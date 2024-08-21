@@ -365,6 +365,9 @@ FodyWeavers.xsd
 # Migrations
 **/Migrations/
 
+# Win / Mac users use different syntax
+appsettings.json
+
 # VS History extension
 .vshistory
 *.vs
