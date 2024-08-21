@@ -363,4 +363,8 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # Migrations
-Data/Migrations
+**/Migrations/
+
+# VS History extension
+.vshistory
+*.vs
