@@ -4,6 +4,7 @@ using CMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240821112426_MadeSomeChangesInEntities1")]
+    partial class MadeSomeChangesInEntities1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -312,7 +315,7 @@ namespace CMS.Migrations
             modelBuilder.Entity("CMS.Entities.Content", b =>
                 {
                     b.HasOne("CMS.Entities.WebPage", "WebPage")
-                        .WithMany("Contents")
+                        .WithMany("Content")
                         .HasForeignKey("WebPageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -334,7 +337,7 @@ namespace CMS.Migrations
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
                 {
                     b.HasOne("CMS.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("WebSites")
+                        .WithMany("WebSite")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -395,17 +398,18 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("CMS.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("WebSites");
+                    b.Navigation("WebSite");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebPage", b =>
                 {
-                    b.Navigation("Contents");
+                    b.Navigation("Content");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
                 {
-                    b.Navigation("WebPage");
+                    b.Navigation("WebPage")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

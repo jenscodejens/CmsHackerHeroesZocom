@@ -1,0 +1,53 @@
+﻿@page "/webpages/details"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>WebPage</h4>
+    <hr />
+    @if (webpage is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">Header</dt>
+            <dd class="col-sm-10">@webpage.Header</dd>
+            <dt class="col-sm-2">Body</dt>
+            <dd class="col-sm-10">@webpage.Body</dd>
+            <dt class="col-sm-2">Footer</dt>
+            <dd class="col-sm-10">@webpage.Footer</dd>
+            <dt class="col-sm-2">WebSiteId</dt>
+            <dd class="col-sm-10">@webpage.WebSiteId</dd>
+        </dl>
+        <div>
+            <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
+            <a href="@($"/webpages")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    WebPage? webpage;
+
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        webpage = await context.WebPage.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
+        if (webpage is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

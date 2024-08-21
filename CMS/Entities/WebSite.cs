@@ -1,12 +1,28 @@
-﻿namespace CMS.Entities
+﻿using CMS.Data;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CMS.Entities
 {
     public class WebSite
     {
+        [Key]
         public int WebSiteId { get; set; }
-        public string UserId { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public DateOnly CreationDate { get; set; }
+        public DateOnly CreationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly LastUpdated { get; set; }
+
+
+
+        //Foregin Keys
+        [ForeignKey("ApplicationUser")]
+        public string UserId { get; set; }
+
+        //relationer
+        public ApplicationUser? ApplicationUser { get; set; }
+        public WebPage? WebPage { get; set; }
+
+
     }
 }

@@ -4,6 +4,7 @@ using CMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CMS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240820134618_AddedRelationBetweenUserAndWebsite")]
+    partial class AddedRelationBetweenUserAndWebsite
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,62 +88,6 @@ namespace CMS.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("CMS.Entities.Content", b =>
-                {
-                    b.Property<int>("ContentId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentId"));
-
-                    b.Property<string>("ContentInput")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ContentType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WebPageId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ContentId");
-
-                    b.HasIndex("WebPageId");
-
-                    b.ToTable("Content");
-                });
-
-            modelBuilder.Entity("CMS.Entities.WebPage", b =>
-                {
-                    b.Property<int>("WebPageId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("WebPageId"));
-
-                    b.Property<string>("Body")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Footer")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Header")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("WebSiteId")
-                        .HasColumnType("int");
-
-                    b.HasKey("WebPageId");
-
-                    b.HasIndex("WebSiteId")
-                        .IsUnique();
-
-                    b.ToTable("WebPage");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
@@ -309,32 +256,10 @@ namespace CMS.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("CMS.Entities.Content", b =>
-                {
-                    b.HasOne("CMS.Entities.WebPage", "WebPage")
-                        .WithMany("Contents")
-                        .HasForeignKey("WebPageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WebPage");
-                });
-
-            modelBuilder.Entity("CMS.Entities.WebPage", b =>
-                {
-                    b.HasOne("CMS.Entities.WebSite", "WebSite")
-                        .WithOne("WebPage")
-                        .HasForeignKey("CMS.Entities.WebPage", "WebSiteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WebSite");
-                });
-
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
                 {
                     b.HasOne("CMS.Data.ApplicationUser", "ApplicationUser")
-                        .WithMany("WebSites")
+                        .WithMany("WebSite")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -395,17 +320,7 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("CMS.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("WebSites");
-                });
-
-            modelBuilder.Entity("CMS.Entities.WebPage", b =>
-                {
-                    b.Navigation("Contents");
-                });
-
-            modelBuilder.Entity("CMS.Entities.WebSite", b =>
-                {
-                    b.Navigation("WebPage");
+                    b.Navigation("WebSite");
                 });
 #pragma warning restore 612, 618
         }

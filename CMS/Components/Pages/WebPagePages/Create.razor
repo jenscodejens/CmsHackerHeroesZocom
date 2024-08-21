@@ -1,0 +1,61 @@
+﻿@page "/webpages/create"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>WebPage</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="WebPage" OnValidSubmit="AddWebPage" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="header" class="form-label">Header:</label> 
+                <InputText id="header" @bind-Value="WebPage.Header" class="form-control" /> 
+                <ValidationMessage For="() => WebPage.Header" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="body" class="form-label">Body:</label> 
+                <InputText id="body" @bind-Value="WebPage.Body" class="form-control" /> 
+                <ValidationMessage For="() => WebPage.Body" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="footer" class="form-label">Footer:</label> 
+                <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" /> 
+                <ValidationMessage For="() => WebPage.Footer" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="websiteid" class="form-label">WebSiteId:</label> 
+                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" /> 
+                <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/webpages">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public WebPage WebPage { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddWebPage()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.WebPage.Add(WebPage);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/webpages");
+    }
+}
