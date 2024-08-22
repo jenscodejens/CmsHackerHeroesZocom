@@ -37,4 +37,6 @@ When your feature is complete and you want to merge to development, make sure th
 - resolve conflicts if necessary 
 - test your code
 - make a pull request from feature to development
-- test your code
+- wait for approval
+- the person who created the pull request must merge/ conclude the PR
+- go to development local and do a git pull to update your local branch
