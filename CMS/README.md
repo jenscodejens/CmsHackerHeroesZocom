@@ -16,6 +16,17 @@ When implementing a new feature:
 
 - pull from development Remote to development Local, to have the latest updates
 - create feature branch from development
+- git push from feature branch (no commits need - this is just to create the feature branch in remote as well)
+  
+  if you get the below message in the terminal, follow the instruction:
+
+```
+fatal: The current branch doc-git-workflow has no upstream branch.
+To push the current branch and set the remote as upstream, use
+
+    git push --set-upstream origin doc-git-workflow 
+```
+
 - do some commits in the feature branch
 - test your code
 
