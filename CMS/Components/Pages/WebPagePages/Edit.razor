@@ -1,0 +1,105 @@
+﻿@page "/WebPages/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>WebPage</h4>
+<hr />
+@if (WebPage is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="WebPage" OnValidSubmit="UpdateWebPage" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />
+                <div class="mb-3">
+                    <label for="header" class="form-label">Header:</label>
+                    <InputText id="header" @bind-Value="WebPage.Header" class="form-control" />
+                    <ValidationMessage For="() => WebPage.Header" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="body" class="form-label">Body:</label>
+                    <InputText id="body" @bind-Value="WebPage.Body" class="form-control" />
+                    <ValidationMessage For="() => WebPage.Body" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="footer" class="form-label">Footer:</label>
+                    <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" />
+                    <ValidationMessage For="() => WebPage.Footer" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="websiteid" class="form-label">WebSiteId:</label>
+                    <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" />
+                    <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/webpages">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
+    [SupplyParameterFromForm]
+    public WebPage? WebPage { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        WebPage ??= await context.WebPage.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
+        if (WebPage is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateWebPage()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(WebPage!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!WebPageExists(WebPage!.WebPageId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/webpages");
+    }
+
+    bool WebPageExists(int webpageid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.WebPage.Any(e => e.WebPageId == webpageid);
+    }
+}
