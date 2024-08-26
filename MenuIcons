@@ -34,7 +34,7 @@ MenuIcons.razor
 ----------------------------------
 @page "/menuicons"
 
-@using statement med path
+@using CMS.Components.RenderFragments
 
 <div>
     @RenderFragments.MenuIconsFragments.MenuIcons
