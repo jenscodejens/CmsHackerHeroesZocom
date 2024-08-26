@@ -63,7 +63,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        WebPage ??= await context.WebPage.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+        WebPage ??= await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
 
         if (WebPage is null)
         {
@@ -100,6 +100,6 @@ else
     bool WebPageExists(int webpageid)
     {
         using var context = DbFactory.CreateDbContext();
-        return context.WebPage.Any(e => e.WebPageId == webpageid);
+        return context.WebPages.Any(e => e.WebPageId == webpageid);
     }
 }

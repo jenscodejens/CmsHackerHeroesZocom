@@ -54,7 +54,7 @@
     public async Task AddWebPage()
     {
         using var context = DbFactory.CreateDbContext();
-        context.WebPage.Add(WebPage);
+        context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/webpages");
     }

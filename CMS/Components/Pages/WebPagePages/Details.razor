@@ -43,7 +43,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        webpage = await context.WebPage.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+        webpage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
 
         if (webpage is null)
         {

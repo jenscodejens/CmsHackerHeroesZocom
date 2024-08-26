@@ -1,9 +1,8 @@
-Simpelt renderfragment för menyikoner (kan refactoreras till mycket mindre).
-App.razor:     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet"> 
+﻿using Microsoft.AspNetCore.Components;
 
-MenuIconsFragment.cs
---------------------------
-    public static class MenuIconsFragments
+namespace CMS.Components.RenderFragments
+{
+    public static class MenuIconsRenderFragment
     {
         public static RenderFragment MenuIcons => builder =>
         {
@@ -29,18 +28,5 @@ MenuIconsFragment.cs
             builder.AddContent(14, "description");
             builder.CloseElement();
         };
-
-MenuIcons.razor 
-----------------------------------
-@page "/menuicons"
-
-@using CMS.Components.RenderFragments
-
-<div>
-    @RenderFragments.MenuIconsFragments.MenuIcons
-</div>
-As RenderFragment
-
-@code {
-    
+    }
 }

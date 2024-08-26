@@ -7,17 +7,13 @@ namespace CMS.Entities
     {
         [Key]
         public int ContentId { get; set; }
-        public ContentType ContentType { get; set; }
-        public string ContentInput { get; set; }
-
-
-        //Foregin Keys
-        [ForeignKey("WebPage")]
+        public WebPage WebPages { get; set; } = new WebPage();
+        public string AddedContent { get; set; }
+        [ForeignKey("WebPageId")]
         public int WebPageId { get; set; }
-        //public string UserId {  get; set; }
-        //public int WebsiteId { get; set; }
-
-        public WebPage? WebPage { get; set; }
+        [ForeignKey("UserId")] // ny
+        public string UserId { get; set; } = string.Empty; // ny
+        public virtual ICollection<ContentType> ContentTypes { get; set; } = new List<ContentType>();
 
     }
 }

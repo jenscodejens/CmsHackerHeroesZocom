@@ -51,7 +51,7 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        webpage = await context.WebPage.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+        webpage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
 
         if (webpage is null)
         {
@@ -62,7 +62,7 @@
     public async Task DeleteWebPage()
     {
         using var context = DbFactory.CreateDbContext();
-        context.WebPage.Remove(webpage!);
+        context.WebPages.Remove(webpage!);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/webpages");
     }
