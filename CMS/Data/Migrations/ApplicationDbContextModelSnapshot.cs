@@ -95,12 +95,13 @@ namespace CMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentId"));
 
-                    b.Property<string>("ContentInput")
+                    b.Property<string>("ContentName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ContentType")
-                        .HasColumnType("int");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("WebPageId")
                         .HasColumnType("int");
@@ -109,7 +110,7 @@ namespace CMS.Migrations
 
                     b.HasIndex("WebPageId");
 
-                    b.ToTable("Content");
+                    b.ToTable("Contents");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebPage", b =>
@@ -132,15 +133,18 @@ namespace CMS.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("WebSiteId")
                         .HasColumnType("int");
 
                     b.HasKey("WebPageId");
 
-                    b.HasIndex("WebSiteId")
-                        .IsUnique();
+                    b.HasIndex("WebSiteId");
 
-                    b.ToTable("WebPage");
+                    b.ToTable("WebPages");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
@@ -173,7 +177,38 @@ namespace CMS.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("WebSite");
+                    b.ToTable("Websites");
+                });
+
+            modelBuilder.Entity("ContentType", b =>
+                {
+                    b.Property<int>("ContentTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentTypeId"));
+
+                    b.Property<int>("ContentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ContentTypeDiscriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
+                    b.Property<string>("DataType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ContentTypeId");
+
+                    b.HasIndex("ContentId");
+
+                    b.ToTable("ContentType");
+
+                    b.HasDiscriminator<string>("ContentTypeDiscriminator").HasValue("ContentType");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -309,26 +344,59 @@ namespace CMS.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ArrayData", b =>
+                {
+                    b.HasBaseType("ContentType");
+
+                    b.Property<string>("ArrayContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ArrayData");
+                });
+
+            modelBuilder.Entity("ImageData", b =>
+                {
+                    b.HasBaseType("ContentType");
+
+                    b.Property<byte[]>("ImageContent")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasDiscriminator().HasValue("ImageData");
+                });
+
+            modelBuilder.Entity("StringData", b =>
+                {
+                    b.HasBaseType("ContentType");
+
+                    b.Property<string>("StringContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("StringData");
+                });
+
             modelBuilder.Entity("CMS.Entities.Content", b =>
                 {
-                    b.HasOne("CMS.Entities.WebPage", "WebPage")
+                    b.HasOne("CMS.Entities.WebPage", "WebPages")
                         .WithMany("Contents")
                         .HasForeignKey("WebPageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("WebPage");
+                    b.Navigation("WebPages");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebPage", b =>
                 {
-                    b.HasOne("CMS.Entities.WebSite", "WebSite")
-                        .WithOne("WebPage")
-                        .HasForeignKey("CMS.Entities.WebPage", "WebSiteId")
+                    b.HasOne("CMS.Entities.WebSite", "WebSites")
+                        .WithMany("WebPages")
+                        .HasForeignKey("WebSiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("WebSite");
+                    b.Navigation("WebSites");
                 });
 
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
@@ -340,6 +408,17 @@ namespace CMS.Migrations
                         .IsRequired();
 
                     b.Navigation("ApplicationUser");
+                });
+
+            modelBuilder.Entity("ContentType", b =>
+                {
+                    b.HasOne("CMS.Entities.Content", "Content")
+                        .WithMany("ContentTypes")
+                        .HasForeignKey("ContentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Content");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -398,6 +477,11 @@ namespace CMS.Migrations
                     b.Navigation("WebSites");
                 });
 
+            modelBuilder.Entity("CMS.Entities.Content", b =>
+                {
+                    b.Navigation("ContentTypes");
+                });
+
             modelBuilder.Entity("CMS.Entities.WebPage", b =>
                 {
                     b.Navigation("Contents");
@@ -405,7 +489,7 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("CMS.Entities.WebSite", b =>
                 {
-                    b.Navigation("WebPage");
+                    b.Navigation("WebPages");
                 });
 #pragma warning restore 612, 618
         }

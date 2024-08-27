@@ -7,21 +7,14 @@ namespace CMS.Entities
     {
         [Key]
         public int WebPageId { get; set; }
-       
-        public string Header { get; set; }
-        public string Body { get; set; }
-        public string Footer { get; set; }
-
-        //Foregin Keys
-
-        //public string UserId { get; set; }
-
-        [ForeignKey("WebSite")]
+        [ForeignKey("WebSiteId")]
         public int WebSiteId { get; set; }
-
-        //relationer
-        public WebSite? WebSite { get; set; }
-        //public ICollection<Content> Content { get; set; } = null;
-        public virtual ICollection<Content> Contents { get; set; } = new List<Content>();
+        public WebSite WebSites { get; set; } = new WebSite();
+        public string Header { get; set; } = string.Empty;
+        public string Body { get; set; } = string.Empty;
+        public string Footer { get; set; } = string.Empty;
+        public virtual ICollection<Content> Contents { get; set; } = new List<Content>(); // Virtual för lazyloading
+        [ForeignKey("UserId")] // ny
+        public string UserId { get; set; } = string.Empty; // ny
     }
 }

@@ -8,21 +8,13 @@ namespace CMS.Entities
     {
         [Key]
         public int WebSiteId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         public DateOnly CreationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly LastUpdated { get; set; }
-
-
-
-        //Foregin Keys
-        [ForeignKey("ApplicationUser")]
-        public string UserId { get; set; }
-
-        //relationer
-        public ApplicationUser? ApplicationUser { get; set; }
-        public WebPage? WebPage { get; set; }
-
-
+        public ApplicationUser ApplicationUser { get; set; } = new ApplicationUser();
+        public virtual ICollection<WebPage> WebPages { get; set; } = new List<WebPage>(); // Virtual för lazyloading
+        [ForeignKey("UserId")]
+        public string UserId { get; set; } = string.Empty;
     }
 }
