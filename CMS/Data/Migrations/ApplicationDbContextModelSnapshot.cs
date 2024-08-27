@@ -95,7 +95,7 @@ namespace CMS.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ContentId"));
 
-                    b.Property<string>("AddedContent")
+                    b.Property<string>("ContentName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -191,11 +191,12 @@ namespace CMS.Migrations
                     b.Property<int>("ContentId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ContentString")
+                    b.Property<string>("ContentTypeDiscriminator")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("DataType")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -203,7 +204,11 @@ namespace CMS.Migrations
 
                     b.HasIndex("ContentId");
 
-                    b.ToTable("ContentTypes");
+                    b.ToTable("ContentType");
+
+                    b.HasDiscriminator<string>("ContentTypeDiscriminator").HasValue("ContentType");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -339,6 +344,39 @@ namespace CMS.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ArrayData", b =>
+                {
+                    b.HasBaseType("ContentType");
+
+                    b.Property<string>("ArrayContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("ArrayData");
+                });
+
+            modelBuilder.Entity("ImageData", b =>
+                {
+                    b.HasBaseType("ContentType");
+
+                    b.Property<byte[]>("ImageContent")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasDiscriminator().HasValue("ImageData");
+                });
+
+            modelBuilder.Entity("StringData", b =>
+                {
+                    b.HasBaseType("ContentType");
+
+                    b.Property<string>("StringContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasDiscriminator().HasValue("StringData");
+                });
+
             modelBuilder.Entity("CMS.Entities.Content", b =>
                 {
                     b.HasOne("CMS.Entities.WebPage", "WebPages")
@@ -374,13 +412,13 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("ContentType", b =>
                 {
-                    b.HasOne("CMS.Entities.Content", "Contents")
+                    b.HasOne("CMS.Entities.Content", "Content")
                         .WithMany("ContentTypes")
                         .HasForeignKey("ContentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Contents");
+                    b.Navigation("Content");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

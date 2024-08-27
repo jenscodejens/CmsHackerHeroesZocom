@@ -1,6 +1,7 @@
 using CMS.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace CMS.Data
 {
@@ -13,8 +14,10 @@ namespace CMS.Data
         public DbSet<Content> Contents { get; set; }
         public DbSet<WebPage> WebPages { get; set; }
         public DbSet<WebSite> Websites { get; set; }
-        public DbSet<ContentType> ContentTypes { get; set; }
-        //public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+        //public DbSet<ContentType> ContentTypes { get; set; } Denna skall inte användas längre, den klassen är nu abstract class
+        public DbSet<StringData> StringData { get; set; }
+        public DbSet<ArrayData> ArrayData { get; set; }
+        public DbSet<ImageData> ImageData { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,16 +47,21 @@ namespace CMS.Data
                 c.HasKey(c => c.ContentId);
                 c.HasOne(c => c.WebPages)
                     .WithMany(w => w.Contents)
-                    .HasForeignKey(c => c.WebPageId);
+                    .HasForeignKey(c => c.WebPageId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                c.HasMany(c => c.ContentTypes)
+                    .WithOne(ct => ct.Content)
+                    .HasForeignKey(ct => ct.ContentId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
-            modelBuilder.Entity<ContentType>(c =>
-            {
-                c.HasKey(c => c.ContentTypeId);
-                c.HasOne(c => c.Contents)
-                    .WithMany(w => w.ContentTypes)
-                    .HasForeignKey(c => c.ContentId);
-            });
+            // TPH arv här
+            modelBuilder.Entity<ContentType>()
+                .HasDiscriminator<string>("ContentTypeDiscriminator") // Discriminator är fältet som håller reda på vilken utav subklasserna som Content har (string, array, image)
+                .HasValue<StringData>("StringData")
+                .HasValue<ArrayData>("ArrayData")
+                .HasValue<ImageData>("ImageData");
         }
     }
 }
