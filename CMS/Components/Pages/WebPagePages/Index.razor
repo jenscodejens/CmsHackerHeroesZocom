@@ -16,10 +16,10 @@
 </p>
 
 <QuickGrid Class="table" Items="context.WebPages">
+    <PropertyColumn Property="webpage => webpage.WebSiteId" />
     <PropertyColumn Property="webpage => webpage.Header" />
     <PropertyColumn Property="webpage => webpage.Body" />
     <PropertyColumn Property="webpage => webpage.Footer" />
-    <PropertyColumn Property="webpage => webpage.WebSiteId" />
 
     <TemplateColumn Context="webpage">
         <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |

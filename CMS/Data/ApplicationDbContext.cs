@@ -13,11 +13,8 @@ namespace CMS.Data
 
         public DbSet<Content> Contents { get; set; }
         public DbSet<WebPage> WebPages { get; set; }
-        public DbSet<WebSite> Websites { get; set; }
-        //public DbSet<ContentType> ContentTypes { get; set; } Denna skall inte användas längre, den klassen är nu abstract class
-        public DbSet<StringData> StringData { get; set; }
-        public DbSet<ArrayData> ArrayData { get; set; }
-        public DbSet<ImageData> ImageData { get; set; }
+        public DbSet<WebSite> WebSites { get; set; }
+  
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -25,43 +22,31 @@ namespace CMS.Data
 
             modelBuilder.Entity<WebSite>(e =>
             {
+                e.ToTable("WebSites");
                 e.HasKey(e => e.WebSiteId);
                 e.HasOne(e => e.ApplicationUser)
                   .WithMany(u => u.WebSites)
-                  .HasForeignKey(e => e.UserId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasForeignKey(e => e.UserId);
             });
 
             modelBuilder.Entity<WebPage>(p =>
             {
+                p.ToTable("WebPages");
                 p.HasKey(p => p.WebPageId);
-                p.HasOne(p => p.WebSites)
+                p.HasOne(p => p.WebSite)
                   .WithMany(w => w.WebPages)
-                  .HasForeignKey(p => p.WebSiteId)
-                  .OnDelete(DeleteBehavior.Cascade);
+                  .HasForeignKey(p => p.WebSiteId);
 
             });
 
             modelBuilder.Entity<Content>(c =>
             {
+                c.ToTable("Contents");
                 c.HasKey(c => c.ContentId);
                 c.HasOne(c => c.WebPages)
                     .WithMany(w => w.Contents)
-                    .HasForeignKey(c => c.WebPageId)
-                    .OnDelete(DeleteBehavior.Cascade);
-
-                c.HasMany(c => c.ContentTypes)
-                    .WithOne(ct => ct.Content)
-                    .HasForeignKey(ct => ct.ContentId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .HasForeignKey(c => c.WebPageId);
             });
-
-            // TPH arv här
-            modelBuilder.Entity<ContentType>()
-                .HasDiscriminator<string>("ContentTypeDiscriminator") // Discriminator är fältet som håller reda på vilken utav subklasserna som Content har (string, array, image)
-                .HasValue<StringData>("StringData")
-                .HasValue<ArrayData>("ArrayData")
-                .HasValue<ImageData>("ImageData");
-        }
+  }
     }
 }
