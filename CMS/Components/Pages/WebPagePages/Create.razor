@@ -17,6 +17,11 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
+                <label for="websiteid" class="form-label">WebSiteId:</label> 
+                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" /> 
+                <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
                 <label for="header" class="form-label">Header:</label> 
                 <InputText id="header" @bind-Value="WebPage.Header" class="form-control" /> 
                 <ValidationMessage For="() => WebPage.Header" class="text-danger" /> 
@@ -30,11 +35,6 @@
                 <label for="footer" class="form-label">Footer:</label> 
                 <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" /> 
                 <ValidationMessage For="() => WebPage.Footer" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="websiteid" class="form-label">WebSiteId:</label> 
-                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" /> 
-                <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" /> 
             </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>

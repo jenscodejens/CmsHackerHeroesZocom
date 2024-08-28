@@ -4,16 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS.Entities
 {
+  
     public class Content
     {
-        [Key]
+  
         public int ContentId { get; set; }
-        public WebPage WebPages { get; set; } = new WebPage();
-        public string ContentName { get; set; } = string.Empty; // Ger användaren möjlighet att döpa sin content t.ex. "Bakgrundsbild till 'Om Oss sidan'"
-        public virtual ICollection<ContentType> ContentTypes { get; set; } = new List<ContentType>();
-        [ForeignKey("WebPageId")]
+    
+        public string ContentName { get; set; } // Ger användaren möjlighet att döpa sin content t.ex. "Bakgrundsbild till 'Om Oss sidan'"
+ 
         public int WebPageId { get; set; }
-        [ForeignKey("UserId")]
-        public string UserId { get; set; } = string.Empty;
+        public WebPage WebPages { get; set; } 
     }
 }

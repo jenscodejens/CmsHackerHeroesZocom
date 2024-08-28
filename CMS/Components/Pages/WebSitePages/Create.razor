@@ -51,6 +51,7 @@
 </div>
 
 @code {
+
     [SupplyParameterFromForm]
     public WebSite WebSite { get; set; } = new();
 
@@ -58,7 +59,7 @@
     public async Task AddWebSite()
     {
         using var context = DbFactory.CreateDbContext();
-        context.Websites.Add(WebSite);
+        context.WebSites.Add(WebSite);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/websites");
     }

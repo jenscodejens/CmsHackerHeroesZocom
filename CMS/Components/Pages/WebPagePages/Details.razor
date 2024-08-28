@@ -18,14 +18,14 @@
     }
     else {
         <dl class="row">
+            <dt class="col-sm-2">WebSiteId</dt>
+            <dd class="col-sm-10">@webpage.WebSiteId</dd>
             <dt class="col-sm-2">Header</dt>
             <dd class="col-sm-10">@webpage.Header</dd>
             <dt class="col-sm-2">Body</dt>
             <dd class="col-sm-10">@webpage.Body</dd>
             <dt class="col-sm-2">Footer</dt>
             <dd class="col-sm-10">@webpage.Footer</dd>
-            <dt class="col-sm-2">WebSiteId</dt>
-            <dd class="col-sm-10">@webpage.WebSiteId</dd>
         </dl>
         <div>
             <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
