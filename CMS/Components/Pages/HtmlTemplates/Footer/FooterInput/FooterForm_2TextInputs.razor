@@ -1,0 +1,43 @@
+﻿@namespace htmltemplates.Footer.FooterInput
+
+<EditForm Model="@formData" OnValidSubmit="@HandleSubmit">
+    @if (formData.Any())
+    {
+        @foreach (var key in formData.Keys)
+        {
+            <div class="mb-3">
+                <label>@key:</label>
+                <InputText @bind-Value="formData[key]" class="form-control" />
+            </div>
+        }
+    }
+    else
+    {
+        <p>No fields available.</p>
+    }
+    <button type="submit" class="btn btn-primary">Submit</button>
+</EditForm>
+
+@code {
+    private Dictionary<string, string> formData = new();
+
+    [Parameter] public Dictionary<string, string> InitialValues { get; set; } = new();
+    [Parameter] public EventCallback<Dictionary<string, string>> OnSubmit { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        // Initialize formData when parameters are set or changed
+        if (InitialValues != null)
+        {
+            formData = new Dictionary<string, string>(InitialValues);
+        }
+    }
+
+    private async Task HandleSubmit()
+    {
+        if (OnSubmit.HasDelegate)
+        {
+            await OnSubmit.InvokeAsync(formData);
+        }
+    }
+}

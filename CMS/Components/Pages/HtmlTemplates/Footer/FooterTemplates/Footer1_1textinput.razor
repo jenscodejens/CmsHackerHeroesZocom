@@ -1,0 +1,16 @@
+﻿@namespace htmltemplates.Footer.footertemplates
+
+<footer class="bg-black text-white">
+    <div class="container text-center">
+        <small>Copyright &copy;</small>
+        @FooterTexts.GetValueOrDefault("FooterText1", "Default Footer Text 1")
+        <br />
+        @FooterTexts.GetValueOrDefault("FooterText2", "Default Footer Text 2")
+    </div>
+</footer>
+
+@code {
+    [Parameter] public Dictionary<string, string> FooterTexts { get; set; } = new Dictionary<string, string>();
+
+    public static string InputForm => "FooterForm_2TextInputs";  // Form associated with this footer template
+}
