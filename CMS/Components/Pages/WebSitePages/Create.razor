@@ -1,14 +1,17 @@
 ﻿@page "/websites/create"
 
+@using CMS.Services
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
+@using System.Security.Claims
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject GetCurrentUserIdService GetCurrentUserIdService
 
 <PageTitle>Create</PageTitle>
 
 <h1>Create</h1>
-
 <h4>WebSite</h4>
 <hr />
 <div class="row">
@@ -17,30 +20,20 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="title" class="form-label">Title:</label> 
-                <InputText id="title" @bind-Value="WebSite.Title" class="form-control" /> 
-                <ValidationMessage For="() => WebSite.Title" class="text-danger" /> 
-            </div>        
+                <label for="title" class="form-label">Title:</label>
+                <InputText id="title" @bind-Value="WebSite.Title" class="form-control" />
+                <ValidationMessage For="() => WebSite.Title" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="description" class="form-label">Description:</label> 
-                <InputText id="description" @bind-Value="WebSite.Description" class="form-control" /> 
-                <ValidationMessage For="() => WebSite.Description" class="text-danger" /> 
-            </div>        
+                <label for="description" class="form-label">Description:</label>
+                <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
+                <ValidationMessage For="() => WebSite.Description" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="creationdate" class="form-label">CreationDate:</label> 
-                <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" /> 
-                <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="lastupdated" class="form-label">LastUpdated:</label> 
-                <InputDate id="lastupdated" @bind-Value="WebSite.LastUpdated" class="form-control" /> 
-                <ValidationMessage For="() => WebSite.LastUpdated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="userid" class="form-label">UserId:</label> 
-                <InputText id="userid" @bind-Value="WebSite.UserId" class="form-control" /> 
-                <ValidationMessage For="() => WebSite.UserId" class="text-danger" /> 
-            </div>        
+                <label for="creationdate" class="form-label">CreationDate:</label>
+                <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
+                <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
+            </div>
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -55,10 +48,22 @@
     [SupplyParameterFromForm]
     public WebSite WebSite { get; set; } = new();
 
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            GetCurrentUserIdService.UserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+        }
+    }
+
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddWebSite()
     {
         using var context = DbFactory.CreateDbContext();
+        WebSite.UserId = GetCurrentUserIdService.UserId;
         context.WebSites.Add(WebSite);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/websites");

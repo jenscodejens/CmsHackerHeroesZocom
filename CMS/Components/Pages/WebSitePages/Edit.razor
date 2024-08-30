@@ -1,5 +1,6 @@
 ﻿@page "/WebSites/edit"
 
+
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
@@ -35,15 +36,20 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="creationdate" class="form-label">CreationDate:</label>
-                    <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" />
+                    <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
                     <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="lastupdated" class="form-label">LastUpdated:</label>
-                    <InputDate id="lastupdated" @bind-Value="WebSite.LastUpdated" class="form-control" />
-                    <ValidationMessage For="() => WebSite.LastUpdated" class="text-danger" />
-                </div>
-                <div class="mb-3">
+                @* If the website has had no update yet then the form wont show *@
+                @if (LastUpdatedDateTime.HasValue)
+                {
+                    <div class="mb-3">
+                        <label for="lastupdated" class="form-label">LastUpdated:</label>
+                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                        <ValidationMessage For="() => WebSite.LastUpdated" class="text-danger" />
+                    </div>
+                }
+                @* Had to keep this in order for DOM to work but made it invisible to user *@
+                <div class="mb-3" style="display: none;">
                     <label for="userid" class="form-label">UserId:</label>
                     <InputText id="userid" @bind-Value="WebSite.UserId" class="form-control" />
                     <ValidationMessage For="() => WebSite.UserId" class="text-danger" />
@@ -65,6 +71,8 @@ else
     [SupplyParameterFromForm]
     public WebSite? WebSite { get; set; }
 
+    private DateTime? LastUpdatedDateTime { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -74,6 +82,13 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+        else
+        {
+            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
+            LastUpdatedDateTime = WebSite.LastUpdated.HasValue
+                ? WebSite.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+                : null;
+        }
     }
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -81,6 +96,7 @@ else
     public async Task UpdateWebSite()
     {
         using var context = DbFactory.CreateDbContext();
+        WebSite!.LastUpdated = DateOnly.FromDateTime(DateTime.Today);
         context.Attach(WebSite!).State = EntityState.Modified;
 
         try
