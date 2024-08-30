@@ -1,0 +1,46 @@
+@using CMS.Data
+@inject ApplicationDbContext Context
+
+<footer style="background-color:@BackgroundColor; color:@TextColor;">
+    <div class="content-wrapper d-flex justify-content-around align-items-stretch p-3">
+        @foreach (var item in Items)
+        {
+            <span>@item</span>
+        }
+    </div>
+</footer>
+
+@code {
+    [Parameter]
+    public string BackgroundColor { get; set; } = "blue";
+
+    [Parameter]
+    public string TextColor { get; set; } = "white";
+
+    private List<string> _items = new List<string>();
+
+    [Parameter]
+    public int WebPageId { get; set; }
+
+    [Parameter]
+    public List<string> Items
+    {
+        get => _items;
+        set => _items = value ?? new List<string>();
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        // The Footer can accept multiple texts (not url though), separate the text with "," in the string
+        var webPage = Context.WebPages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
+        if (webPage != null)
+        {
+            string footerContent = webPage.Footer ?? string.Empty;
+
+            _items = footerContent.Split(',').Select(item => item.Trim()).ToList();
+        }
+    }
+}
+

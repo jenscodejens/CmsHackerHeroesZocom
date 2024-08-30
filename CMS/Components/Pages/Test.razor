@@ -1,0 +1,46 @@
+@page "/test"
+@inject NavigationManager NavigationManager
+
+<h5>Header from Db - 1 phrase</h5>
+<HeaderComponent BackgroundColor="black"
+                 TextColor="#FF6600"
+                 WebPageId="1">
+</HeaderComponent>
+<br>
+<h5>Header from Db - 2 phrases</h5>
+<HeaderComponent BackgroundColor="#660099"
+                 TextColor="white"
+                 WebPageId="2">
+</HeaderComponent>
+<br>
+<br>
+<h5>Body from Db</h5>
+<BodyComponent BackgroundColor="lightgrey"
+                 TextColor="black"
+                 WebPageId="1">
+</BodyComponent>
+<br>
+<br>
+<h5>Footer from Db - 3 phrases</h5>
+<FooterComponent BackgroundColor="blue"
+                 TextColor="white"
+                 WebPageId="1">
+</FooterComponent>
+<br>
+<h5>Footer from Db - 2 phrases</h5>
+<FooterComponent BackgroundColor="black"
+                 TextColor="white"
+                 WebPageId="2">
+</FooterComponent>
+<br>
+<br>
+
+<a href="/cleantest" onclick="@NavigateToVisitorView">As Visitor</a>
+
+
+@code {
+    private void NavigateToVisitorView()
+    {
+        NavigationManager.NavigateTo("/cleantest");
+    }
+}

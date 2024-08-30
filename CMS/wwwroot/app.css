@@ -1,5 +1,7 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    height: 100%; /*nytt*/
+    margin: 0; /*nytt*/
 }
 
 a, .btn-link {
@@ -64,4 +66,20 @@ h1:focus {
     align-items: center;
     justify-content: center;
     vertical-align: middle;
+}
+
+/*Nytt, osäker ännu*/
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.content-wrapper {
+    flex: 1;
+}
+
+footer {
+    width: 100%;
 }

@@ -1,0 +1,32 @@
+﻿@using CMS.Data
+@inject ApplicationDbContext Context
+
+<body style="background-color:@BackgroundColor; color:@TextColor;">
+    <div class="container d-flex justify-content-between align-items-center p-3">
+        @BodyContent
+    </div>
+</body>
+
+@code {
+    [Parameter]
+    public string BackgroundColor { get; set; } = "white";
+    [Parameter]
+    public string TextColor { get; set; } = "black";
+    [Parameter]
+    public int WebPageId { get; set; }
+
+    private string _bodyContent = "no body data present";
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        var webPage = Context.WebPages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
+        if (webPage != null)
+        {
+            _bodyContent = webPage.Body ?? string.Empty;
+        }
+    }
+
+    private string BodyContent => _bodyContent.Trim();
+}
