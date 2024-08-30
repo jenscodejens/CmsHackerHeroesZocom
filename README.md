@@ -1,1 +1,1 @@
-# Väldigt basic renderings exempel på en header, body, footer
+# Väldigt basic renderings exempel på en header, body, footer med coomponents
