@@ -11,7 +11,7 @@ namespace CMS.Entities
         public string Title { get; set; } 
         public string Description { get; set; }
         public DateOnly CreationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-        public DateOnly LastUpdated { get; set; }
+        public DateOnly? LastUpdated { get; set; }
        
         public string UserId { get; set; } = string.Empty;
         public ApplicationUser ApplicationUser { get; set; } 
