@@ -371,3 +371,5 @@ appsettings.json
 # VS History extension
 .vshistory
 *.vs
+CMS/appsettings.json
+.vscode/settings.json
