@@ -1,0 +1,57 @@
+﻿@page "/content/create"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h4>WebPage</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Content" OnValidSubmit="AddContent" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" />
+            <div class="mb-3">
+                <label for="contentid" class="form-label">ContentId:</label>
+                <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" />
+                <ValidationMessage For="() => Content.ContentId" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="webpageid" class="form-label">WebPageId:</label>
+                <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
+                <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="contentname" class="form-label">Content Input:</label>
+                <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
+                <ValidationMessage For="() => Content" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/webpages">Back to List</a>
+</div>
+
+@code {
+
+    [SupplyParameterFromForm]
+    public Content Content { get; set; } = new();
+
+    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    public async Task AddContent()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Contents.Add(Content);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/content");
+    }
+}
+

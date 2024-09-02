@@ -131,7 +131,7 @@
         WebPage.Body = bodyHtml;  // If body HTML is dynamic, capture it accordingly
         WebPage.Footer = footerHtml;  // If footer HTML is dynamic, capture it accordingly
 
-        context.WebPage.Add(WebPage);
+        context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
 
         // Navigate to a different page after successful submission
