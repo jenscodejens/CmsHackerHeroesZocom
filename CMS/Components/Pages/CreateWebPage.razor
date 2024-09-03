@@ -26,7 +26,7 @@
 {
     <div>
         <h4>Template Preview</h4>
-        @RenderDynamicComponent(selectedTemplatePath)
+        @RenderDynamicComponent(selectedTemplatePath, templateParameters)
     </div>
 }
 
@@ -34,7 +34,10 @@
 {
     <div>
         <h4>Input Form</h4>
-        @RenderDynamicComponent(selectedInputFormPath)
+        @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
+    {
+    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
+    })
     </div>
 }
 
@@ -42,6 +45,7 @@
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;
     private string selectedInputFormPath;
+    private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,6 +59,8 @@
         if (selectedTemplate != null)
         {
             selectedInputFormPath = selectedTemplate.InputFormPath; // Get the input form path
+                                                                    // Initialize parameters for the selected template
+            templateParameters.Clear();
         }
         else
         {
@@ -62,7 +68,7 @@
         }
     }
 
-    private RenderFragment RenderDynamicComponent(string componentPath)
+    private RenderFragment RenderDynamicComponent(string componentPath, Dictionary<string, object> parameters)
     {
         if (!string.IsNullOrEmpty(componentPath))
         {
@@ -72,6 +78,10 @@
                 return builder =>
                 {
                     builder.OpenComponent(0, type);
+                    foreach (var parameter in parameters)
+                    {
+                        builder.AddAttribute(1, parameter.Key, parameter.Value);
+                    }
                     builder.CloseComponent();
                 };
             }
@@ -81,5 +91,14 @@
             }
         }
         return builder => builder.AddContent(0, "No component selected.");
+    }
+
+    private void OnInputFormSubmit(Dictionary<string, object> formValues)
+    {
+        // Update the parameters for the selected template based on form values
+        foreach (var kvp in formValues)
+        {
+            templateParameters[kvp.Key] = kvp.Value;
+        }
     }
 }
