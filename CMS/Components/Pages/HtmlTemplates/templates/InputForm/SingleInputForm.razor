@@ -1,0 +1,26 @@
+﻿@page "/inputform"
+@namespace htmltemplates.templates.InputForm
+
+<h3>Input Form</h3>
+
+<div>
+    <form @onsubmit="HandleSubmit">
+        <div>
+            <label>@LabelText</label>
+            <input type="text" @bind="inputValue" />
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+@code {
+    [Parameter] public string LabelText { get; set; } = "Enter Text:";
+    [Parameter] public EventCallback<string> OnSubmit { get; set; }
+
+    private string inputValue = string.Empty;
+
+    private async Task HandleSubmit()
+    {
+        await OnSubmit.InvokeAsync(inputValue);
+    }
+}

@@ -1,0 +1,85 @@
+﻿@page "/createwebpage"
+@namespace htmltemplates.templates
+@using CMS.Data
+@using CMS.Models
+@using Microsoft.EntityFrameworkCore
+@inject ApplicationDbContext DbContext
+@rendermode InteractiveServer
+
+<h3>Create a Web Page</h3>
+
+<div>
+    <label for="templateDropdown">Choose a Template:</label>
+    <select id="templateDropdown" @onchange="OnTemplateChanged">
+        <option value="">-- Select Template --</option>
+        @if (templates != null)
+        {
+            @foreach (var template in templates)
+            {
+                <option value="@template.TemplatePath">@template.TemplateType</option>
+            }
+        }
+    </select>
+</div>
+
+@if (!string.IsNullOrEmpty(selectedTemplatePath))
+{
+    <div>
+        <h4>Template Preview</h4>
+        @RenderDynamicComponent(selectedTemplatePath)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(selectedInputFormPath))
+{
+    <div>
+        <h4>Input Form</h4>
+        @RenderDynamicComponent(selectedInputFormPath)
+    </div>
+}
+
+@code {
+    private List<Template> templates = new List<Template>(); // Initialize with an empty list
+    private string selectedTemplatePath;
+    private string selectedInputFormPath;
+
+    protected override async Task OnInitializedAsync()
+    {
+        templates = await DbContext.Templates.ToListAsync();
+    }
+
+    private void OnTemplateChanged(ChangeEventArgs e)
+    {
+        selectedTemplatePath = e.Value?.ToString();
+        var selectedTemplate = templates.FirstOrDefault(t => t.TemplatePath == selectedTemplatePath);
+        if (selectedTemplate != null)
+        {
+            selectedInputFormPath = selectedTemplate.InputFormPath; // Get the input form path
+        }
+        else
+        {
+            selectedInputFormPath = null; // Clear input form if no template selected
+        }
+    }
+
+    private RenderFragment RenderDynamicComponent(string componentPath)
+    {
+        if (!string.IsNullOrEmpty(componentPath))
+        {
+            var type = Type.GetType(componentPath);
+            if (type != null)
+            {
+                return builder =>
+                {
+                    builder.OpenComponent(0, type);
+                    builder.CloseComponent();
+                };
+            }
+            else
+            {
+                return builder => builder.AddContent(0, "Component not found.");
+            }
+        }
+        return builder => builder.AddContent(0, "No component selected.");
+    }
+}

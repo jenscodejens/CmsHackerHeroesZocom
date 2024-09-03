@@ -1,0 +1,40 @@
+﻿@using Microsoft.AspNetCore.Components
+@using Microsoft.Extensions.DependencyInjection
+
+@code {
+    [Parameter] public string TemplatePath { get; set; }
+
+    private RenderFragment templateFragment;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LoadTemplate();
+    }
+
+    private void LoadTemplate()
+    {
+        if (string.IsNullOrEmpty(TemplatePath))
+        {
+            templateFragment = builder => builder.AddContent(0, "No template selected.");
+            return;
+        }
+
+        var type = Type.GetType(TemplatePath);
+        if (type != null && typeof(IComponent).IsAssignableFrom(type))
+        {
+            templateFragment = builder =>
+            {
+                builder.OpenComponent(0, type);
+                builder.CloseComponent();
+            };
+        }
+        else
+        {
+            templateFragment = builder => builder.AddContent(0, "Component not found or invalid.");
+        }
+    }
+}
+
+@* Render the template fragment *@
+@templateFragment

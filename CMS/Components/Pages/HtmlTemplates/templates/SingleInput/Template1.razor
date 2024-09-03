@@ -1,0 +1,15 @@
+﻿@page "/temp1"
+@namespace htmltemplates.templates.SingleInput
+
+<h3>Template 1</h3>
+
+<footer class="bg-primary text-white">
+    <div class="container text-center">
+        <small>Template 1 Footer: &copy; </small>
+        @TextInput
+    </div>
+</footer>
+
+@code {
+    [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 1";
+}
