@@ -3,7 +3,7 @@
 @inject NavigationManager NavigationManager
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
-    <a class="navbar-brand" style="font-size:24px;" href="/">CMS</a>
+    <a class="navbar-brand" style="font-size:24px; padding-top:10px; padding-bot:10px;" href="/">CMS</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,7 +12,7 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
                 <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                    Home
+                    Hem
                 </NavLink>
             </li>
 
@@ -20,32 +20,53 @@
                 <NotAuthorized>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Dropdown
+                            Meny
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 20px;">
-                            <a class="dropdown-item" href="Account/Login">log</a>
-                            <a class="dropdown-item" href="Account/Register">Another action</a>
+                            <a class="dropdown-item" href="#">Vad du får</a>
+                            <a class="dropdown-item" href="#">Prismodell</a>
+                             <a class="dropdown-item" href="#">Teamet</a>
+                            <a class="dropdown-item" href="#">Om Oss</a>
+                            
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Something else here</a>
+                           
+                             <a class="dropdown-item" href="Account/Login">Logga In</a>
+                             <a class="dropdown-item" href="Account/Register">Registera dig nu</a>
                         </div>
                     </li>
                 </NotAuthorized>
 
                 <Authorized>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="auth">
-                            Auth Required
+                   
+                    
+                      <li class="nav-item">
+                        <NavLink class="nav-link" href="#">
+                            Skapa Hemsida
                         </NavLink>
                     </li>
                     <li class="nav-item">
                         <NavLink class="nav-link" href="Websites">
-                            Websites
+                            Sparade Webbsidor
                         </NavLink>
                     </li>
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="webpages">
-                            WebPages
-                        </NavLink>
+
+                   
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Meny
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 20px;">
+                            <a class="dropdown-item" href="Account/Manage">Profil</a>
+                            <a class="dropdown-item" href="Account/Manage/Email">Email</a>
+                            <a class="dropdown-item" href="Account/Manage/ChangePassword">Lösenord</a>
+                            <a class="dropdown-item" href="Account/Manage/TwoFactorAuthentication">Två stegs verifering</a>
+                            
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Om Oss</a>
+                             <a class="dropdown-item" href="webpages">webpages</a>
+                            <a class="dropdown-item" href="auth">Authentisering</a>
+                             
+                        </div>
                     </li>
                 </Authorized>
             </AuthorizeView>
@@ -56,12 +77,12 @@
                 <NotAuthorized>
                     <li class="nav-item">
                         <NavLink class="btn btn-outline-success my-2 my-sm-0" style="font-size:20px; margin-right:10px;" href="Account/Login">
-                            Login
+                            Logga In
                         </NavLink>
                     </li>
                     <li class="nav-item">
                         <NavLink class="btn btn-outline-success my-2 my-sm-0" style="font-size:20px; margin-right:10px;" href="Account/Register">
-                            Register
+                            Registera dig nu
                         </NavLink>
                     </li>
                 </NotAuthorized>
