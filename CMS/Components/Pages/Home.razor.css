@@ -134,6 +134,10 @@
   .box1 h1 {
       margin-top: 5%;
     }
+
+                 .box1 h2 {
+                   font-size: 80px;
+                 }
   
   .grid-container {
     display: grid;
@@ -146,8 +150,9 @@
 @media (min-width: 1440px) {
 
   .box1 h1 {
-      margin-top: 0px;
+      margin-top: 20px;
     }
+
   .box4 img {
     width: auto;
     height: 400px;
