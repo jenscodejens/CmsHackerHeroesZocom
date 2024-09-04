@@ -84,7 +84,8 @@
 .box4 {
   grid-column: 5 / 7;
   grid-row: 1 / 6;
-  background-color: rgb(91, 29, 214);
+  /* background-color: rgb(91, 29, 214); */
+  background-color: #2f285b;
   border-radius: 12px;
   padding: 10px;
   margin-bottom: 10px;
