@@ -28,7 +28,7 @@
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
             
-            <h2>Get Started Now</h2>
+            <h2 class="bold">Get Started Now</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="mb-3">
@@ -46,13 +46,19 @@
                 <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
+            
             <button type="submit" class="w-100 btn btn-lg btn-success form-control round-border">Signup</button>
+
+            <div class="col-mb-3 mt-4">
+                <span class="bold">Have an acount? <a class="bold no-underline" href="Account/Login"> Sign In</a></span>
+            </div>
         </EditForm>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    <div class="col-md-6 col-md-offset-2 section-color">
         <section>
-            <h3>Some Image here</h3>
+            <h3>CMS Hacker Heroes</h3>
             <hr />
+            <img src="/images/Screenshot 2024-09-03 213157.png"/>
         </section>
     </div>
 </div>
