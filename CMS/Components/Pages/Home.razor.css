@@ -28,6 +28,10 @@ background: linear-gradient(to top right, #b703f3 0%, #ffd07a 35%, #ffc0fd 66%, 
   color: white;
 }
 
+.box2 p {
+  font-size: 15px;
+}
+
 .box1 img {
   width: 100%;
   height: 370px;
@@ -73,4 +77,41 @@ background: linear-gradient(to top right, #b703f3 0%, #ffd07a 35%, #ffc0fd 66%, 
   border-radius: 12px;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+/* Stil för H2-rubrik */
+.box4 h2.display-1 {
+  margin-top: 30px;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+}
+
+/* Stil för bilden */
+.box4 img {
+  width: 550px;
+  height: 400px;
+  display: block;
+  margin: 0 auto;
+}
+
+/* Stil för knappen */
+.box4 button {
+  font-size: 35px;
+  background: linear-gradient(to top right, #b703f3 0%, #ffd07a 35%, #ffc0fd 66%);
+  border-radius: 12px;
+  color: white;
+  border-color: #b703f3;
+  text-shadow:
+    -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+/* Stil för säljande text */
+.box4 .mt-4 {
+  font-size: 20px;
+  color: white;
+  padding: 10px;
 }
