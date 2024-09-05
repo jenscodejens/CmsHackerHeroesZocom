@@ -3,13 +3,17 @@
 
 <h3>Template 1</h3>
 
-<footer class="bg-primary text-white">
-    <div class="container text-center">
-        <small>Template 1 Footer: &copy; </small>
-        @TextInput
+<footer class="text-white py-4" style="background-color:@Backgroundcolor;">
+    <div class="container">
+        <div class="text-center mb-3 mb-md-0">
+            <small class="d-block">Template 1 Footer: &copy; 2024 @TextInput1</small>
+            <small class="d-block">Author: @TextInput2</small>
+        </div>
     </div>
 </footer>
 
 @code {
-    [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 1";
+    [Parameter] public string TextInput1 { get; set; } = "Default FooterText 1 for Template 1";
+    [Parameter] public string TextInput2 { get; set; } = "Default FooterText 2 for Template 1";
+    [Parameter] public string Backgroundcolor { get; set; } = "grey";
 }

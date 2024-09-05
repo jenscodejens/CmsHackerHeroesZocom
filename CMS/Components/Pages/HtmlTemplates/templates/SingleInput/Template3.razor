@@ -2,13 +2,15 @@
 
 <h3>Template 2</h3>
 
-<footer class="bg-danger text-white">
+<footer class=" text-secondary py-4" style="background-color:@BackgroundColor;">
     <div class="container text-center">
-        <small>Template 3 Footer: &copy; </small>
-        @TextInput
+        <p class="lead mb-2">@TextInput</p>
+        <hr class="w-25 mx-auto my-3" />
+        <p class="small mb-0">&copy; 2024, All rights reserved.</p>
     </div>
 </footer>
 
 @code {
-    [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 3";
+    [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 2";
+    [Parameter] public string BackgroundColor { get; set; } = "blue"; // Default color
 }

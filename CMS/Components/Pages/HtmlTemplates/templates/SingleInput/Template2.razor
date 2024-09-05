@@ -2,13 +2,13 @@
 
 <h3>Template 2</h3>
 
-<footer class="bg-secondary text-white">
+<footer style="background-color:@BackgroundColor;">
     <div class="container text-center">
-        <small>Template 2 Footer: &copy; </small>
-        @TextInput
+        <p class="mb-0">@TextInput</p>
     </div>
 </footer>
 
 @code {
     [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 2";
+    [Parameter] public string BackgroundColor { get; set; } = "yellow"; // Default color
 }
