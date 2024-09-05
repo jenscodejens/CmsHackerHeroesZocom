@@ -14,7 +14,11 @@
             <label>@LabelText2</label>
             <input type="text" @bind="inputValue2" />
         </div>
+        
         <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
+
+        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -23,6 +27,7 @@
     [Parameter] public string LabelText1 { get; set; } = "Enter First Text:";
     [Parameter] public string LabelText2 { get; set; } = "Enter Second Text:";
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
+    [Parameter] public string Textcolor { get; set; } = "black"; // Add TextColor parameter
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
     private string inputValue1 = string.Empty;
@@ -34,7 +39,8 @@
         {
             { "TextInput1", inputValue1 },
             { "TextInput2", inputValue2 },
-            { "Backgroundcolor", Backgroundcolor }
+            { "Backgroundcolor", Backgroundcolor },
+            { "Textcolor", Textcolor } // Include Textcolor in form submission
         };
 
         await OnSubmit.InvokeAsync(formValues);

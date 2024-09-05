@@ -25,7 +25,6 @@
 @if (!string.IsNullOrEmpty(selectedTemplatePath))
 {
     <div>
-        <h4>Template Preview</h4>
         @RenderDynamicComponent(selectedTemplatePath, templateParameters)
     </div>
 }
@@ -33,7 +32,6 @@
 @if (!string.IsNullOrEmpty(selectedInputFormPath))
 {
     <div>
-        <h4>Input Form</h4>
         @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
     {
     { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
