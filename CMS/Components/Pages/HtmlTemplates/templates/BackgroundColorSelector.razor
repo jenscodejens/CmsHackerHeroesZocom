@@ -1,0 +1,19 @@
+﻿@code {
+    [Parameter] public string SelectedColor { get; set; }
+    [Parameter] public EventCallback<string> SelectedColorChanged { get; set; }
+
+    private void OnColorChanged(ChangeEventArgs e)
+    {
+        SelectedColor = e.Value.ToString();
+        SelectedColorChanged.InvokeAsync(SelectedColor);
+    }
+}
+
+<label for="backgroundColor">Select Background Color:</label>
+<select id="backgroundColor" @onchange="OnColorChanged">
+    <option value="grey">Grey</option>
+    <option value="red">Red</option>
+    <option value="blue">Blue</option>
+    <option value="green">Green</option>
+    <option value="yellow">Yellow</option>
+</select>

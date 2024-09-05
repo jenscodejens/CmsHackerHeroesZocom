@@ -1,31 +1,37 @@
-﻿@page "/inputform"
-@namespace htmltemplates.templates.InputForm
+﻿@namespace htmltemplates.templates.InputForm
+@using CMS.Components.Pages.HtmlTemplates.templates
+
 
 <h3>Input Form</h3>
 
 <div>
     <form @onsubmit="HandleSubmit">
         <div>
-            <label>@LabelText</label>
-            <input type="text" @bind="inputValue" />
+            <label>@LabelText1</label>
+            <input type="text" @bind="inputValue1" />
         </div>
+        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
         <button type="submit">Submit</button>
     </form>
 </div>
 
 @code {
-    [Parameter] public string LabelText { get; set; } = "Enter Text:";
+    [Parameter] public string LabelText1 { get; set; } = "Enter First Text:";
+    [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
-    private string inputValue = string.Empty;
+    private string inputValue1 = string.Empty;
+    private string inputValue2 = string.Empty;
 
     private async Task HandleSubmit()
     {
         var formValues = new Dictionary<string, object>
         {
-            { "TextInput", inputValue }
+            { "TextInput1", inputValue1 },
+            { "Backgroundcolor", Backgroundcolor }
         };
 
         await OnSubmit.InvokeAsync(formValues);
     }
 }
+
