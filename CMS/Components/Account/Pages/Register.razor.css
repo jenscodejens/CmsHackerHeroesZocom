@@ -1,0 +1,37 @@
+.register-page {
+    --primary-background-green-success: #198754;
+    --secondary-color-orange: #D38F5E;
+}
+
+
+.register-page .section-color {
+    background-color: var(--primary-background-green-success);
+    color: var(--secondary-color-orange);
+}
+
+.register-page .bold {
+    font-weight: bold;
+}
+
+.register-page .no-underline {
+    text-decoration: none;
+}
+
+.register-page .spaced-heading {
+    margin-bottom: 80px;
+}
+
+.register-page .form-control.round-border {
+    border-radius: 40px;
+    padding: 10px;
+}
+
+.register-page .round-border {
+    border-radius: 40px;
+    padding: 10px;
+}
+
+.register-page .label-bold {
+    font-weight: bold;
+}
+

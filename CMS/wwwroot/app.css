@@ -1,8 +1,3 @@
-:root {
-    --primary-background-green-success: #198754;
-    --secondary-color-orange: #D38F5E;
-}
-
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
@@ -17,32 +12,6 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
-.section-color{
-    background-color: var(--primary-background-green-success);
-    color: var(--secondary-color-orange)
-}
-
-.bold {
-    font-weight: bold;
-}
-
-.no-underline {
-    text-decoration: none;
-}
-
-.spaced-heading {
-    margin-bottom: 80px;
-}
-
-.round-border {
-    border-radius: 15px;
-    padding: 10px;
-}
-
-.label-bold {
-    font-weight: bold;
-}
-
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 
@@ -54,11 +23,6 @@ a, .btn-link {
 
 h1:focus {
     outline: none;
-}
-
-.rounded-input {
-   border-radius: 15px;
-   padding: 10px; 
 }
 
 .valid.modified:not([type=checkbox]) {
