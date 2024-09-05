@@ -373,3 +373,6 @@ CMS/appsettings.json
 .vshistory
 *.vs
 .vscode/settings.json
+
+# Rider IDE 
+.idea/
