@@ -1,5 +1,6 @@
 ﻿@page "/Account/Register"
 
+
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
@@ -15,43 +16,52 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Register</PageTitle>
 
-<h1>Register</h1>
+<PageTitle>Register</PageTitle>
+<div class="register-page">
+
+<h1 class="spaced-heading">Register</h1>
 
 <div class="row">
     <div class="col-md-4">
         <StatusMessage Message="@Message" />
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
-            <h2>Create a new account.</h2>
+            
+            <h2 class="bold">Get Started Now</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
+            <div class="mb-3">
+                <label for="email" class="label-bold">Email address</label>
+                <InputText id="email" @bind-Value="Input.Email" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="Enter your email" />
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="password">Password</label>
+            <div class="mb-3">
+                <label for="password" class="label-bold">Password</label>
+                <InputText id="password" type="password" @bind-Value="Input.Password" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Enter password" />
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
-                <label for="confirm-password">Confirm Password</label>
+            <div class="mb-3">
+                <label for="confirm-password" class="label-bold">Confirm Password</label>
+                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            
+            <button type="submit" class="w-100 btn btn-lg btn-success form-control round-border">Signup</button>
+
+            <div class="col-mb-3 mt-4">
+                <span class="bold">Have an acount? <a class="bold no-underline" href="Account/Login"> Sign In</a></span>
+            </div>
         </EditForm>
     </div>
-    <div class="col-md-6 col-md-offset-2">
+    <div class="col-md-6 col-md-offset-2 section-color">
         <section>
-            <h3>Use another service to register.</h3>
+            <h3>CMS Hacker Heroes</h3>
             <hr />
-            <ExternalLoginPicker />
+            <img src="/images/Screenshot 2024-09-03 213157.png"/>
         </section>
     </div>
+</div>
 </div>
 
 @code {
@@ -97,7 +107,7 @@
                 "Account/RegisterConfirmation",
                 new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
         }
-
+    
         await SignInManager.SignInAsync(user, isPersistent: false);
         RedirectManager.RedirectTo(ReturnUrl);
     }
