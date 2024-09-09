@@ -367,9 +367,12 @@ FodyWeavers.xsd
 
 # Win / Mac users use different syntax
 appsettings.json
-
+**/appsettings.json
+CMS/appsettings.json
 # VS History extension
 .vshistory
 *.vs
-CMS/appsettings.json
 .vscode/settings.json
+
+# Rider IDE 
+.idea/
