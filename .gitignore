@@ -376,3 +376,13 @@ CMS/appsettings.json
 
 # Rider IDE 
 .idea/
+# Ignore .idea directory
+
+.idea/.idea.CMS/.idea/
+
+# Ignore qodana.yaml file
+qodana.yaml
+
+git rm -r --cached .idea
+git rm -r --cached .idea/.idea.CMS/.idea
+git rm --cached qodana.yaml
