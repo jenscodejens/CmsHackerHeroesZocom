@@ -383,6 +383,3 @@ CMS/appsettings.json
 # Ignore qodana.yaml file
 qodana.yaml
 
-git rm -r --cached .idea
-git rm -r --cached .idea/.idea.CMS/.idea
-git rm --cached qodana.yaml
