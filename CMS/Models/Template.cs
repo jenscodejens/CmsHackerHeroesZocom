@@ -1,4 +1,6 @@
-﻿namespace CMS.Models
+﻿using CMS.Entities;
+
+namespace CMS.Models
 {
     public class Template
     {

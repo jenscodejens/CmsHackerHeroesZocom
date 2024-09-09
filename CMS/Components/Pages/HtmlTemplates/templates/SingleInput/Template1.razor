@@ -1,5 +1,5 @@
 ﻿@page "/temp1"
-@namespace htmltemplates.templates.SingleInput
+@namespace Templates.SingleInput
 
 <h3>Template 1</h3>
 
@@ -18,3 +18,29 @@
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; // Default text color
 }
+
+
+@* @code {
+    [Parameter] public Dictionary<string, object> Inputs { get; set; }
+    [Parameter] public string Backgroundcolor { get; set; } = "grey";
+    [Parameter] public string Textcolor { get; set; } = "black";
+}
+
+<footer class="text-white py-4" style="background-color:@Backgroundcolor;">
+    <div class="container">
+        <div class="text-center mb-3 mb-md-0" style="color:@Textcolor;">
+            @if (Inputs != null && Inputs.Any())
+            {
+                @foreach (var input in Inputs)
+                {
+                    <small class="d-block">@input.Key: @input.Value</small>
+                }
+            }
+            else
+            {
+                <small>No inputs provided.</small>
+            }
+        </div>
+    </div>
+</footer>
+ *@

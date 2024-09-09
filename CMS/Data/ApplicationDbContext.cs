@@ -48,7 +48,10 @@ namespace CMS.Data
                 c.HasOne(c => c.WebPages)
                     .WithMany(w => w.Contents)
                     .HasForeignKey(c => c.WebPageId);
+                c.HasOne(c => c.Template)
+                 .WithMany()  // No reverse navigation
+                 .HasForeignKey(c => c.TemplateId);
             });
-  }
+        }
     }
 }

@@ -1,0 +1,87 @@
+﻿@page "/preview/{contentId:int}"
+@using CMS.Data
+@using CMS.Models
+@using CMS.Entities
+@inject ApplicationDbContext DbContext
+@code {
+    [Parameter] public int contentId { get; set; }
+
+    private string selectedTemplatePath;
+    private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load the content from the database using the contentId
+        var content = await DbContext.Contents.FindAsync(contentId);
+
+        if (content != null)
+        {
+            // Deserialize TextInputsJson to extract the inputs dynamically
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(content.TextInputsJson);
+
+            // Set the template path based on the TemplateId
+            var template = await DbContext.Templates.FindAsync(content.TemplateId);
+            if (template != null)
+            {
+                selectedTemplatePath = template.TemplatePath;
+
+                // Pass all text inputs to templateParameters
+                templateParameters.Clear();
+                if (textInputs != null)
+                {
+                    foreach (var input in textInputs)
+                    {
+                        templateParameters[input.Key] = input.Value;
+                    }
+                }
+
+                // Add the colors to the template parameters
+                templateParameters["Backgroundcolor"] = content.Backgroundcolor ?? "grey";
+                templateParameters["Textcolor"] = content.Textcolor ?? "black";
+            }
+            else
+            {
+                Console.WriteLine($"Template with ID {content.TemplateId} not found.");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Content with ID {contentId} not found.");
+        }
+    }
+
+    private RenderFragment RenderDynamicComponent(string componentPath, Dictionary<string, object> parameters)
+    {
+        if (!string.IsNullOrEmpty(componentPath))
+        {
+            var type = Type.GetType(componentPath);
+            if (type != null)
+            {
+                return builder =>
+                {
+                    builder.OpenComponent(0, type);
+                    foreach (var parameter in parameters)
+                    {
+                        builder.AddAttribute(1, parameter.Key, parameter.Value);
+                    }
+                    builder.CloseComponent();
+                };
+            }
+            else
+            {
+                return builder => builder.AddContent(0, $"Component type '{componentPath}' not found.");
+            }
+        }
+        return builder => builder.AddContent(0, "No component selected.");
+    }
+}
+
+<h3>Content Preview</h3>
+@if (!string.IsNullOrEmpty(selectedTemplatePath))
+{
+    @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+}
+else
+{
+    <p>No content available for preview.</p>
+}
