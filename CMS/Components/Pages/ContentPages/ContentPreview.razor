@@ -2,6 +2,7 @@
 @using CMS.Data
 @using CMS.Models
 @using CMS.Entities
+@using System.Text.Json
 @inject ApplicationDbContext DbContext
 @code {
     [Parameter] public int contentId { get; set; }
@@ -17,7 +18,7 @@
         if (content != null)
         {
             // Deserialize TextInputsJson to extract the inputs dynamically
-            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(content.TextInputsJson);
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
 
             // Set the template path based on the TemplateId
             var template = await DbContext.Templates.FindAsync(content.TemplateId);
@@ -31,7 +32,8 @@
                 {
                     foreach (var input in textInputs)
                     {
-                        templateParameters[input.Key] = input.Value;
+                        // Convert JsonElement to the appropriate type
+                        templateParameters[input.Key] = ConvertJsonElement(input.Value);
                     }
                 }
 
@@ -47,6 +49,28 @@
         else
         {
             Console.WriteLine($"Content with ID {contentId} not found.");
+        }
+    }
+
+    // Helper method to convert JsonElement to the appropriate .NET type
+    private object ConvertJsonElement(System.Text.Json.JsonElement jsonElement)
+    {
+        switch (jsonElement.ValueKind)
+        {
+            case JsonValueKind.String:
+                return jsonElement.GetString();
+            case JsonValueKind.Number:
+                // Use GetDecimal for general number conversion, or adjust as needed
+                return jsonElement.GetDecimal();
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                return jsonElement.GetBoolean();
+            case JsonValueKind.Object:
+                return jsonElement.GetRawText(); // Handle objects if needed
+            case JsonValueKind.Array:
+                return jsonElement.ToString(); // Handle arrays if needed
+            default:
+                return null;
         }
     }
 
@@ -74,6 +98,7 @@
         }
         return builder => builder.AddContent(0, "No component selected.");
     }
+
 }
 
 <h3>Content Preview</h3>
