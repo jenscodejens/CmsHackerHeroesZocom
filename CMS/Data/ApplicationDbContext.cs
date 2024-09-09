@@ -1,4 +1,5 @@
-using CMS.Entities;
+using System.Net.Mime;
+using  CMS.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -14,6 +15,7 @@ namespace CMS.Data
         public DbSet<Content> Contents { get; set; }
         public DbSet<WebPage> WebPages { get; set; }
         public DbSet<WebSite> WebSites { get; set; }
+        public DbSet<WebSiteVisit> WebSiteVisits { get; set; }
   
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

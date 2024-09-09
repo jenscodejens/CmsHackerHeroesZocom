@@ -1,13 +1,21 @@
-﻿@inherits LayoutComponentBase
+﻿
+@inherits LayoutComponentBase
+
 
 <div class="page">
-    
     <main>
+        <NavExample/>
+        <div class="main">
+            <div class="content px-4">
+                <h1> @WebSiteId</h1>
 
-    <NavExample/>
-        <article class="content px-4">
-            @Body
-        </article>
+                <WebSiteVisitorCounter WebSiteId="@WebSiteId" />
+
+                <WebsiteVisitsSummary WebSiteId="@WebSiteId" />
+
+                @Body   
+            </div>
+        </div>
     </main>
 </div>
 
@@ -16,3 +24,15 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+[Parameter]
+public string WebSiteId { get; set; }
+
+protected override void OnInitialized()
+{
+// In a real scenario, you would get this from the current website context
+    WebSiteId = "";
+}
+}
+

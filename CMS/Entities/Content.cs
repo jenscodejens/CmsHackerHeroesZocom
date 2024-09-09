@@ -1,8 +1,4 @@
-﻿using CMS.Entities;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace CMS.Entities
+﻿namespace CMS.Entities
 {
   
     public class Content
