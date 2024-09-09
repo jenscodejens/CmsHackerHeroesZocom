@@ -10,10 +10,11 @@
 }
 
 <label for="backgroundColor">Select Background Color:</label>
-<select id="backgroundColor" @onchange="OnColorChanged">
+<select id="backgroundColor" @onchange="OnColorChanged" value="@SelectedColor">
     <option value="grey">Grey</option>
     <option value="red">Red</option>
     <option value="blue">Blue</option>
     <option value="green">Green</option>
     <option value="yellow">Yellow</option>
 </select>
+

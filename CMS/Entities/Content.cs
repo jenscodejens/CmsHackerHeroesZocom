@@ -1,11 +1,8 @@
-﻿using CMS.Entities;
-using CMS.Models;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using CMS.Models;
 
 namespace CMS.Entities
 {
-  
+
     public class Content
     {
         public int ContentId { get; set; }

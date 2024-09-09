@@ -4,16 +4,17 @@
 @using CMS.Entities
 @using System.Text.Json
 @inject ApplicationDbContext DbContext
-@code {
-    [Parameter] public int contentId { get; set; }
 
-    private string selectedTemplatePath;
+@code {
+    [Parameter] public int ContentId { get; set; }
+
+    private string selectedTemplatePath = string.Empty;
     private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
 
     protected override async Task OnInitializedAsync()
     {
-        // Load the content from the database using the contentId
-        var content = await DbContext.Contents.FindAsync(contentId);
+        // Load the content from the database using the ContentId
+        var content = await DbContext.Contents.FindAsync(ContentId);
 
         if (content != null)
         {
@@ -40,6 +41,7 @@
                 // Add the colors to the template parameters
                 templateParameters["Backgroundcolor"] = content.Backgroundcolor ?? "grey";
                 templateParameters["Textcolor"] = content.Textcolor ?? "black";
+                templateParameters["Contentname"] = content.ContentName ?? "no info entered"; /* ny */
             }
             else
             {
@@ -48,19 +50,17 @@
         }
         else
         {
-            Console.WriteLine($"Content with ID {contentId} not found.");
+            Console.WriteLine($"Content with ID {ContentId} not found.");
         }
     }
 
-    // Helper method to convert JsonElement to the appropriate .NET type
-    private object ConvertJsonElement(System.Text.Json.JsonElement jsonElement)
+    private object? ConvertJsonElement(JsonElement jsonElement)
     {
         switch (jsonElement.ValueKind)
         {
             case JsonValueKind.String:
                 return jsonElement.GetString();
             case JsonValueKind.Number:
-                // Use GetDecimal for general number conversion, or adjust as needed
                 return jsonElement.GetDecimal();
             case JsonValueKind.True:
             case JsonValueKind.False:
@@ -98,7 +98,6 @@
         }
         return builder => builder.AddContent(0, "No component selected.");
     }
-
 }
 
 <h3>Content Preview</h3>
@@ -110,3 +109,4 @@ else
 {
     <p>No content available for preview.</p>
 }
+
