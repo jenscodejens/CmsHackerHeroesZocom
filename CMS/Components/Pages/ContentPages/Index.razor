@@ -25,6 +25,7 @@
     <PropertyColumn Property="content => content.TemplateId" />
 
     <TemplateColumn Context="content">
+        <a href="@($"/preview/{content.ContentId}")">Preview</a>
         <a href="@($"content/edit?contentid={content.ContentId}")">Edit</a> |
         <a href="@($"content/details?contentid={content.ContentId}")">Details</a> |
         <a href="@($"content/delete?contentid={content.ContentId}")">Delete</a>
