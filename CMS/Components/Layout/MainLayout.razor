@@ -1,5 +1,5 @@
-﻿
-@inherits LayoutComponentBase
+﻿@inherits LayoutComponentBase
+@using CMS.Components
 
 
 <div class="page">
@@ -7,15 +7,16 @@
         <NavExample/>
         <div class="main">
             <div class="content px-4">
-                <h1> @WebSiteId</h1>
+                <h1>@WebSiteId</h1>
 
                 <WebSiteVisitorCounter WebSiteId="@WebSiteId" />
 
                 <WebsiteVisitsSummary WebSiteId="@WebSiteId" />
 
-                @Body   
+                @Body
             </div>
         </div>
+        <Footer></Footer>
     </main>
 </div>
 
@@ -32,7 +33,10 @@ public string WebSiteId { get; set; }
 protected override void OnInitialized()
 {
 // In a real scenario, you would get this from the current website context
-    WebSiteId = "";
+WebSiteId = "";
 }
 }
+
+
+
 
