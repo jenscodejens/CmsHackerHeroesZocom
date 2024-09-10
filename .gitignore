@@ -376,3 +376,10 @@ CMS/appsettings.json
 
 # Rider IDE 
 .idea/
+# Ignore .idea directory
+
+.idea/.idea.CMS/.idea/
+
+# Ignore qodana.yaml file
+qodana.yaml
+
