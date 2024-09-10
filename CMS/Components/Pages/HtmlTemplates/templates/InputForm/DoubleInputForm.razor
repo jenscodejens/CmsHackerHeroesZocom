@@ -61,6 +61,7 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
+    [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
     [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
     [Parameter] public string LabelText2 { get; set; } = "Enter First Text:";
     [Parameter] public string LabelText3 { get; set; } = "Enter Second Text:";
@@ -124,7 +125,7 @@
                 }),
                 Backgroundcolor = Backgroundcolor,
                 Textcolor = Textcolor,
-                TemplateId = 1
+                TemplateId = TemplateId
             };
 
         context.Contents.Add(content);

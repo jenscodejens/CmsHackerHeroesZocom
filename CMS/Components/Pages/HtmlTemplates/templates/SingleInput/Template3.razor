@@ -1,4 +1,4 @@
-﻿@namespace htmltemplates.templates.SingleInput
+﻿@namespace Templates.SingleInput
 
 <h3>Template 2</h3>
 
@@ -11,6 +11,7 @@
 </footer>
 
 @code {
+    [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
     [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 2";
     [Parameter] public string Backgroundcolor { get; set; } = "blue"; // Default color
     [Parameter] public string Textcolor { get; set; } = "black"; // Add Textcolor parameter

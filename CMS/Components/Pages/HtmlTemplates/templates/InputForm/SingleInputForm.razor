@@ -17,6 +17,7 @@
 </div>
 
 @code {
+    [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
     [Parameter] public string LabelText1 { get; set; } = "Enter First Text:";
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; // Add TextColor parameter

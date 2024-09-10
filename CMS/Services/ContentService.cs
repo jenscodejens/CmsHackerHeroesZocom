@@ -8,42 +8,31 @@ namespace CMS.Services
 {
     public class ContentService
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
 
-        public ContentService(ApplicationDbContext context)
+        // Inject the IDbContextFactory instead of ApplicationDbContext directly
+        public ContentService(IDbContextFactory<ApplicationDbContext> dbContextFactory)
         {
-            _context = context;
+            _dbContextFactory = dbContextFactory;
         }
 
-        // Save the text inputs as JSON using a dictionary
-        public async Task SaveContentAsync(int contentId, Dictionary<string, string> textInputs, string backgroundcolor, string textcolor)
+        public async Task SaveContentAsync(string contentName, int webPageId, Dictionary<string, string> textInputs, string backgroundColor, string textColor, int templateId)
         {
-            var content = await _context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+            // Create a new context instance on-demand using the factory
+            await using var context = _dbContextFactory.CreateDbContext();
 
-            if (content != null)
+            var content = new Content
             {
-                // Serialize the dictionary to JSON
-                content.TextInputsJson = JsonSerializer.Serialize(textInputs); // or JsonConvert.SerializeObject(textInputs) for Newtonsoft.Json
-                content.Backgroundcolor = backgroundcolor;
-                content.Textcolor = textcolor;
+                ContentName = contentName,
+                WebPageId = webPageId,
+                TextInputsJson = JsonSerializer.Serialize(textInputs), // or use Newtonsoft.Json
+                Backgroundcolor = backgroundColor,
+                Textcolor = textColor,
+                TemplateId = templateId
+            };
 
-                _context.Update(content);
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        // Retrieve content and deserialize the JSON into a dictionary
-        public async Task<Content> GetContentWithTemplateAsync(int contentId)
-        {
-            var content = await _context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
-
-            if (content != null && !string.IsNullOrEmpty(content.TextInputsJson))
-            {
-                // Deserialize the JSON back into a dictionary
-                //content.TextInputs = JsonSerializer.Deserialize<Dictionary<string, string>>(content.TextInputsJson); // or JsonConvert.DeserializeObject<Dictionary<string, string>>(content.TextInputsJson) for Newtonsoft.Json
-            }
-
-            return content;
+            context.Contents.Add(content);
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -33,9 +33,10 @@
 {
     <div>
         @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
-    {
-    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
-    })
+        {
+            { "TemplateId", templateParameters["TemplateId"] },
+            { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
+        })
     </div>
 }
 
@@ -57,8 +58,11 @@
         if (selectedTemplate != null)
         {
             selectedInputFormPath = selectedTemplate.InputFormPath; // Get the input form path
-                                                                    // Initialize parameters for the selected template
+                                                                    
+            // Initialize parameters for the selected template
             templateParameters.Clear();
+
+            templateParameters["TemplateId"] = selectedTemplate.TemplateId; // Pass the TemplateId
         }
         else
         {
