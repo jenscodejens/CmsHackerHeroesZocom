@@ -3,7 +3,8 @@
 @using CMS.Models
 @using CMS.Entities
 @using System.Text.Json
-@inject ApplicationDbContext DbContext
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 
 @code {
     [Parameter] public int ContentId { get; set; }
@@ -13,8 +14,12 @@
 
     protected override async Task OnInitializedAsync()
     {
+
+        // Create a new DbContext instance using the factory
+        using var dbContext = DbContextFactory.CreateDbContext();
+
         // Load the content from the database using the ContentId
-        var content = await DbContext.Contents.FindAsync(ContentId);
+        var content = await dbContext.Contents.FindAsync(ContentId);
 
         if (content != null)
         {
@@ -22,7 +27,7 @@
             var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
 
             // Set the template path based on the TemplateId
-            var template = await DbContext.Templates.FindAsync(content.TemplateId);
+            var template = await dbContext.Templates.FindAsync(content.TemplateId);
             if (template != null)
             {
                 selectedTemplatePath = template.TemplatePath;
