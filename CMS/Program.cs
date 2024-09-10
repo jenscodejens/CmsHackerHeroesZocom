@@ -32,7 +32,7 @@ namespace CMS
             // add visitorCounterService 
             builder.Services.AddScoped<VisitorCounterService>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-            builder.Services.AddScoped<ContentService>();
+            //builder.Services.AddScoped<ContentService>();
 
             builder.Services.AddAuthentication(options =>
                 {

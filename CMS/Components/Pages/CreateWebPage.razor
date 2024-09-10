@@ -3,7 +3,7 @@
 @using CMS.Data
 @using CMS.Models
 @using Microsoft.EntityFrameworkCore
-@inject ApplicationDbContext DbContext
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
 <h3>Create a Web Page</h3>
@@ -48,7 +48,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        templates = await DbContext.Templates.ToListAsync();
+        using var dbContext = DbContextFactory.CreateDbContext();
+        templates = await dbContext.Templates.ToListAsync();
     }
 
     private void OnTemplateChanged(ChangeEventArgs e)

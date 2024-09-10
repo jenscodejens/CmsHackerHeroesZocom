@@ -17,7 +17,6 @@ namespace CMS.Data
         public DbSet<WebPage> WebPages { get; set; }
         public DbSet<WebSite> WebSites { get; set; }
         public DbSet<WebSiteVisit> WebSiteVisits { get; set; }
-  
         public DbSet<Template> Templates { get; set; }  // Map to the Templates table
 
 
