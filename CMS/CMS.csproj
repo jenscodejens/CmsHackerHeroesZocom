@@ -20,4 +20,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0-preview.7.24413.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Components\BlazorComponent\Footer.css" />
+  </ItemGroup>
+
+
 </Project>
