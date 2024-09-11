@@ -1,0 +1,18 @@
+﻿@namespace Templates.SingleInput
+
+<h3>Template 2</h3>
+
+<footer class=" text-secondary py-4" style="background-color:@Backgroundcolor; color:@Textcolor;">
+    <div class="container text-center">
+        <p class="lead mb-2">@TextInput</p>
+        <hr class="w-25 mx-auto my-3" />
+        <p class="small mb-0">&copy; 2024, All rights reserved.</p>
+    </div>
+</footer>
+
+@code {
+    [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
+    [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 2";
+    [Parameter] public string Backgroundcolor { get; set; } = "blue"; // Default color
+    [Parameter] public string Textcolor { get; set; } = "black"; // Add Textcolor parameter
+}

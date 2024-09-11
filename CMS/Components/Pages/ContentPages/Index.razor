@@ -1,0 +1,44 @@
+﻿@page "/content"
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using CMS.Entities
+@using CMS.Data
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@implements IAsyncDisposable
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="content/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Contents">
+    <PropertyColumn Property="content => content.ContentId" />
+    <PropertyColumn Property="content => content.WebPageId" />
+    <PropertyColumn Property="content => content.ContentName" />
+    <PropertyColumn Property="content => content.TextInputsJson" />
+    <PropertyColumn Property="content => content.Backgroundcolor" />
+    <PropertyColumn Property="content => content.Textcolor" />
+    <PropertyColumn Property="content => content.TemplateId" />
+
+    <TemplateColumn Context="content">
+        <a href="@($"/preview/{content.ContentId}")">Preview</a> |
+        <a href="@($"content/edit?contentid={content.ContentId}")">Edit</a> |
+        <a href="@($"content/details?contentid={content.ContentId}")">Details</a> |
+        <a href="@($"content/delete?contentid={content.ContentId}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    ApplicationDbContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

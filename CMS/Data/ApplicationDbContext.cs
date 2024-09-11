@@ -1,5 +1,6 @@
+using CMS.Entities;
+using CMS.Models;
 using System.Net.Mime;
-using  CMS.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection.Emit;
@@ -16,7 +17,8 @@ namespace CMS.Data
         public DbSet<WebPage> WebPages { get; set; }
         public DbSet<WebSite> WebSites { get; set; }
         public DbSet<WebSiteVisit> WebSiteVisits { get; set; }
-  
+        public DbSet<Template> Templates { get; set; }  // Map to the Templates table
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -48,7 +50,10 @@ namespace CMS.Data
                 c.HasOne(c => c.WebPages)
                     .WithMany(w => w.Contents)
                     .HasForeignKey(c => c.WebPageId);
+                c.HasOne(c => c.Template)
+                 .WithMany()  // No reverse navigation
+                 .HasForeignKey(c => c.TemplateId);
             });
-  }
+        }
     }
 }

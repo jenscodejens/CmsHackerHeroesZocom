@@ -1,0 +1,117 @@
+﻿@page "/preview/{contentId:int}"
+@using CMS.Data
+@using CMS.Models
+@using CMS.Entities
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+@code {
+    [Parameter] public int ContentId { get; set; }
+
+    private string selectedTemplatePath = string.Empty;
+    private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        // Create a new DbContext instance using the factory
+        using var dbContext = DbContextFactory.CreateDbContext();
+
+        // Load the content from the database using the ContentId
+        var content = await dbContext.Contents.FindAsync(ContentId);
+
+        if (content != null)
+        {
+            // Deserialize TextInputsJson to extract the inputs dynamically
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
+
+            // Set the template path based on the TemplateId
+            var template = await dbContext.Templates.FindAsync(content.TemplateId);
+            if (template != null)
+            {
+                selectedTemplatePath = template.TemplatePath;
+
+                // Pass all text inputs to templateParameters
+                templateParameters.Clear();
+                if (textInputs != null)
+                {
+                    foreach (var input in textInputs)
+                    {
+                        // Convert JsonElement to the appropriate type
+                        templateParameters[input.Key] = ConvertJsonElement(input.Value);
+                    }
+                }
+
+                // Add the colors to the template parameters
+                templateParameters["Backgroundcolor"] = content.Backgroundcolor ?? "grey";
+                templateParameters["Textcolor"] = content.Textcolor ?? "black";
+                templateParameters["Contentname"] = content.ContentName ?? "no info entered"; /* ny */
+            }
+            else
+            {
+                Console.WriteLine($"Template with ID {content.TemplateId} not found.");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Content with ID {ContentId} not found.");
+        }
+    }
+
+    private object? ConvertJsonElement(JsonElement jsonElement)
+    {
+        switch (jsonElement.ValueKind)
+        {
+            case JsonValueKind.String:
+                return jsonElement.GetString();
+            case JsonValueKind.Number:
+                return jsonElement.GetDecimal();
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                return jsonElement.GetBoolean();
+            case JsonValueKind.Object:
+                return jsonElement.GetRawText(); // Handle objects if needed
+            case JsonValueKind.Array:
+                return jsonElement.ToString(); // Handle arrays if needed
+            default:
+                return null;
+        }
+    }
+
+    private RenderFragment RenderDynamicComponent(string componentPath, Dictionary<string, object> parameters)
+    {
+        if (!string.IsNullOrEmpty(componentPath))
+        {
+            var type = Type.GetType(componentPath);
+            if (type != null)
+            {
+                return builder =>
+                {
+                    builder.OpenComponent(0, type);
+                    foreach (var parameter in parameters)
+                    {
+                        builder.AddAttribute(1, parameter.Key, parameter.Value);
+                    }
+                    builder.CloseComponent();
+                };
+            }
+            else
+            {
+                return builder => builder.AddContent(0, $"Component type '{componentPath}' not found.");
+            }
+        }
+        return builder => builder.AddContent(0, "No component selected.");
+    }
+}
+
+<h3>Content Preview</h3>
+@if (!string.IsNullOrEmpty(selectedTemplatePath))
+{
+    @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+}
+else
+{
+    <p>No content available for preview.</p>
+}
+
