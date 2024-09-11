@@ -24,7 +24,7 @@ else
                 <ValidationSummary class="text-danger" />
                 <div class="mb-3">
                     <label for="contentid" class="form-label">ContentId:</label>
-                    <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" />
+                    <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly/>
                     <ValidationMessage For="() => Content.ContentId" class="text-danger" />
                 </div>
                 <div class="mb-3">
