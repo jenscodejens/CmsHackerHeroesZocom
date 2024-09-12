@@ -9,31 +9,56 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>Index Web Pages</h1>
 
 <p>
     <a href="webpages/create">Create New</a>
 </p>
 
-<QuickGrid Class="table" Items="context.WebPages">
-    <PropertyColumn Property="webpage => webpage.WebSiteId" />
-    <PropertyColumn Property="webpage => webpage.Header" />
-    <PropertyColumn Property="webpage => webpage.Body" />
-    <PropertyColumn Property="webpage => webpage.Footer" />
+@if (webpages == null || !webpages.Any())
+{
+    <p>No webpages available.</p>
+}
+else
+{
+    <QuickGrid Class="table" Items="webpages"> <!-- Changed from context.WebPages to webpages -->
+        <PropertyColumn Property="webpage => webpage.WebPageId" />
+        <PropertyColumn Property="webpage => webpage.WebSiteId" />
+        <PropertyColumn Property="webpage => webpage.Header" />
+        <PropertyColumn Property="webpage => webpage.Body" />
+        <PropertyColumn Property="webpage => webpage.Footer" />
 
-    <TemplateColumn Context="webpage">
-        <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
-        <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Details</a> |
-        <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="webpage">
+            <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> |
+            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
+            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Details</a> |
+            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
 
 @code {
+    IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
+    [SupplyParameterFromQuery]
+    public int? WebSiteId { get; set; }
+
     ApplicationDbContext context = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
+
+        if (WebSiteId.HasValue)
+        {
+            // Fetch WebPages filtered by WebSiteId
+            webpages = context.WebPages
+                .Where(wp => wp.WebSiteId == WebSiteId.Value);
+        }
+        else
+        {
+            // Fetch all WebPages if no WebSiteId is provided
+            webpages = context.WebPages;
+        }
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

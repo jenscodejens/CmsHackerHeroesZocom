@@ -12,6 +12,8 @@
 
 @code {
     [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
+    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+
     [Parameter] public string TextInput { get; set; } = "Default FooterText for Template 2";
     [Parameter] public string Backgroundcolor { get; set; } = "blue"; // Default color
     [Parameter] public string Textcolor { get; set; } = "black"; // Add Textcolor parameter

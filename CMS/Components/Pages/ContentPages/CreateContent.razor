@@ -1,4 +1,4 @@
-﻿@page "/createwebpage"
+﻿@page "/content/createcontent"
 @namespace htmltemplates.templates
 @using CMS.Data
 @using CMS.Models
@@ -6,7 +6,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
-<h3>Create a Web Page</h3>
+<h3>Create a Content</h3>
 
 <div>
     <label for="templateDropdown">Choose a Template:</label>
@@ -35,12 +35,17 @@
         @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
         {
             { "TemplateId", templateParameters["TemplateId"] },
+            { "WebPageId", templateParameters["WebPageId"] },
             { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
         })
     </div>
 }
 
 @code {
+
+    [SupplyParameterFromQuery]
+    public int? WebPageId { get; set; } // Accept WebPageId from query parameters
+
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;
     private string selectedInputFormPath;
@@ -50,6 +55,13 @@
     {
         using var dbContext = DbContextFactory.CreateDbContext();
         templates = await dbContext.Templates.ToListAsync();
+
+        // Initialize parameters with WebPageId
+        if (WebPageId.HasValue)
+        {
+            templateParameters["WebPageId"] = WebPageId.Value;
+        }
+
     }
 
     private void OnTemplateChanged(ChangeEventArgs e)
@@ -62,8 +74,14 @@
                                                                     
             // Initialize parameters for the selected template
             templateParameters.Clear();
-
             templateParameters["TemplateId"] = selectedTemplate.TemplateId; // Pass the TemplateId
+
+            // Add WebPageId to parameters if available
+            if (WebPageId.HasValue)
+            {
+                templateParameters["WebPageId"] = WebPageId.Value;
+            }
+
         }
         else
         {
