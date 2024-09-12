@@ -12,8 +12,8 @@
 <h1>Index Content</h1>
 
 <p>
-    <a href="content/create">Create New</a>
-    <a href="content/create">Create New content Template</a>
+    <a href="content/create">(Scaffolded)Create New</a> |
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Create New</a>
 </p>
 
 @if (contents == null || !contents.Any())
