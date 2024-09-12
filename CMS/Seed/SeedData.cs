@@ -149,6 +149,12 @@ namespace CMS.Seed
                     TemplatePath = "Templates.SingleInput.Template1Header",
                     InputFormPath = "Templates.InputForm.DoubleInputForm"
                 },
+                  new Template
+                {
+                    TemplateType = "Link",
+                    TemplatePath = "Templates.SingleInput.Template1Link",
+                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                },
             };
 
             return list;
