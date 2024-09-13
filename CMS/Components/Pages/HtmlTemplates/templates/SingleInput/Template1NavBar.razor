@@ -1,0 +1,27 @@
+﻿@namespace Templates.SingleInput
+
+<h3>Header Template 1</h3>
+
+<<nav>
+   <ul>
+        <li><a href="@TextInput2">@TextInput1</a></li>
+        <li><a href="@TextInput4">@TextInput3</a></li>
+        <li><a href="@TextInput6">@TextInput5</a></li>
+        <li><a href="@TextInput9">@TextInput7</a></li>
+   </ul>
+</nav>
+
+@code {
+    [Parameter] public int TemplateId { get; set; }
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+    [Parameter] public string TextInput1 { get; set; } = "Meny Item 1";
+    [Parameter] public string TextInput2 { get; set; } = "Meny URL 1";
+    [Parameter] public string TextInput3 { get; set; } = "Meny Item 2";
+    [Parameter] public string TextInput4 { get; set; } = "Meny URL 2";
+    [Parameter] public string TextInput5 { get; set; } = "Meny Item 3";
+    [Parameter] public string TextInput6 { get; set; } = "Meny URL 3";
+    [Parameter] public string TextInput7 { get; set; } = "Meny Item 3";
+    [Parameter] public string TextInput8 { get; set; } = "Meny URL 3";
+    [Parameter] public string Backgroundcolor { get; set; } = "grey";
+    [Parameter] public string Textcolor { get; set; } = "black"; 
+}
