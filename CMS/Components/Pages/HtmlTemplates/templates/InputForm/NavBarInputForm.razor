@@ -68,6 +68,8 @@
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
     [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
+    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+
     [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
     [Parameter] public string LabelText2 { get; set; } = "Enter First Item Name:";
     [Parameter] public string LabelText3 { get; set; } = "Enter First URL:";
@@ -175,10 +177,17 @@
     {
         await using var context = DbFactory.CreateDbContext();
 
+        // Ensure WebPageId exists in WebPages table
+        var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
+        if (!webPageExists)
+        {
+            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+        }
+
         var content = new Content
             {
                 ContentName = inputValueContentName,
-                WebPageId = 2,
+                WebPageId = WebPageId,
                 TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
 
@@ -197,7 +206,16 @@
             };
 
         context.Contents.Add(content);
-        await context.SaveChangesAsync();
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateException ex)
+        {
+            // Log detailed information for debugging
+            Console.WriteLine($"Error: {ex.InnerException?.Message}");
+            throw;
+        }
 
         // mapping del så inputs hamnar där de ska
         var formValues = new Dictionary<string, object>
