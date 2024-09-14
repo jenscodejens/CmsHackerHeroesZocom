@@ -94,7 +94,6 @@
     private string inputValue7 = string.Empty;
     private string inputValue8 = string.Empty;
   
-
     private InputStep currentStep = InputStep.ContentNameInput;
     private string currentLabelText = string.Empty;
 
@@ -250,7 +249,7 @@
 
     private void Done()
     {
-        NavigationManager.NavigateTo("/content");
+        NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
     }
 
     private string GetPlaceholderText()
