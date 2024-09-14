@@ -25,7 +25,7 @@
         <form>
             <div>
                 <label>@currentLabelText</label>
-                <input type="text" @bind="inputValue" placeholder="@GetPlaceholderText()" />
+                <input type="text" @bind="inputValue" placeholder="" />
                 <button type="button" @onclick="HandleSubmit">Add</button>
             </div>
         </form>
@@ -252,8 +252,8 @@
         NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
     }
 
-    private string GetPlaceholderText()
-    {
-        return currentStep == InputStep.SecondInput ? "optional" : string.Empty;
-    }
+    // private string GetPlaceholderText()
+    // {
+    //     return currentStep == InputStep.SecondInput ? "optional" : string.Empty;
+    // }
 }
