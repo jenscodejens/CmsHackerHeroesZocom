@@ -1,0 +1,83 @@
+﻿@page "/webpages/createmulti"
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<h3>Add Multiple Contents Page</h3>
+
+@if (webpage is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <!-- Header Section -->
+    <header class="header-section">
+        <p>HEADER</p>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+    </header>
+
+    <!-- Main Body Section -->
+    <main class="main-body-section">
+        <p>BODY</p>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <p>FOOTER</p>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+    </footer>
+}
+
+@code {
+    WebPage? webpage;
+
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        webpage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
+        if (webpage is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
+
+<!-- Add your CSS here or in a separate stylesheet -->
+<style>
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .debug-info {
+        font-style: italic;
+        color: #888;
+    }
+
+    .header-section, .main-body-section, .footer-section {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .header-section {
+        background-color: #f4f4f4;
+    }
+
+    .main-body-section {
+        background-color: #ffffff;
+    }
+
+    .footer-section {
+        background-color: #f4f4f4;
+    }
+</style>
