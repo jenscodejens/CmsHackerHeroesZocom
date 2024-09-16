@@ -4,6 +4,8 @@
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
+@rendermode InteractiveServer
+
 <h3>Add Multiple Contents Page</h3>
 
 @if (webpage is null)
@@ -18,10 +20,16 @@ else
         <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
     </header>
 
-    <!-- Main Body Section -->
-    <main class="main-body-section">
-        <p>BODY</p>
-        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+    <!-- Main Body Sections -->
+    <main class="main-body-sections">
+        @foreach (var index in contentIndexes)
+        {
+            <div class="main-body-section">
+                <p>BODY</p>
+                <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+            </div>
+        }
+        <button @onclick="AddNewContent" class="add-button">Add New Content</button>
     </main>
 
     <!-- Footer Section -->
@@ -33,6 +41,8 @@ else
 
 @code {
     WebPage? webpage;
+
+    private List<int> contentIndexes = new List<int>();
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }
@@ -46,6 +56,12 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+    }
+
+    private void AddNewContent()
+    {
+        // Add a new index to the list to render an additional CreateContent component
+        contentIndexes.Add(contentIndexes.Count);
     }
 }
 
