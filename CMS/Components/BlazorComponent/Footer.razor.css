@@ -33,17 +33,16 @@ footer {
 }
 
 .container ul {
-
     list-style: none;
     align-items: first baseline;
 }
 
-.container ul li {
-    padding: 10px;
-}
+    .container ul li {
+        padding: 10px;
+    }
 
-.container ul a {
-    text-decoration: none;
-    color: white;
-    font-size: 12px;
-}
+    .container ul a {
+        text-decoration: none;
+        color: white;
+        font-size: 12px;
+    }
