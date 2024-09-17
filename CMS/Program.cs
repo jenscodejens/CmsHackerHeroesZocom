@@ -3,6 +3,7 @@ using CMS.Components.Account;
 using CMS.Data;
 using CMS.Extensions;
 using CMS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,7 @@ namespace CMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -38,11 +39,12 @@ namespace CMS
             builder.Services.AddQuickGridEntityFrameworkAdapter();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            // Add roles
+            // Add roles and identity services
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>() // enable roles
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
-                .AddRoleManager<RoleManager<IdentityRole>>()
+                .AddRoleManager<RoleManager<IdentityRole>>() // Role manager to handle roles
                 .AddDefaultTokenProviders();
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
@@ -50,6 +52,15 @@ namespace CMS
             builder.Services.AddScoped<GetCurrentUserIdService>();
 
             var app = builder.Build();
+
+            // Seed roles after the application starts
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                await SeedRoles(roleManager);
+            }
+
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -70,13 +81,31 @@ namespace CMS
             app.UseStaticFiles();
             app.UseAntiforgery();
 
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
 
+            // Use authentication and authorization middleware
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.Run();
+        }
+
+        // Function to seed roles (Admin and User)
+        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
+        {
+            var roles = new[] { "Admin", "User" };
+            foreach (var role in roles)
+            {
+                if(!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
         }
     }
 }

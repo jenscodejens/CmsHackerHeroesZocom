@@ -1,0 +1,66 @@
+﻿@page "/Account/Roles"
+@rendermode InteractiveServer
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<Data.ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+
+<h3>Roler och användare</h3>
+
+<AuthorizeView Roles="User">
+    <Authorized>
+        <p>User, @context.User.Identity?.Name!</p>
+        <!--Add-->
+    </Authorized>
+    <NotAuthorized>
+        <!--Add-->
+    </NotAuthorized>
+</AuthorizeView>
+<hr />
+<AuthorizeView Roles="Admin">
+    <Authorized>
+        <p>Admin, @context.User.Identity?.Name!</p>
+    </Authorized>
+    <NotAuthorized>
+        <!--Add-->
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<h3>Roller</h3>
+@foreach (var role in RoleManager.Roles)
+{
+    <p>@role.Name</p>
+}
+
+<h3>Users</h3>
+@foreach (var user in UserManager.Users)
+{
+    <p>@user.UserName</p>
+}
+
+@code {
+    private string authMessage = "Användaren är inte inloggad!";
+    private string adminMessage = "Hello Admin";
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var authState = await authenticationState;
+            var user = authState?.User;
+
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                authMessage = $"{user.Identity.Name} är inloggad!";
+            }
+        }
+    }
+
+    private void AnySecureMethod()
+    {
+        adminMessage = "Admin";
+    }
+}
+
