@@ -1,96 +1,117 @@
 ﻿@page "/"
+@using CMS.Data
+@using CMS.Services
+@inject IGetCurrentUserService GetCurrentUserService
+@inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
-<div class="grid-container">
-  <div class="box1">
+<AuthorizeView>
+  <NotAuthorized>
+    
+    <div class="grid-container">
+      <div class="box1">
 
-    <h1>HACKER HEROES</h1>
-    <h2>CMS</h2>
-    <img src="https://via.placeholder.com/300x300" alt="Bild i Box 1">
-  </div>
-  <div class="box2">
-    <h4>Varför välja oss?</h4>
-    <p>Att välja rätt CMS (Content Management System) är avgörande för din verksamhet, och vi är övertygade om att vårt
-      CMS är det bästa valet för dig. Vårt CMS är designat med användaren i fokus. Det intuitiva gränssnittet gör det
-      enkelt att skapa, redigera och publicera innehåll utan att behöva tekniska kunskaper. Dessutom är systemet
-      flexibelt och kan anpassas efter dina specifika behov, oavsett om du driver en liten blogg eller en stor
-      e-handelsplats.</p>
+        <h1>HACKER HEROES</h1>
+        <h2>CMS</h2>
+        <img src="https://via.placeholder.com/300x300" alt="Bild i Box 1">
+      </div>
+      <div class="box2">
+        <h4>Varför välja oss?</h4>
+        <p>Att välja rätt CMS (Content Management System) är avgörande för din verksamhet, och vi är övertygade om att vårt
+          CMS är det bästa valet för dig. Vårt CMS är designat med användaren i fokus. Det intuitiva gränssnittet gör det
+          enkelt att skapa, redigera och publicera innehåll utan att behöva tekniska kunskaper. Dessutom är systemet
+          flexibelt och kan anpassas efter dina specifika behov, oavsett om du driver en liten blogg eller en stor
+          e-handelsplats.</p>
 
-    <p>Säkerhet är en prioritet för oss. Vårt CMS erbjuder inbyggda säkerhetsfunktioner som skyddar ditt innehåll och
-      din data mot hot och intrång. Vi erbjuder också omfattande support och kundservice. Oavsett vilka problem eller
-      frågor du har, finns vårt dedikerade team här för att hjälpa dig.</p>
+        <p>Säkerhet är en prioritet för oss. Vårt CMS erbjuder inbyggda säkerhetsfunktioner som skyddar ditt innehåll och
+          din data mot hot och intrång. Vi erbjuder också omfattande support och kundservice. Oavsett vilka problem eller
+          frågor du har, finns vårt dedikerade team här för att hjälpa dig.</p>
 
-    <p>Vårt CMS är kompatibelt med en mängd olika verktyg och plattformar, vilket gör det enkelt att integrera med dina
-      befintliga system och arbetsflöden. Oavsett hur mycket din webbplats växer kan vårt CMS hantera ökande trafik och
-      innehållsvolym utan att kompromissa med prestandan.</p>
+        <p>Vårt CMS är kompatibelt med en mängd olika verktyg och plattformar, vilket gör det enkelt att integrera med dina
+          befintliga system och arbetsflöden. Oavsett hur mycket din webbplats växer kan vårt CMS hantera ökande trafik och
+          innehållsvolym utan att kompromissa med prestandan.</p>
 
 
-  </div>
-  <div class="box3">
-    <div class="box3-item">
-      <h4>
-        Enkelt att använda
-      </h4>
+      </div>
+      <div class="box3">
+        <div class="box3-item">
+          <h4>
+            Enkelt att använda
+          </h4>
+        </div>
+        <div class="box3-item">
+          <h4>
+            Anpassningsbar
+          </h4>
+        </div>
+        <div class="box3-item">
+          <h4>
+            Responsiv
+          </h4>
+        </div>
+        <div class="box3-item">
+          <h4>
+            Snabb
+          </h4>
+        </div>
+        <div class="box3-item">
+          <h4>
+            Säker
+          </h4>
+        </div>
+        <div class="box3-item">
+          <h4>
+            Integrerad
+          </h4>
+        </div>
+      </div>
+
+
+      <div class="box4">
+
+        <!-- Stor H1-rubrik -->
+        <h2 class="display-1">
+          Boka din Demo nu!
+        </h2>
+
+        <!-- Mellanstor bild -->
+        <div class="text-center">
+          <img src="https://via.placeholder.com/300x300" alt="Demo bild" />
+        </div>
+
+        <!-- Grön knapp med Bootstrap -->
+        <div class="text-center mt-4">
+          <button>
+            Boka nu
+          </button>
+        </div>
+
+        <!-- Säljande text -->
+        <div class="mt-4">
+          <p>Upplev kraften i vårt CMS-verktyg genom att boka en gratis demo idag! Vårt system gör det enkelt för dig att
+            hantera innehåll på ett intuitivt och effektivt sätt, oavsett om du driver en liten blogg eller en stor
+            företagswebbplats. Få en skräddarsydd genomgång och upptäck alla funktioner som kan hjälpa dig att spara tid
+            och maximera din webbplats prestanda.</p>
+        </div>
+      </div>
     </div>
-    <div class="box3-item">
-      <h4>
-        Anpassningsbar
-      </h4>
-    </div>
-    <div class="box3-item">
-      <h4>
-        Responsiv
-      </h4>
-    </div>
-    <div class="box3-item">
-      <h4>
-        Snabb
-      </h4>
-    </div>
-    <div class="box3-item">
-      <h4>
-        Säker
-      </h4>
-    </div>
-    <div class="box3-item">
-      <h4>
-        Integrerad
-      </h4>
-    </div>
-  </div>
-
-
-  <div class="box4">
-
-    <!-- Stor H1-rubrik -->
-    <h2 class="display-1">
-      Boka din Demo nu!
-    </h2>
-
-    <!-- Mellanstor bild -->
-    <div class="text-center">
-      <img src="https://via.placeholder.com/300x300" alt="Demo bild" />
-    </div>
-
-    <!-- Grön knapp med Bootstrap -->
-    <div class="text-center mt-4">
-      <button>
-        Boka nu
-      </button>
-    </div>
-
-    <!-- Säljande text -->
-    <div class="mt-4">
-      <p>Upplev kraften i vårt CMS-verktyg genom att boka en gratis demo idag! Vårt system gör det enkelt för dig att
-        hantera innehåll på ett intuitivt och effektivt sätt, oavsett om du driver en liten blogg eller en stor
-        företagswebbplats. Få en skräddarsydd genomgång och upptäck alla funktioner som kan hjälpa dig att spara tid
-        och maximera din webbplats prestanda.</p>
-    </div>
-  </div>
-</div>
+  </NotAuthorized>
+</AuthorizeView>
 
 
 @code {
 
+  public ApplicationUser User { get;  set; }
+
+  protected override async Task OnInitializedAsync()
+  {
+    var user = await GetCurrentUserService.GetCurrentUserAsync();
+    if (user != null)
+    { 
+      NavigationManager.NavigateTo($"/websites?UserId={user.Id}");
+    }
+    
+  }
+ 
 }
