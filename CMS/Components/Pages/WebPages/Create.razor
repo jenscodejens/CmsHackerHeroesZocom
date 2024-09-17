@@ -66,6 +66,6 @@
         using var context = DbFactory.CreateDbContext();
         context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/webpages");
+        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");
     }
 }

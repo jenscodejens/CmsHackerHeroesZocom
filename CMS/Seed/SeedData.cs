@@ -16,10 +16,10 @@ namespace CMS.Seed
         public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService)
         {
 
-            //if (context.WebSites.Any() && context.WebSites.Count() < 10)
-            //{
-            //    return;
-            //}
+            if (context.WebSites.Any() && context.WebSites.Count() < 10)
+            {
+                return;
+            }
 
             //adds templates we have made in folder if we haven't any values in the template table
             if (!context.Templates.Any())
@@ -28,28 +28,28 @@ namespace CMS.Seed
                 await context.Templates.AddRangeAsync(templates);
             }
 
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    var fName = faker.Name.FirstName();
-            //    var lName = faker.Name.LastName();
-            //    var email = faker.Internet.Email(fName, lName, "zocom.se");
-            //    var result = await registerService.CreateUser(email, "pSrkXHN6z8s%KHW@");
-            //    Console.WriteLine(result);
-            //}
+            for (int i = 0; i < 4; i++)
+            {
+                var fName = faker.Name.FirstName();
+                var lName = faker.Name.LastName();
+                var email = faker.Internet.Email(fName, lName, "zocom.se");
+                var result = await registerService.CreateUser(email, "pSrkXHN6z8s%KHW@");
+                Console.WriteLine(result);
+            }
 
-            //var result1 = await registerService.CreateUser(@"test@test.com", "pSrkXHN6z8s%KHW@");
-            //Console.WriteLine(result1);
+            var result1 = await registerService.CreateUser(@"test@test.com", "pSrkXHN6z8s%KHW@");
+            Console.WriteLine(result1);
 
-            //var userId = context.Users.Where(u => EF.Functions.Like(u.Email, "test@test.com")).Select(u => u.Id).FirstOrDefault();
-            //if (userId == null)
-            //{
-            //    return;
-            //}
+            var userId = context.Users.Where(u => EF.Functions.Like(u.Email, "test@test.com")).Select(u => u.Id).FirstOrDefault();
+            if (userId == null)
+            {
+                return;
+            }
 
-           
-            //var menus = CreateWebSites(userId);
 
-            //await context.AddRangeAsync(menus);
+            var menus = CreateWebSites(userId);
+
+            await context.AddRangeAsync(menus);
             context.SaveChanges();
 
         }
