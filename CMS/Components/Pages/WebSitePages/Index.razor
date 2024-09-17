@@ -23,6 +23,7 @@
     <PropertyColumn Property="website => website.UserId" />
 
     <TemplateColumn Context="website">
+        <a href="@($"/webpages?websiteid={website.WebSiteId}")">Show Web Pages</a> |
         <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
         <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
         <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a>
