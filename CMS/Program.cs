@@ -61,7 +61,6 @@ namespace CMS
                 await SeedRoles(roleManager);
             }
 
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -80,7 +79,6 @@ namespace CMS
 
             app.UseStaticFiles();
 
-
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
 
@@ -90,7 +88,9 @@ namespace CMS
             // Use authentication and authorization middleware
             app.UseAuthentication();
             app.UseAuthorization();
+
             app.UseAntiforgery();
+
             app.Run();
         }
 
