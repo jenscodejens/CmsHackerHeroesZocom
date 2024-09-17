@@ -14,8 +14,9 @@
 <p>
     <a href="websites/create">Create New</a>
 </p>
-
-<QuickGrid Class="table" Items="context.WebSites">
+@if(UserId != null) {
+    
+<QuickGrid Class="table" Items="context.WebSites.Where(w => w.UserId == UserId)">
     <PropertyColumn Property="website => website.Title" />
     <PropertyColumn Property="website => website.Description" />
     <PropertyColumn Property="website => website.CreationDate" />
@@ -29,7 +30,13 @@
     </TemplateColumn>
 </QuickGrid>
 
+}
+
 @code {
+    
+    [SupplyParameterFromQuery]
+    public string UserId { get; set; }
+    
     ApplicationDbContext context = default!;
 
     protected override void OnInitialized()
