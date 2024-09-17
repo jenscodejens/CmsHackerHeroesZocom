@@ -79,7 +79,6 @@ namespace CMS
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-            app.UseAntiforgery();
 
 
             app.MapRazorComponents<App>()
@@ -91,6 +90,7 @@ namespace CMS
             // Use authentication and authorization middleware
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseAntiforgery();
             app.Run();
         }
 
