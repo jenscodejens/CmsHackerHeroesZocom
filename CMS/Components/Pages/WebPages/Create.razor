@@ -18,7 +18,7 @@
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
                 <label for="websiteid" class="form-label">WebSiteId:</label> 
-                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" /> 
+                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" readonly/> 
                 <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
@@ -49,6 +49,16 @@
 
     [SupplyParameterFromForm]
     public WebPage WebPage { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    public int WebsiteId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // Set the WebPage's WebsiteId to the passed-in parameter
+        WebPage.WebSiteId = WebsiteId;
+    }
+
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddWebPage()

@@ -12,7 +12,7 @@
 <h1>Index Web Pages</h1>
 
 <p>
-    <a href="webpages/create">Create New</a>
+    <a href="webpages/create?websiteid=@WebSiteId">Create New</a>
 </p>
 
 @if (webpages == null || !webpages.Any())
@@ -31,7 +31,8 @@ else
         <TemplateColumn Context="webpage">
             @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
             <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Preview WebPage</a> |
-            <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")"> See all Contents</a> |
+            @* <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
             <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
             <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Details</a> |
             <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Delete</a>
