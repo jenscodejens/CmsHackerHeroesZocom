@@ -1,0 +1,21 @@
+﻿@code {
+    [Parameter] public string SelectedTextColor { get; set; }
+    [Parameter] public EventCallback<string> SelectedTextColorChanged { get; set; }
+
+    private void OnTextColorChanged(ChangeEventArgs e)
+    {
+        SelectedTextColor = e.Value.ToString();
+        SelectedTextColorChanged.InvokeAsync(SelectedTextColor);
+    }
+}
+
+<label for="textColor">Select Text Color:</label>
+<select id="textColor" @onchange="OnTextColorChanged" value="@SelectedTextColor">
+    <option value="black">Black</option>
+    <option value="white">White</option>
+    <option value="red">Red</option>
+    <option value="blue">Blue</option>
+    <option value="green">Green</option>
+    <option value="yellow">Yellow</option>
+</select>
+

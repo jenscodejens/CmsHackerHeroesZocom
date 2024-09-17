@@ -1,0 +1,175 @@
+﻿@page "/addContent"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+@using Microsoft.AspNetCore.Components.Rendering
+@rendermode InteractiveServer
+
+<style>
+    /* Your existing CSS */
+    .template-cms {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 20px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+    }
+
+    .header-block-cms {
+        width: 100%;
+        background-color: #4a90e2;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+    }
+
+    .body-block-cms {
+        width: 100%;
+        background-color: #ffffff;
+        color: #333;
+        text-align: center;
+        padding: 20px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    .footer-block-cms {
+        width: 100%;
+        background-color: #4a90e2;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        border-radius: 5px;
+    }
+</style>
+
+<h3>Add Website Content</h3>
+
+<PageTitle>Add Website Content</PageTitle>
+<AuthorizeView>
+    <Authorized Context="authContext">
+        <div class="template-cms">
+            <h3>Hello, @authContext.User.Identity?.Name!</h3>
+
+            <!-- Options to select header content -->
+            <div class="header-options">
+                <select @onchange="OnHeaderOptionChanged">
+                    <option value="default">Select Header Content</option>
+                    <option value="option1">Header Option 1</option>
+                    <option value="option2">Header Option 2</option>
+                    <option value="option3">Header Option 3</option>
+                </select>
+            </div>
+
+            <!-- Header Block where the dynamic content will be shown -->
+            <div class="header-block-cms">
+                @if (!string.IsNullOrEmpty(headerHtml))
+                {
+                    @((MarkupString)headerHtml)
+                }
+                else
+                {
+                    <h4>Header Block</h4>
+                    <!-- Default header content -->
+                }
+            </div>
+
+            <div class="body-block-cms">
+                <h4>Body Block</h4>
+                <!-- Add body content here -->
+            </div>
+
+            <div class="footer-block-cms">
+                <h4>Footer Block</h4>
+                <!-- Add footer content here -->
+            </div>
+        </div>
+
+        <!-- Add a button here to add a webpage to the webpage database -->
+        <EditForm Model="@WebPage" OnValidSubmit="@AddWebPage">
+            <div class="mb-3">
+                <label for="websiteid" class="form-label">WebSiteId:</label>
+                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" />
+                <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+
+    </Authorized>
+    <NotAuthorized>
+        <p>You are not authorized to view this content. Please log in.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    // Variable to hold the HTML content for the header
+    private string? headerHtml;
+    private string? bodyHtml = "Default body content";  // Placeholder body content
+    private string? footerHtml = "Default footer content";  // Placeholder footer content
+
+    [SupplyParameterFromForm]
+    public WebPage WebPage { get; set; } = new();
+    public string selectedHeaderValue { get; set; } = string.Empty;
+
+    public async Task AddWebPage()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Save header, body, and footer HTML as strings to the database
+        WebPage.Header = headerHtml;
+        WebPage.Body = bodyHtml;  // If body HTML is dynamic, capture it accordingly
+        WebPage.Footer = footerHtml;  // If footer HTML is dynamic, capture it accordingly
+
+        context.WebPages.Add(WebPage);
+        await context.SaveChangesAsync();
+
+        // Navigate to a different page after successful submission
+        NavigationManager.NavigateTo("/webpages");
+    }
+
+    // Method to handle the dropdown change event
+    private void OnHeaderOptionChanged(ChangeEventArgs e)
+    {
+        selectedHeaderValue = e.Value?.ToString();
+
+        switch (selectedHeaderValue)
+        {
+            case "option1":
+                var NavTitle = "My NavBar";
+                headerHtml = $@"
+                                 <nav class='navbar navbar-expand-lg navbar-light bg-light justify-content-center'>
+                                    <a class='navbar-brand'>{NavTitle}</a>
+                                 </nav>
+                             ";
+                break;
+
+            case "option2":
+                headerHtml = @"
+                    <h4>Header Option 2</h4>
+                    <p>This is content for option 2.</p>";
+                break;
+            case "option3":
+                headerHtml = @"
+                    <h4>Header Option 3</h4>
+                    <p>This is content for option 3.</p>";
+                break;
+            default:
+                headerHtml = string.Empty;
+                break;
+        }
+
+        // Force the UI to update after changing the HTML
+        StateHasChanged();
+    }
+}

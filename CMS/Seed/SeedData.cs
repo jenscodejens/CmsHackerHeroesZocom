@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Bogus;
 using CMS.Services;
 using CMS.Entities;
+using CMS.Models;
 
 namespace CMS.Seed
 {
@@ -18,6 +19,13 @@ namespace CMS.Seed
             if (context.WebSites.Any() && context.WebSites.Count() < 10)
             {
                 return;
+            }
+
+            //adds templates we have made in folder if we haven't any values in the template table
+            if (!context.Templates.Any())
+            {
+                var templates = CreateTemplates();
+                await context.Templates.AddRangeAsync(templates);
             }
 
             for (int i = 0; i < 4; i++)
@@ -112,7 +120,52 @@ namespace CMS.Seed
 
             return list;
         }
-            
+
+        private static ICollection<Template> CreateTemplates()
+        {
+            var list = new List<Template>
+            {
+                new Template
+                {
+                    TemplateType = "Footer2",
+                    TemplatePath = "Templates.SingleInput.Template2",
+                    InputFormPath = "Templates.InputForm.SingleInputForm"
+                },
+                new Template
+                {
+                    TemplateType = "Footer3",
+                    TemplatePath = "Templates.SingleInput.Template3",
+                    InputFormPath = "Templates.InputForm.SingleInputForm"
+                },
+                new Template
+                {
+                    TemplateType = "Footer",
+                    TemplatePath = "Templates.SingleInput.Template1",
+                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                },
+                 new Template
+                {
+                    TemplateType = "Header",
+                    TemplatePath = "Templates.SingleInput.Template1Header",
+                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                },
+                  new Template
+                {
+                    TemplateType = "Link",
+                    TemplatePath = "Templates.SingleInput.Template1Link",
+                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "NavBar",
+                    TemplatePath = "Templates.SingleInput.Template1NavBar",
+                    InputFormPath = "Templates.InputForm.NavBarInputForm"
+                },
+            };
+
+            return list;
+        }
+
     }
 
 }

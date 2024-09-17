@@ -1,16 +1,22 @@
 ﻿@inherits LayoutComponentBase
+@using CMS.Components
 @using CMS.Components.BlazorComponent
 
 <div class="page">
-    
     <main>
-
         <NavExample/>
-        <article class="content px-4">
-            @Body
-        </article>
-        <Footer></Footer>
+        <div class="main">
+            <article class="content px-4">
+                <h1>@WebSiteId</h1>
 
+                <WebSiteVisitorCounter WebSiteId="@WebSiteId" />
+
+                <WebsiteVisitsSummary WebSiteId="@WebSiteId" />
+
+                @Body
+            </article>
+        </div>
+        <Footer></Footer>
     </main>
 </div>
 
@@ -19,3 +25,18 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+@code {
+    [Parameter]
+    public string WebSiteId { get; set; }
+
+    protected override void OnInitialized()
+    {
+        // In a real scenario, you would get this from the current website context
+        WebSiteId = "";
+    }
+}
+
+
+
+
