@@ -64,14 +64,6 @@ namespace CMS
 
             var app = builder.Build();
 
-            // Seed roles after the application starts
-            using (var scope = app.Services.CreateScope())
-            {
-                var services = scope.ServiceProvider;
-                var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-                await SeedRoles(roleManager);
-            }
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -105,18 +97,5 @@ namespace CMS
             app.Run();
         }
 
-        // Function to seed roles (Admin and User)
-        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
-        {
-            var roles = new[] { "Admin", "User" };
-            foreach (var role in roles)
-            {
-                if(!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
-            }
-
-        }
     }
 }
