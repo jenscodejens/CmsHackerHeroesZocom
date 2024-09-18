@@ -46,7 +46,9 @@
     // [SupplyParameterFromQuery]
     // public int? WebPageId { get; set; } // Accept WebPageId from query parameters
 
-    [Parameter] public int? WebPageId { get; set; } // Accept WebPageId as a parameter
+    [Parameter] 
+    [SupplyParameterFromQuery]
+    public int? WebPageId { get; set; } // Accept WebPageId as a parameter
 
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;
