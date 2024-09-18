@@ -17,7 +17,7 @@ namespace CMS.Seed
         public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService, RoleManager<IdentityRole> roleManager)
         {
 
-            if (context.WebSites.Any() && context.WebSites.Count() < 10)
+            if (context.WebSites.Any())
             {
                 return;
             }
