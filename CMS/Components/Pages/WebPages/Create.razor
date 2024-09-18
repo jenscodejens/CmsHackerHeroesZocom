@@ -17,6 +17,11 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
+                <label for="webpagename" class="form-label">webpagename:</label>
+                <InputText id="webpagename" @bind-Value="WebPage.WebPageName" class="form-control" />
+                <ValidationMessage For="() => WebPage.WebPageName" class="text-danger" />
+            </div>
+            <div class="mb-3">
                 <label for="websiteid" class="form-label">WebSiteId:</label> 
                 <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" /> 
                 <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" /> 

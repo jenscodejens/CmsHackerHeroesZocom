@@ -22,6 +22,10 @@
 
     @if (currentStep != InputStep.Done)
     {
+                   @foreach (var item in MenyItems)
+                    {
+                        <a>item.Key</a>
+                    }
         <form>
             <div>
                 <label>@currentLabelText</label>
@@ -38,7 +42,7 @@
                 {
                         @foreach (var item in MenyItems)
                     {
-                            <option value="@item.Key">jjj</option>
+                        <option value="@item.Value">@item.Key</option>
                     }
                 }
 @*                 else

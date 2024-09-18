@@ -1,7 +1,10 @@
 ﻿using CMS.Data;
 using CMS.Entities;
+using CMS.Migrations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Templates.InputForm
 {
@@ -22,21 +25,24 @@ namespace Templates.InputForm
         [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 
         [Parameter] public string Backgroundcolor { get; set; } = "grey";
+        [Parameter] public string WebPageName { get; set; } = string.Empty;
         [Parameter] public string Textcolor { get; set; } = "black";
         [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
-        
+
         private string inputValue = string.Empty;
         private string inputValueContentName = string.Empty;
-
+        
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
 
-       
-        public Dictionary<string , string> MenyItems = new Dictionary<string, string>();
+
+        public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { {"Empty","Empty"} };
+    
+        //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-        [SupplyParameterFromQuery]
-        private int? WebSiteId { get; set; }
+        //[SupplyParameterFromQuery]
+        //private int? WebSiteId { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -48,22 +54,51 @@ namespace Templates.InputForm
             {
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
-            
-            if (WebSiteId.HasValue)
-            {
-                // Fetch WebPages filtered by WebSiteId
-                webpages = context.WebPages
-                    .Where(wp => wp.WebSiteId == WebSiteId.Value);
 
-                foreach(var site in webpages) {
-                    MenyItems.Add(site.WebSite.Title, "https://Github.com");
+            //if (WebSiteId.HasValue)
+            //{
+            //    // Fetch WebPages filtered by WebSiteId
+            //    webpages = context.WebPages
+            //        .Where(wp => wp.WebSiteId == WebSiteId.Value);
+
+            //    foreach(var site in webpages) {
+            //        MenyItems.Add(site.WebSite.Title, "https://Github.com");
+            //    }
+
+            //     IEnMenyItems = new List<Dictionary<string, string>>()
+            //    { MenyItems };
+
+            //}
+            //if (WebPageId.HasValue)
+            //{
+            // Fetch WebPages filtered by WebSiteId
+            //webpages
+                var pages = context.WebPages.ToList();
+                var page  = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
+                var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
+                //.Where(wp => wp.WebPageId == WebPageId)
+                //.Include(WebPageName);
+
+
+
+
+                
+                foreach (var site in webpages1)
+                {
+                    if(site.WebPageName != null)
+                    { 
+                        MenyItems.Add(site.WebPageName, "https://Github.com");
+                    }
                 }
 
-            }
+                //IEnMenyItems = new List<Dictionary<string, string>>()
+                //{ MenyItems };
 
-            {
-                throw new InvalidOperationException($"WebPageId {WebPageId} is not found.");
-            }
+            //}
+            //else
+            //{
+            //    throw new InvalidOperationException($"WebPageId {WebPageId}, WebSiteId{WebSiteId} is not found.");
+            //}
 
 
 
@@ -123,7 +158,8 @@ namespace Templates.InputForm
                     //TextInput5 = inputValue5,
                     //TextInput6 = inputValue6,
                     //TextInput7 = inputValue7,
-                    //TextInput8 = inputValue8
+                    //TextInput8 = inputValue8,
+                    //TextInput9 = inputValue9
                 }),
                 Backgroundcolor = Backgroundcolor,
                 Textcolor = Textcolor,
@@ -146,6 +182,7 @@ namespace Templates.InputForm
             var formValues = new Dictionary<string, object>
         {
             { "ContentName", inputValueContentName },
+            { "TextInput9", WebPageName },
             //{ "TextInput1", inputValue1 },
             //{ "TextInput2", inputValue2 },
             //{ "TextInput3", inputValue3 },
