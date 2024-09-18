@@ -59,7 +59,6 @@ namespace CMS
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
             builder.Services.AddScoped<ICreateUserService, CreateUserService>();
-            builder.Services.AddScoped<GetCurrentUserIdService>();
             builder.Services.AddScoped<IGetCurrentUserService, GetCurrentUserService>();
 
             var app = builder.Build();

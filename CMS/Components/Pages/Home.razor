@@ -109,7 +109,7 @@
     var user = await GetCurrentUserService.GetCurrentUserAsync();
     if (user != null)
     { 
-      NavigationManager.NavigateTo($"/websites?UserId={user.Id}");
+      NavigationManager.NavigateTo($"/websites");
     }
     
   }
