@@ -25,7 +25,7 @@
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 20px;">
                             <a class="dropdown-item" href="#">Vad du får</a>
                             <a class="dropdown-item" href="#">Prismodell</a>
-                             <a class="dropdown-item" href="#">Teamet</a>
+                            <a class="dropdown-item" href="#">Teamet</a>
                             <a class="dropdown-item" href="#">Om Oss</a>
                             
                             <div class="dropdown-divider"></div>
@@ -37,9 +37,7 @@
                 </NotAuthorized>
 
                 <Authorized>
-                   
-                    
-                      <li class="nav-item">
+                    <li class="nav-item">
                         <NavLink class="nav-link" href="websites/create">
                             Skapa Hemsida
                         </NavLink>
@@ -49,7 +47,6 @@
                             Sparade Webbsidor
                         </NavLink>
                     </li>
-
                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -63,9 +60,8 @@
                             
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#">Om Oss</a>
-                             <a class="dropdown-item" href="webpages">webpages</a>
+                            <a class="dropdown-item" href="webpages">webpages</a>
                             <a class="dropdown-item" href="auth">Authentisering</a>
-                             
                         </div>
                     </li>
                 </Authorized>
@@ -94,12 +90,12 @@
                     </li>
                     <li class="nav-item">
                         <form action="Account/Logout" method="post" class="form-inline" style="font-size:20px; margin-right:10px;">
-    <AntiforgeryToken />
-    <input type="hidden" name="ReturnUrl" value="#" />
-    <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" style="font-size:20px; margin-right:10px; margin-left:10px;">
-        Logout
-    </button>
-</form>
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                            <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" style="font-size:20px; margin-right:10px; margin-left:10px;">
+                                Logout
+                            </button>
+                        </form>
                     </li>
                 </Authorized>
             </AuthorizeView>
