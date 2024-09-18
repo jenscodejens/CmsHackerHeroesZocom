@@ -31,14 +31,17 @@ namespace Templates.InputForm
 
 
         private string inputValue = string.Empty;
+        private string inputUrl = string.Empty;
+        private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
-        
+        private string inputItemValue = string.Empty;
+
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
 
 
-        public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { {"Empty","Empty"} };
-    
+        public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { {"Inget","Inget"} };
+        public Dictionary<string, string> AddMenyItems = new Dictionary<string, string>() { { "Inget", "Inget" } };
         //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
         //[SupplyParameterFromQuery]
@@ -73,7 +76,7 @@ namespace Templates.InputForm
             //{
             // Fetch WebPages filtered by WebSiteId
             //webpages
-                var pages = context.WebPages.ToList();
+                var pages = await context.WebPages.ToListAsync();
                 var page  = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
                 var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
                 //.Where(wp => wp.WebPageId == WebPageId)
@@ -91,6 +94,7 @@ namespace Templates.InputForm
                     }
                 }
 
+            
                 //IEnMenyItems = new List<Dictionary<string, string>>()
                 //{ MenyItems };
 
@@ -106,23 +110,50 @@ namespace Templates.InputForm
         }
 
         // Är här man loopas igenom så rätt label visas och det sparas ned under rätt del av json objektet.
+        //private void AddName()
+        //{
+        //    inputValueContentName = inputValue; // Input NavBar name
+        //    inputValue = string.Empty;
+        //    currentStep = InputStep.AddItem; // Hoppa till second input
+        //                                     //currentLabelText = LabelText2; // Ändra label till den för second input  
+        //}
+
+        //private void AddItem()
+        //{
+        //    inputValueContentName = inputValue; // Input NavBar name
+        //    inputValue = string.Empty;
+        //    currentStep = InputStep.AddItem; // Hoppa till second input
+        //                                     //currentLabelText = LabelText2; // Ändra label till den för second input  
+        //}
         private async Task HandleSubmit()
         {
             if (currentStep == InputStep.ContentNameInput)
             {
-                inputValueContentName = inputValue; // spara first input
+                inputValueContentName = inputValue; // Input NavBar name
+                //inputURL              = inputURL // // Input menu item URL
                 inputValue = string.Empty;
                 currentStep = InputStep.AddItem; // Hoppa till second input
                 //currentLabelText = LabelText2; // Ändra label till den för second input
             }
             else if (currentStep == InputStep.AddItem)
             {
+                while(currentStep == InputStep.AddItem || currentStep == InputStep.AddItem)
+                {
+                    if (currentStep == InputStep.AddItem)
+                    { 
                 //inputValue1 = inputValue;
+                inputItemValue = inputValue; // Input menu item name
+                //inputItemURL = inputUrl; // Input menu item URL
                 inputValue = string.Empty;
                 //currentStep = InputStep.SecondInput;
                 //currentLabelText = LabelText3;
+                    }
+                    elsif()
+                    {
+                    }
+                }
             }
-            else if (currentStep == InputStep.Stop)
+            else if (currentStep == InputStep.Done)
             {
                 //inputValue8 = inputValue;
                 inputValue = string.Empty;
@@ -200,24 +231,10 @@ namespace Templates.InputForm
         }
 
 
-        // Borttaget se ovan om varför.
-        // private void CancelTemplate()
-        // {
-        //     inputValue = string.Empty;
-        //     inputValue1 = string.Empty;
-        //     inputValue2 = string.Empty;
-        //     currentStep = InputStep.FirstInput;
-        //     currentLabelText = LabelText1;
-        // }
-
         private void Done()
         {
             NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
         }
 
-        // private string GetPlaceholderText()
-        // {
-        //     return currentStep == InputStep.SecondInput ? "optional" : string.Empty;
-        // }
     }
 }

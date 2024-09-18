@@ -20,24 +20,25 @@
     /Jens
 *@
 
-    @if (currentStep != InputStep.Done)
+    @{if (currentStep == InputStep.ContentNameInput)
     {
-                   @foreach (var item in MenyItems)
-                    {
-                        <a>item.Key</a>
-                    }
+                  
         <form>
             <div>
-                <label>@currentLabelText</label>
+                    <label for="templateDropdown">Meny namn:</label>
                 <input type="text" @bind="inputValue" placeholder="" />
-                <button type="button" @onclick="HandleSubmit">Add</button>
+                <button type="button" @onclick="HandleSubmit">Lägg till</button>
             </div>
         </form>
+    }
+    else
+    {
+            
 
         <div>
-            <label for="templateDropdown">Webb pages:</label>
+            <label for="templateDropdown">Lägg till sida:</label>
                 <select id="templateDropdown" @onchange="HandleSubmit">
-                <option value="">-- Select Template --</option>
+                <option value="">-- Välj Sida --</option>
                     @if (webpages != null)
                 {
                         @foreach (var item in MenyItems)
@@ -45,16 +46,12 @@
                         <option value="@item.Value">@item.Key</option>
                     }
                 }
-@*                 else
-                {
-                    for (int i = 0;i<10; i++)
-                    {
-                        <option value="kkk">jjj</option>
-                    }
-                } *@
+
             </select>
-            <button type="button" @onclick="HandleSubmit">Add</button>
+            <button type="button" @onclick="HandleSubmit">Spara</button>
+            <button type="button" @onclick="AddSubmit">Lägg till menylänk.</button>
         </div>
+        }
 
         @* <div>
             <label>@currentLabelText</label>
