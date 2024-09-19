@@ -18,19 +18,21 @@
 
             <AuthorizeView>
                 <NotAuthorized>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meny
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 20px;">
-                            <a class="dropdown-item" href="#">Vad du får</a>
-                            <a class="dropdown-item" href="#">Prismodell</a>
-                            <a class="dropdown-item" href="#">Om Oss</a>
-                            <div class="dropdown-divider"></div>
-                             <a class="dropdown-item" href="Account/Login">Logga In</a>
-                             <a class="dropdown-item" href="Account/Register">Registera dig nu</a>
-                        </div>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            Kontakta oss
+                        </NavLink>
+                    </li>                    
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            Vad Du Får
+                        </NavLink>
                     </li>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            Prismodell
+                        </NavLink>
+                    </li>                    
                 </NotAuthorized>
 
                 <Authorized>
