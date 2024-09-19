@@ -1,13 +1,8 @@
 ﻿@page "/websites/create"
 
-@using CMS.Services
-@using Microsoft.EntityFrameworkCore
-@using CMS.Entities
-@using System.Security.Claims
+@inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
-@inject GetCurrentUserIdService GetCurrentUserIdService
 
 <PageTitle>Create</PageTitle>
 
@@ -48,24 +43,23 @@
     [SupplyParameterFromForm]
     public WebSite WebSite { get; set; } = new();
 
-    protected override async Task OnInitializedAsync()
-    {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
+    public string UserId { get; set; }
 
-        if (user.Identity.IsAuthenticated)
-        {
-            GetCurrentUserIdService.UserId = user.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-        }
+     protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        this.UserId = user.Id;
     }
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddWebSite()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        
         using var context = DbFactory.CreateDbContext();
-        WebSite.UserId = GetCurrentUserIdService.UserId;
+        WebSite.UserId = user.Id;
         context.WebSites.Add(WebSite);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/websites");
+        NavigationManager.NavigateTo($"/websites");
     }
 }

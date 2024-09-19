@@ -5,6 +5,7 @@ using Bogus;
 using CMS.Services;
 using CMS.Entities;
 using CMS.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMS.Seed
 {
@@ -13,10 +14,10 @@ namespace CMS.Seed
 
         private static Faker faker = new Faker();
         private static Random random = new Random();
-        public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService)
+        public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService, RoleManager<IdentityRole> roleManager)
         {
 
-            if (context.WebSites.Any() && context.WebSites.Count() < 10)
+            if (context.WebSites.Any())
             {
                 return;
             }
@@ -26,6 +27,16 @@ namespace CMS.Seed
             {
                 var templates = CreateTemplates();
                 await context.Templates.AddRangeAsync(templates);
+            }
+
+            // Seed roles
+            var roles = new[] { "Admin", "User" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
             }
 
             for (int i = 0; i < 4; i++)

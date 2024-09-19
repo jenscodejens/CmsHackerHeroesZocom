@@ -1,6 +1,7 @@
 ﻿using CMS.Data;
 using CMS.Seed;
 using CMS.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMS.Extensions
 {
@@ -14,11 +15,12 @@ namespace CMS.Extensions
 
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var registerService = scope.ServiceProvider.GetRequiredService<ICreateUserService>();
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
 
                 try
                 {
-                    await SeedData.InitAsync(context, registerService);
+                    await SeedData.InitAsync(context, registerService, roleManager);
                 }
                 catch (Exception ex)
                 {

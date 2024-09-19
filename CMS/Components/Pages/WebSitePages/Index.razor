@@ -1,10 +1,11 @@
 ﻿@page "/websites"
+@attribute [Authorize]
 
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
-@using CMS.Entities
 @using CMS.Data
-@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+
+@inject IGetCurrentUserService GetCurrentUserService
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
 @implements IAsyncDisposable
 
 <PageTitle>Index</PageTitle>
@@ -14,29 +15,45 @@
 <p>
     <a href="websites/create">Create New</a>
 </p>
+@if (UserId != null)
+{
+    <QuickGrid Class="table" Items="context.WebSites.Where(w => w.UserId == UserId)">
+        <PropertyColumn Property="website => website.Title"/>
+        <PropertyColumn Property="website => website.Description"/>
+        <PropertyColumn Property="website => website.CreationDate"/>
+        <PropertyColumn Property="website => website.LastUpdated"/>
 
-<QuickGrid Class="table" Items="context.WebSites">
-    <PropertyColumn Property="website => website.Title" />
-    <PropertyColumn Property="website => website.Description" />
-    <PropertyColumn Property="website => website.CreationDate" />
-    <PropertyColumn Property="website => website.LastUpdated" />
-    <PropertyColumn Property="website => website.UserId" />
 
-    <TemplateColumn Context="website">
-        <a href="@($"/webpages?websiteid={website.WebSiteId}")">Show Web Pages</a> |
-        <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
-        <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
-        <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="website">
+            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
+            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
+            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a> |
+            <a href="@($"/webpages?websiteid={website.WebSiteId}")">Show Web Pages</a> |
+            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Add Page</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
 
 @code {
+
+    public string UserId { get; set; }
+
     ApplicationDbContext context = default!;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        if (user != null)
+        {
+            UserId = user.Id;
+        }
+
         context = DbFactory.CreateDbContext();
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        await context.DisposeAsync();
+    }
+
 }
