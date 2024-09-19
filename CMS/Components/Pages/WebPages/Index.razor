@@ -1,10 +1,10 @@
 ﻿@page "/webpages"
+@attribute[Authorize]
 
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
-@using CMS.Entities
 @using CMS.Data
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
 <PageTitle>Index</PageTitle>
@@ -43,22 +43,25 @@ else
     public int? WebSiteId { get; set; }
 
     ApplicationDbContext context = default!;
+    public string UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        if (user != null)
+        {
+            UserId = user.Id;
+        }
+
         context = DbFactory.CreateDbContext();
 
         if (WebSiteId.HasValue)
         {
             // Fetch WebPages filtered by WebSiteId
-            webpages = context.WebPages
-                .Where(wp => wp.WebSiteId == WebSiteId.Value);
+            webpages = context.WebPages.Include(w => w.WebSite)
+                .Where(wp => wp.WebSite.UserId == UserId);
         }
-        else
-        {
-            // Fetch all WebPages if no WebSiteId is provided
-            webpages = context.WebPages;
-        }
+      
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
