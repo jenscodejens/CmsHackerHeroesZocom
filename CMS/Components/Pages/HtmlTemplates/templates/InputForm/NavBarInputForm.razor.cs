@@ -14,7 +14,7 @@ namespace Templates.InputForm
         {
             ContentNameInput,
             AddItem,
-            Stop,
+            Wait,
             Done
         }
 
@@ -29,19 +29,20 @@ namespace Templates.InputForm
         [Parameter] public string Textcolor { get; set; } = "black";
         [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
+        [Parameter] public string templateDropdown { get; set; } = string.Empty;
 
         private string inputValue = string.Empty;
         private string inputUrl = string.Empty;
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
-        private string inputItemValue = string.Empty;
+        //private string inputItemValue = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
 
 
         public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { {"Inget","Inget"} };
-        public Dictionary<string, string> AddMenyItems = new Dictionary<string, string>() { { "Inget", "Inget" } };
+        public Dictionary<string, string> AddMenyItems = new Dictionary<string, string>();
         //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
         //[SupplyParameterFromQuery]
@@ -110,58 +111,37 @@ namespace Templates.InputForm
         }
 
         // Är här man loopas igenom så rätt label visas och det sparas ned under rätt del av json objektet.
-        //private void AddName()
-        //{
-        //    inputValueContentName = inputValue; // Input NavBar name
-        //    inputValue = string.Empty;
-        //    currentStep = InputStep.AddItem; // Hoppa till second input
-        //                                     //currentLabelText = LabelText2; // Ändra label till den för second input  
-        //}
-
-        //private void AddItem()
-        //{
-        //    inputValueContentName = inputValue; // Input NavBar name
-        //    inputValue = string.Empty;
-        //    currentStep = InputStep.AddItem; // Hoppa till second input
-        //                                     //currentLabelText = LabelText2; // Ändra label till den för second input  
-        //}
-        private async Task HandleSubmit()
+        private void AddMenuName()
         {
-            if (currentStep == InputStep.ContentNameInput)
-            {
-                inputValueContentName = inputValue; // Input NavBar name
-                //inputURL              = inputURL // // Input menu item URL
-                inputValue = string.Empty;
-                currentStep = InputStep.AddItem; // Hoppa till second input
-                //currentLabelText = LabelText2; // Ändra label till den för second input
-            }
-            else if (currentStep == InputStep.AddItem)
-            {
-                while(currentStep == InputStep.AddItem || currentStep == InputStep.AddItem)
-                {
-                    if (currentStep == InputStep.AddItem)
-                    { 
-                //inputValue1 = inputValue;
-                inputItemValue = inputValue; // Input menu item name
-                //inputItemURL = inputUrl; // Input menu item URL
-                inputValue = string.Empty;
-                //currentStep = InputStep.SecondInput;
-                //currentLabelText = LabelText3;
-                    }
-                    elsif()
-                    {
-                    }
-                }
-            }
-            else if (currentStep == InputStep.Done)
-            {
-                //inputValue8 = inputValue;
-                inputValue = string.Empty;
-                currentStep = InputStep.Done;
-
-                await SaveToDatabase();
-            }
+            inputValueContentName = inputValue; // Input NavBar name
+            inputValue = string.Empty;
+            currentStep = InputStep.AddItem; // Hoppa till second input
+                                             //currentLabelText = LabelText2; // Ändra label till den för second input  
         }
+
+        private void AddItem()
+        {
+            if (!string.IsNullOrEmpty(templateDropdown) && !string.IsNullOrEmpty(inputValue))
+            {
+                AddMenyItems.Add(templateDropdown, inputValue);
+            }
+
+            inputValue = string.Empty;
+            currentStep = InputStep.Wait; // Hoppa till second input
+                                             //currentLabelText = LabelText2; // Ändra label till den för second input  
+        }
+        private void NewItem()
+        {          
+                currentStep = InputStep.AddItem; // Hoppa till second input
+        }
+
+        private async Task Save()
+        {
+         
+
+            await SaveToDatabase();
+        }
+                
 
         // Hårdkodat WebPageId, den icke-hårdkodade koden får du fixa
         private async Task SaveToDatabase()

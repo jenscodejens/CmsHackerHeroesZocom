@@ -7,8 +7,6 @@
 
 @namespace Templates.InputForm
 
-<h3>Input Form</h3>
-
 <div>
 @*  Patrik, för att förklara lite hur jag gick tillväga för att ha ett input field för samtliga: inputValue, inputValue1 och inputValue2.
     Gjorde en loop (kan vara switch case med) som håller reda på vilken av de tre ovan som är den aktuella för inputen vid ett givet tillfälle.
@@ -25,33 +23,39 @@
                   
         <form>
             <div>
-                    <label for="templateDropdown">Meny namn:</label>
-                <input type="text" @bind="inputValue" placeholder="" />
-                <button type="button" @onclick="HandleSubmit">Lägg till</button>
+                    <label for="meny">Meny namn:</label>
+                    <input type="text" @bind="inputValue" placeholder="" />
+                    <button type="button" @onclick="AddMenuName">Lägg till</button>
             </div>
         </form>
     }
-    else
+        else if ((currentStep == InputStep.AddItem))
     {
             
 
         <div>
-            <label for="templateDropdown">Lägg till sida:</label>
-                <select id="templateDropdown" @onchange="HandleSubmit">
-                <option value="">-- Välj Sida --</option>
-                    @if (webpages != null)
-                {
-                        @foreach (var item in MenyItems)
-                    {
-                        <option value="@item.Value">@item.Key</option>
-                    }
-                }
+                <label for="title">Menyval nam:</label>
 
-            </select>
-            <button type="button" @onclick="HandleSubmit">Spara</button>
-            <button type="button" @onclick="AddSubmit">Lägg till menylänk.</button>
-        </div>
+                <input type="text" @bind="inputValue" placeholder="Menyval nam" />
+
+                    <select id="templateDropdown" @bind="templateDropdown">
+                    <option value="">-- Välj Sida --</option>
+                    @if (webpages != null)
+                    {
+                        @foreach (var item in MenyItems)
+                        {
+                            <option value="@item.Key">@item.Key</option>
+                        }
+                    }
+                </select>
+                <button type="button" @onclick="AddItem">Lägg till</button>
+            </div>
         }
+        else if ((currentStep == InputStep.Wait))
+        {
+            <button type="button" @onclick="NewItem">Lägg till menyval</button>
+        }
+
 
         @* <div>
             <label>@currentLabelText</label>
@@ -59,15 +63,32 @@
             <button type="button" @onclick="HandleSubmit">Edit</button>
         </div> *@
     }
+    @if (@inputValueContentName != string.Empty)
+    {
+        <div>
+            <div>
+            <a> Meny namn: @inputValueContentName </a>
+            </div>
+            <a> Menylänkar: </a>
+            @foreach (var item in AddMenyItems)
+            {
+                <a> @item.Value-</a>
+            }
+
+        
+
+    </div>
+    }
 
     <div>
+
         <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
         <br>
         <TextColorSelector @bind-SelectedTextColor="Textcolor" />
     </div>
 
     <div style="margin-top: 10px;">
-        <button type="button" @onclick="Done">Done</button>
+        <button type="button" @onclick="Done"></button>
 @*  Eftersom vi nu (enligt Mikael borde) sparar direkt i Db när ett textfält läggs till så tog jag bort min Cancel kod nedan.
     Det vi kan göra är att ladda templaten och sparar över det man redan tryck igenom om man trycker på cancel, eftersom koden blir nu automatiskt sparad direkt man trycker på Add (vilket sker efter varje textinput).
     Jag påbörjade men slutade och rullade tillbaka försök att få rullningsmenyn över färger att automatiskt uppdateras dynamiskt så som input av texter fungerar.
