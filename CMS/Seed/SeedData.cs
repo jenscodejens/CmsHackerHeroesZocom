@@ -183,6 +183,12 @@ namespace CMS.Seed
                     TemplateType = "BodySingleImage",
                     TemplatePath = "Templates.Body.SingleImage",
                     InputFormPath = "Templates.InputForm.SingleImageInputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "BodySingleImage",
+                    TemplatePath = "Templates.Body.SingleVideoInput",
+                    InputFormPath = "Templates.InputForm.SingleVideoInputForm"
                 }
             };
 

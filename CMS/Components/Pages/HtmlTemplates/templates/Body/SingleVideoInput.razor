@@ -1,0 +1,51 @@
+﻿@namespace Templates.Body
+
+<!-- Video Preview Section -->
+<div class="video-container" style="margin-top: 20px;">
+    @if (IsYouTubeUrl(VideoUrl))
+    {
+        <iframe width="560" height="315" src="@GetYouTubeEmbedUrl(VideoUrl)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    }
+    else
+    {
+        <video src="@VideoUrl" style="width: @VideoWidth; height: @VideoHeight;" controls>
+            Your browser does not support the video tag.
+        </video>
+    }
+</div>
+
+
+
+
+@code {
+    [Parameter] public int TemplateId { get; set; }
+    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+
+    // all parameters the user must fill in
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+
+    // Video Properties
+    [Parameter] public string VideoUrl { get; set; } = string.Empty;
+    [Parameter] public string VideoWidth { get; set; } = "100%";
+    [Parameter] public string VideoHeight { get; set; } = "auto";
+
+
+    // Method to construct a dictionary of video attributes
+    private bool IsYouTubeUrl(string url)
+    {
+        return url.Contains("youtube.com/watch") || url.Contains("youtu.be/");
+    }
+
+    private string GetYouTubeEmbedUrl(string url)
+    {
+        var videoId = ExtractYouTubeVideoId(url);
+        return $"https://www.youtube.com/embed/{videoId}";
+    }
+
+    private string ExtractYouTubeVideoId(string url)
+    {
+        var uri = new Uri(url);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        return queryParams["v"] ?? url.Split('/').Last();
+    }
+}
