@@ -24,9 +24,5 @@
     <None Remove="Components\BlazorComponent\Footer.css" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Components\Pages\HtmlTemplates\templates\Body\" />
-  </ItemGroup>
-
 
 </Project>

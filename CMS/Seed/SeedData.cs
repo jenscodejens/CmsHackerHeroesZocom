@@ -161,6 +161,12 @@ namespace CMS.Seed
                     TemplatePath = "Templates.SingleInput.Template1NavBar",
                     InputFormPath = "Templates.InputForm.NavBarInputForm"
                 },
+                   new Template
+                {
+                    TemplateType = "BodyImageCard",
+                    TemplatePath = "Templates.Body.Body1",
+                    InputFormPath = "Templates.InputForm.Body1InputForm"
+                }
             };
 
             return list;
