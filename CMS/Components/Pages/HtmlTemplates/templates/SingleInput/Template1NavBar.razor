@@ -10,9 +10,8 @@
     <div class="collapse navbar-collapse" id="navbaris">
         <ul class="navbar-nav mr-auto">
 
-            @foreach (var item in AddMenyItems)
+            @foreach (var item in MenyItems)
             {
-                <a> @item.Value-</a>
 
                 <li class="nav-item">
                     <NavLink class="nav-link" href="@item.Key">
@@ -60,5 +59,6 @@
     [Parameter] public Dictionary<string, string> AddMenyItems { get; set; } = new Dictionary<string, string>();
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; 
+    [Parameter] public Dictionary<string, string> MenyItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };
 
 }
