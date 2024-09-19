@@ -42,7 +42,7 @@ else
                     <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
-                <div class="mb-3">
+                @* <div class="mb-3">
                     <label for="contentbackground" class="form-label">Background Input:</label>
                     <InputText id="contentbackground" @bind-Value="Content.Backgroundcolor" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
@@ -51,7 +51,7 @@ else
                     <label for="contentTextColor" class="form-label">contentTextColor Input:</label>
                     <InputText id="contentTextColor" @bind-Value="Content.Textcolor" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
+                </div> *@
                 <div class="mb-3">
                     <label for="contentTemplateID" class="form-label">contentTemplateID Input:</label>
                     <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
@@ -70,6 +70,7 @@ else
 @code {
     [SupplyParameterFromQuery]
     public int ContentId { get; set; }
+
 
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
@@ -108,7 +109,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/content");
+        NavigationManager.NavigateTo($"/contents?webpageid={Content.WebPageId}");
     }
 
     bool ContentExists(int contentid)

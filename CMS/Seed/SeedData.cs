@@ -177,6 +177,12 @@ namespace CMS.Seed
                     TemplateType = "BodyImageCard",
                     TemplatePath = "Templates.Body.Body1",
                     InputFormPath = "Templates.InputForm.Body1InputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "BodySingleImage",
+                    TemplatePath = "Templates.Body.SingleImage",
+                    InputFormPath = "Templates.InputForm.SingleImageInputForm"
                 }
             };
 
