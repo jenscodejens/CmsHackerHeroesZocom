@@ -18,22 +18,71 @@
     /Jens
 *@
 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbaris">
+            <ul class="navbar-nav mr-auto">
+
+                @foreach (var item in AddMenyItems)
+                {
+                    
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="" @onclick="@Edit">
+                            @item.Value
+                        </NavLink>
+                    </li>
+                }
+                @*  <li class="nav-item">
+                <NavLink class="nav-link" href="@TextInput2">
+                @TextInput1
+                </NavLink>
+
+                </li>
+                <li class="nav-item">
+                <NavLink class="nav-link" href="@TextInput4">
+                @TextInput3
+                </NavLink>
+                </li>
+
+                <li class="nav-item">
+                <NavLink class="nav-link" href="@TextInput6">
+                @TextInput5
+                </NavLink>
+                </li>
+
+                <li class="nav-item">
+                <NavLink class="nav-link" href="@TextInput8">
+                @TextInput7
+                </NavLink>
+                </li>
+                <li class="nav-item">
+                <NavLink class="nav-link" href="@TextInput9">
+                @TextInput9
+                </NavLink>
+                </li> *@
+            </ul>
+        </div>
+    </nav>
+
+    <div>
     @{if (currentStep == InputStep.ContentNameInput)
     {
-                  
         <form>
-            <div>
+            
                     <label for="meny">Meny namn:</label>
                     <input type="text" @bind="inputValue" placeholder="" />
                     <button type="button" @onclick="AddMenuName">Lägg till</button>
-            </div>
+           
         </form>
     }
         else if ((currentStep == InputStep.AddItem))
     {
             
 
-        <div>
+        
                 <label for="title">Menyval nam:</label>
 
                 <input type="text" @bind="inputValue" placeholder="Menyval nam" />
@@ -49,46 +98,36 @@
                     }
                 </select>
                 <button type="button" @onclick="AddItem">Lägg till</button>
-            </div>
+            
         }
         else if ((currentStep == InputStep.Wait))
         {
-            <button type="button" @onclick="NewItem">Lägg till menyval</button>
+                <button type="button" @onclick="NewItem">Lägg till menyval</button>
         }
-
+        else if ((currentStep == InputStep.Edit))
+        {
+                
+        }
 
         @* <div>
             <label>@currentLabelText</label>
             <input type="text" @bind="inputValue" placeholder="" />
             <button type="button" @onclick="HandleSubmit">Edit</button>
         </div> *@
-    }
-    @if (@inputValueContentName != string.Empty)
-    {
-        <div>
-            <div>
-            <a> Meny namn: @inputValueContentName </a>
-            </div>
-            <a> Menylänkar: </a>
-            @foreach (var item in AddMenyItems)
-            {
-                <a> @item.Value-</a>
-            }
+    
 
-        
-
-    </div>
     }
 
+    
     <div>
-
         <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-        <br>
+        
         <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+    </div>
     </div>
 
     <div style="margin-top: 10px;">
-        <button type="button" @onclick="Done"></button>
+        <button type="button" @onclick="Done">Spara meny</button>
 @*  Eftersom vi nu (enligt Mikael borde) sparar direkt i Db när ett textfält läggs till så tog jag bort min Cancel kod nedan.
     Det vi kan göra är att ladda templaten och sparar över det man redan tryck igenom om man trycker på cancel, eftersom koden blir nu automatiskt sparad direkt man trycker på Add (vilket sker efter varje textinput).
     Jag påbörjade men slutade och rullade tillbaka försök att få rullningsmenyn över färger att automatiskt uppdateras dynamiskt så som input av texter fungerar.

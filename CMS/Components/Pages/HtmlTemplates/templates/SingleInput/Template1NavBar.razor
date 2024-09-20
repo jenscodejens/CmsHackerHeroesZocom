@@ -2,7 +2,7 @@
 
 @* Background color and text color are not yet implemented.
  *@
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
+@* <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -10,7 +10,7 @@
     <div class="collapse navbar-collapse" id="navbaris">
         <ul class="navbar-nav mr-auto">
 
-            @foreach (var item in MenyItems)
+            @foreach (var item in AddMenyItems)
             {
 
                 <li class="nav-item">
@@ -18,7 +18,7 @@
                         @item.Value
                 </NavLink>
                 </li>
-            }
+            } *@
            @*  <li class="nav-item">
                 <NavLink class="nav-link" href="@TextInput2">
                     @TextInput1
@@ -47,16 +47,16 @@
                     @TextInput9
                 </NavLink>
             </li> *@
-        </ul>
+     @*    </ul>
     </div>
-</nav>
+</nav> *@
 
 
 @code {
     [Parameter] public int TemplateId { get; set; }
     [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
     [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public Dictionary<string, string> AddMenyItems { get; set; } = new Dictionary<string, string>();
+    [Parameter] public Dictionary<string, string> AddMenyItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; 
     [Parameter] public Dictionary<string, string> MenyItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };

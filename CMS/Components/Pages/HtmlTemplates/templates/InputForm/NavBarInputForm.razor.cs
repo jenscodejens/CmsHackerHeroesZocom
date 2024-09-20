@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
+using Templates.SingleInput;
+
+
 
 namespace Templates.InputForm
 {
@@ -15,8 +19,10 @@ namespace Templates.InputForm
             ContentNameInput,
             AddItem,
             Wait,
+            Edit,
             Done
         }
+
 
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
@@ -47,6 +53,7 @@ namespace Templates.InputForm
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
         //[SupplyParameterFromQuery]
         //private int? WebSiteId { get; set; }
+       
 
         protected override async Task OnInitializedAsync()
         {
@@ -128,12 +135,26 @@ namespace Templates.InputForm
 
             inputValue = string.Empty;
             currentStep = InputStep.Wait; // Hoppa till second input
-                                             //currentLabelText = LabelText2; // Ändra label till den för second input  
+            
         }
         private void NewItem()
         {          
                 currentStep = InputStep.AddItem; // Hoppa till second input
         }
+
+        private void Edit()
+        {
+            foreach (var item in AddMenyItems)
+            {
+
+                templateDropdown = item.Key;
+                inputValue = item.Value;
+
+
+            }
+            currentStep = InputStep.Edit;
+        }
+}
 
         private async Task Save()
         {
