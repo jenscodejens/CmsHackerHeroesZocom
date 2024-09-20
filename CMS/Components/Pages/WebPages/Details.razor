@@ -1,4 +1,5 @@
 ﻿@page "/webpages/details"
+@attribute [Authorize]
 @rendermode InteractiveServer
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory

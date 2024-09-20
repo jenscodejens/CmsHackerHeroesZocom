@@ -1,5 +1,5 @@
 ﻿@page "/WebSites/edit"
-
+@attribute [Authorize]
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 

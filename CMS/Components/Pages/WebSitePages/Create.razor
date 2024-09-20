@@ -1,5 +1,5 @@
 ﻿@page "/websites/create"
-
+@attribute [Authorize]
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
