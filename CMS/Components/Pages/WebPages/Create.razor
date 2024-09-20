@@ -1,4 +1,6 @@
 ﻿@page "/webpages/create"
+@attribute [Authorize]
+@rendermode InteractiveServer
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
@@ -10,25 +12,36 @@
 <h4>WebPage</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-10">
         <EditForm method="post" Model="WebPage" OnValidSubmit="AddWebPage" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="websiteid" class="form-label">WebSiteId:</label> 
-                <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" readonly/> 
-                <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="header" class="form-label">Header:</label> 
                 <InputText id="header" @bind-Value="WebPage.Header" class="form-control" /> 
                 <ValidationMessage For="() => WebPage.Header" class="text-danger" /> 
-            </div>        
+            </div>
             <div class="mb-3">
-                <label for="body" class="form-label">Body:</label> 
-                <InputText id="body" @bind-Value="WebPage.Body" class="form-control" /> 
-                <ValidationMessage For="() => WebPage.Body" class="text-danger" /> 
-            </div>        
+                <label for="image" class="form-label">Image:</label>
+                <InputText id="image" @bind-Value="WebPage.ImageUrl" class="form-control" />
+                <ValidationMessage For="() => WebPage.ImageUrl" class="text-danger" />
+            </div>
+            <div class="mb-3">
+
+                <MarkdownEditor @bind-Value="@WebPage.Body"
+                                SpellChecker="false">
+                    <Toolbar>
+                        <MarkdownToolbarButton Action="MarkdownAction.Bold" Icon="fa fa-bold" Title="Bold" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Italic" Icon="fa fa-italic" Title="Italic" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Code" Icon="fa fa-code" Title="Code" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Heading" Icon="fa fa-header" Title="Heading" />
+                        <MarkdownToolbarButton Action="MarkdownAction.UnorderedList" Icon="fa fa-list-ul" Title="Generic List" />
+                        <MarkdownToolbarButton Action="MarkdownAction.OrderedList" Icon="fa fa-list-ol" Title="Numbered List" />
+                    </Toolbar>
+                </MarkdownEditor>
+                <ValidationMessage For="() => WebPage.Body" class="text-danger" />
+            </div>
+
             <div class="mb-3">
                 <label for="footer" class="form-label">Footer:</label> 
                 <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" /> 
@@ -48,22 +61,31 @@
     [SupplyParameterFromForm]
     public WebPage WebPage { get; set; } = new();
 
-    [SupplyParameterFromQuery]
-    public int WebsiteId { get; set; }
+    //[SupplyParameterFromQuery]
+    //public int WebsiteId { get; set; }
 
-    protected override void OnInitialized()
-    {
+    //protected override void OnInitialized()
+    //{
         // Set the WebPage's WebsiteId to the passed-in parameter
-        WebPage.WebSiteId = WebsiteId;
-    }
+        //WebPage.WebSiteId = WebsiteId;
+    //}
 
+
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
+    
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddWebPage()
     {
+        WebPage.WebSiteId = WebSiteId;
+        
         using var context = DbFactory.CreateDbContext();
         context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");
+        
+        //NavigationManager.NavigateTo($"webpages/details?WebPageId={WebPage.WebPageId}");
     }
+    
 }

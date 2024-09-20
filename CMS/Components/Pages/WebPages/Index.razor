@@ -2,31 +2,32 @@
 @attribute [Authorize]
 
 @using Microsoft.AspNetCore.Components.QuickGrid
-@using CMS.Data
-@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
 <PageTitle>Index</PageTitle>
 
 <h1>Index Web Pages</h1>
-
-<p>
-    <a href="webpages/create?websiteid=@WebSiteId">Create New</a>
-</p>
-
+@if (WebSiteId != null)
+{
+    <p>
+        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Create New</a>
+    </p>
+}
 @if (webpages == null || !webpages.Any())
 {
     <p>No webpages available.</p>
 }
 else
 {
-    <QuickGrid Class="table" Items="webpages"> <!-- Changed from context.WebPages to webpages -->
-        <PropertyColumn Property="webpage => webpage.WebPageId" />
-        <PropertyColumn Property="webpage => webpage.WebSiteId" />
-        <PropertyColumn Property="webpage => webpage.Header" />
-        <PropertyColumn Property="webpage => webpage.Body" />
-        <PropertyColumn Property="webpage => webpage.Footer" />
+    <QuickGrid Class="table" Items="webpages">
+        <!-- Changed from context.WebPages to webpages -->
+        <PropertyColumn Property="webpage => webpage.WebPageId"/>
+        <PropertyColumn Property="webpage => webpage.WebSiteId"/>
+        <PropertyColumn Property="webpage => webpage.Header"/>
+        <PropertyColumn Property="webpage => webpage.Body"/>
+        <PropertyColumn Property="webpage => webpage.Footer"/>
 
         <TemplateColumn Context="webpage">
             @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
@@ -42,30 +43,32 @@ else
 
 @code {
     IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-    [SupplyParameterFromQuery]
-    public int? WebSiteId { get; set; }
-
+    [SupplyParameterFromQuery] public int? WebSiteId { get; set; }
     ApplicationDbContext context = default!;
-    public string UserId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        var user = await GetCurrentUserService.GetCurrentUserAsync();
-        if (user != null)
-        {
-            UserId = user.Id;
-        }
-
         context = DbFactory.CreateDbContext();
 
-        if (WebSiteId.HasValue)
+        if (WebSiteId != null)
         {
-            // Fetch WebPages filtered by WebSiteId
             webpages = context.WebPages.Include(w => w.WebSite)
-                .Where(wp => wp.WebSite.UserId == UserId);
+                .Where(wp => wp.WebSiteId == WebSiteId);
         }
-      
+        else
+        {
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
+            if (user != null)
+            {
+                webpages = context.WebPages.Include(w => w.WebSite)
+                    .Where(wp => wp.WebSite.UserId == user.Id);
+            }
+        }
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        await context.DisposeAsync();
+    }
+
 }
