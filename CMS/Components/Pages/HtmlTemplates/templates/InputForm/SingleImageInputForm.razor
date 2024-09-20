@@ -42,6 +42,14 @@
             <!-- Background Color Controls -->
             <label>Background Color:</label>
             <input type="color" @bind="BackgroundColor" />
+
+            <!-- Image Alignment Controls -->
+            <label>Image Alignment:</label>
+            <select @bind="ImageAlignment">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+            </select>
         </div>
 @* 
         <div>
@@ -76,6 +84,7 @@
     [Parameter] public string BoxShadow { get; set; } = "none";
     [Parameter] public string BackgroundColor { get; set; }
     [Parameter] public string Textcolor { get; set; }
+    [Parameter] public string ImageAlignment { get; set; } = "center";
 
 
     // Save all inputs to the database when the "Save" button is clicked
@@ -94,7 +103,8 @@
             { "BorderRadius", BorderRadius },
             { "BoxShadow", BoxShadow },
             { "BackgroundColor", BackgroundColor },
-            { "Textcolor", Textcolor }
+            { "Textcolor", Textcolor },
+            { "ImageAlignment", ImageAlignment }
         };
 
         await OnSubmit.InvokeAsync(formValues);
@@ -129,6 +139,7 @@
                     BorderRadius = BorderRadius,
                     BoxShadow = BoxShadow,
                     Backgroundcolor = BackgroundColor,
+                    ImageAlignment = ImageAlignment
                 }),
                 TemplateId = TemplateId
             };

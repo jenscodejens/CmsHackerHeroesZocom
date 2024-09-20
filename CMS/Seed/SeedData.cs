@@ -186,7 +186,7 @@ namespace CMS.Seed
                 },
                    new Template
                 {
-                    TemplateType = "BodySingleImage",
+                    TemplateType = "BodySingleVideo",
                     TemplatePath = "Templates.Body.SingleVideoInput",
                     InputFormPath = "Templates.InputForm.SingleVideoInputForm"
                 }

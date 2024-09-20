@@ -1,7 +1,7 @@
 ﻿@namespace Templates.Body
 
-<div class="image-container" style="background-color: @BackgroundColor; border: @($"{BorderWidth}px solid {BorderColor}"); padding: 10px; box-shadow: @BoxShadow;">
-    <img src="@ImageInput1" class="custom-image" style="width: @ImageWidth; height: @ImageHeight; border-radius: @($"{BorderRadius}px");" />
+<div class="image-container" style="background-color: @BackgroundColor; padding: 10px; box-shadow: @BoxShadow; text-align:@ImageAlignment;">
+    <img src="@ImageInput1" class="custom-image" style="width: @ImageWidth; height: @ImageHeight; border-radius: @($"{BorderRadius}px"); border: @($"{BorderWidth}px solid {BorderColor}");" />
 </div>
 
 
@@ -23,4 +23,5 @@
     [Parameter] public string BoxShadow { get; set; } = "none";
     [Parameter] public string BackgroundColor { get; set; } = "#ffffff";
     [Parameter] public string Textcolor { get; set; } = "black";
+    [Parameter] public string ImageAlignment { get; set; } = "center";
 }

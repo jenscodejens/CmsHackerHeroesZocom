@@ -25,6 +25,15 @@
 
             <label>Video Height (px or %):</label>
             <input type="text" @bind="VideoHeight" placeholder="e.g., auto or 300px" />
+
+            <!-- Video Alignment Controls -->
+            <label>Video Alignment:</label>
+            <select @bind="VideoAlignment">
+                <option value="left">Left</option>
+                <option value="center">Center</option>
+                <option value="right">Right</option>
+            </select>
+
         </div>
 
 
@@ -49,6 +58,7 @@
     [Parameter] public string VideoUrl { get; set; } = string.Empty;
     [Parameter] public string VideoWidth { get; set; } = "100%";
     [Parameter] public string VideoHeight { get; set; } = "auto";
+    [Parameter] public string VideoAlignment { get; set; } = "left";
 
 
     // Save all inputs to the database when the "Save" button is clicked
@@ -61,6 +71,7 @@
             { "VideoUrl", VideoUrl },
             { "VideoWidth", VideoWidth },
             { "VideoHeight", VideoHeight },
+            { "VideoAlignment", VideoAlignment },
         };
 
         await OnSubmit.InvokeAsync(formValues);
@@ -90,6 +101,7 @@
                     VideoUrl = VideoUrl,
                     VideoWidth = VideoWidth,
                     VideoHeight = VideoHeight,
+                    VideoAlignment = VideoAlignment
                 }),
                 TemplateId = TemplateId
             };

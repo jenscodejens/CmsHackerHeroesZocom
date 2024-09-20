@@ -4,6 +4,8 @@
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
+@attribute [Authorize]
+
 @rendermode InteractiveServer
 
 <h3>Add Multiple Contents Page</h3>

@@ -1,10 +1,10 @@
 ﻿@namespace Templates.Body
 
 <!-- Video Preview Section -->
-<div class="video-container" style="margin-top: 20px;">
+<div class="video-container" style="margin-top: 20px; text-align:@VideoAlignment;">
     @if (IsYouTubeUrl(VideoUrl))
     {
-        <iframe width="560" height="315" src="@GetYouTubeEmbedUrl(VideoUrl)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe width="560" style="display: block;"  height="315" src="@GetYouTubeEmbedUrl(VideoUrl)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
     }
     else
     {
@@ -28,6 +28,7 @@
     [Parameter] public string VideoUrl { get; set; } = string.Empty;
     [Parameter] public string VideoWidth { get; set; } = "100%";
     [Parameter] public string VideoHeight { get; set; } = "auto";
+    [Parameter] public string VideoAlignment { get; set; } = "left";
 
 
     // Method to construct a dictionary of video attributes

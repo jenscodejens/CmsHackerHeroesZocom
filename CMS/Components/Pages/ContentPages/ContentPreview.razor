@@ -6,6 +6,8 @@
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 
+@attribute [Authorize]
+
 @code {
     [Parameter] public int ContentId { get; set; }
 
