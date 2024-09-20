@@ -17,7 +17,37 @@
 </p>
 @if (UserId != null)
 {
-    <QuickGrid Class="table" Items="context.WebSites.Where(w => w.UserId == UserId)">
+    <div class="grid-container" style="display: grid;"> 
+    @foreach (var website in context.WebSites.Where(w => w.UserId == UserId))
+    {
+        <div class="grid-item" >
+    
+            @if (website.ImageUrl != null)
+            {
+                <img src="@website.ImageUrl" alt=""
+                     style="object-fit:contain;width: 100%;height: 50%;"/>
+               
+            }
+            else
+            {
+                <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
+                     style="object-fit:contain;width: 100%;height: 50%;"/>
+           
+            }
+             <h3> @website.Title</h3>
+             <p style="font-size: small"> @website.Description</p>
+            <p style="font-size: small"> @website.CreationDate</p>
+
+            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
+            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
+            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a> |
+            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Add Page</a>
+        </div>
+    }
+    </div>
+
+    <!--
+<QuickGrid Class="table" Items="context.WebSites.Where(w => w.UserId == UserId)">
         <PropertyColumn Property="website => website.Title"/>
         <PropertyColumn Property="website => website.Description"/>
         <PropertyColumn Property="website => website.CreationDate"/>
@@ -31,9 +61,10 @@
             <a href="@($"/webpages?websiteid={website.WebSiteId}")">Show Web Pages</a> |
             <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Add Page</a>
         </TemplateColumn>
-    </QuickGrid>
+    </QuickGrid> -->
 }
 
+    
 @code {
 
     public string UserId { get; set; }
