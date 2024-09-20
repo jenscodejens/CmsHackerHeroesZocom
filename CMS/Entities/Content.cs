@@ -11,8 +11,8 @@ namespace CMS.Entities
 
         // New column to store JSON data
         public string TextInputsJson { get; set; }
-        public string Backgroundcolor { get; set; }
-        public string Textcolor { get; set; }
+        //public string? Backgroundcolor { get; set; }
+        //public string? Textcolor { get; set; }
 
         public WebPage WebPages { get; set; }
         public int TemplateId { get; set; }

@@ -57,7 +57,7 @@ namespace CMS.Seed
                 return;
             }
 
-           
+
             var menus = CreateWebSites(userId);
 
             await context.AddRangeAsync(menus);
@@ -172,6 +172,24 @@ namespace CMS.Seed
                     TemplatePath = "Templates.SingleInput.Template1NavBar",
                     InputFormPath = "Templates.InputForm.NavBarInputForm"
                 },
+                   new Template
+                {
+                    TemplateType = "BodyImageCard",
+                    TemplatePath = "Templates.Body.Body1",
+                    InputFormPath = "Templates.InputForm.Body1InputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "BodySingleImage",
+                    TemplatePath = "Templates.Body.SingleImage",
+                    InputFormPath = "Templates.InputForm.SingleImageInputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "BodySingleVideo",
+                    TemplatePath = "Templates.Body.SingleVideoInput",
+                    InputFormPath = "Templates.InputForm.SingleVideoInputForm"
+                }
             };
 
             return list;

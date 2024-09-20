@@ -61,6 +61,16 @@
     [SupplyParameterFromForm]
     public WebPage WebPage { get; set; } = new();
 
+    //[SupplyParameterFromQuery]
+    //public int WebsiteId { get; set; }
+
+    //protected override void OnInitialized()
+    //{
+        // Set the WebPage's WebsiteId to the passed-in parameter
+        //WebPage.WebSiteId = WebsiteId;
+    //}
+
+
     [SupplyParameterFromQuery]
     public int WebSiteId { get; set; }
     
@@ -73,8 +83,9 @@
         using var context = DbFactory.CreateDbContext();
         context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
+        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");
         
-        NavigationManager.NavigateTo($"webpages/details?WebPageId={WebPage.WebPageId}");
+        //NavigationManager.NavigateTo($"webpages/details?WebPageId={WebPage.WebPageId}");
     }
     
 }
