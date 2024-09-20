@@ -1,6 +1,5 @@
 ﻿using CMS.Data;
 using CMS.Entities;
-using CMS.Migrations;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
@@ -47,7 +46,7 @@ namespace Templates.InputForm
         private string currentLabelText = string.Empty;
 
 
-        public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { {"Inget","Inget"} };
+        public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
         public Dictionary<string, string> AddMenyItems = new Dictionary<string, string>();
         //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
@@ -87,24 +86,24 @@ namespace Templates.InputForm
                 var pages = await context.WebPages.ToListAsync();
                 var page  = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
                 var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
-                //.Where(wp => wp.WebPageId == WebPageId)
-                //.Include(WebPageName);
+            //.Where(wp => wp.WebPageId == WebPageId)
+            //.Include(WebPageName);
 
 
 
 
-                
-                foreach (var site in webpages1)
+
+            foreach (var site in webpages1)
+            {
+                if (site.WebPageName != null)
                 {
-                    if(site.WebPageName != null)
-                    { 
-                        MenyItems.Add(site.WebPageName, "https://Github.com");
-                    }
+                    MenyItems.Add(site.WebPageName, site.WebPageName);
                 }
+            }
 
-            
-                //IEnMenyItems = new List<Dictionary<string, string>>()
-                //{ MenyItems };
+
+            //IEnMenyItems = new List<Dictionary<string, string>>()
+            //{ MenyItems };
 
             //}
             //else
@@ -130,11 +129,22 @@ namespace Templates.InputForm
         {
             if (!string.IsNullOrEmpty(templateDropdown) && !string.IsNullOrEmpty(inputValue))
             {
-                AddMenyItems.Add(templateDropdown, inputValue);
+                if (!AddMenyItems.ContainsKey(inputValue))
+                {
+                    AddMenyItems.Add(inputValue, templateDropdown);
+                }
+                //else
+                //{
+                //    //should be removed and replaced by verification + alertmessages 
+                //    while (AddMenyItems.ContainsKey(inputValue))
+                //    {
+                //        string add = "{Finns redan}";
+                //        inputValue = $"{inputValue}{add}";
+                //    }
+                //}
             }
 
-            inputValue = string.Empty;
-            currentStep = InputStep.Wait; // Hoppa till second input
+            inputValue = string.Empty;//Loop
             
         }
         private void NewItem()
@@ -147,14 +157,24 @@ namespace Templates.InputForm
             foreach (var item in AddMenyItems)
             {
 
-                templateDropdown = item.Key;
-                inputValue = item.Value;
+                templateDropdown = item.Value;
+                inputValue = item.Key;
 
 
             }
             currentStep = InputStep.Edit;
         }
-}
+
+        private void ChangeItem()
+        {
+            currentStep = InputStep.Wait;
+        }
+
+        private void AbortItem()
+        {
+            inputValue = string.Empty;
+            currentStep = InputStep.Wait;
+        }
 
         private async Task Save()
         {

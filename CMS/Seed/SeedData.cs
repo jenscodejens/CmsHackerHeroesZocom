@@ -21,7 +21,7 @@ namespace CMS.Seed
             //    return;
             //}
 
-            //adds templates we have made in folder if we haven't any values in the template table
+           // //adds templates we have made in folder if we haven't any values in the template table
             //if (!context.Templates.Any())//Templates.Any())
             //{
             //    var templates = CreateTemplates();

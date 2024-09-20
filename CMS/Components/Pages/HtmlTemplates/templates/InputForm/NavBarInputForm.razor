@@ -30,8 +30,8 @@
                 {
                     
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="" @onclick="@Edit">
-                            @item.Value
+                        <NavLink class="nav-link"  @onclick="@Edit">
+                            @item.Key
                         </NavLink>
                     </li>
                 }
@@ -98,6 +98,8 @@
                     }
                 </select>
                 <button type="button" @onclick="AddItem">Lägg till</button>
+                <button type="button" @onclick="AbortItem">Avbryt</button>
+
             
         }
         else if ((currentStep == InputStep.Wait))
@@ -106,7 +108,22 @@
         }
         else if ((currentStep == InputStep.Edit))
         {
-                
+                <label for="title">Menyval nam:</label>
+
+                <input type="text" @bind="inputValue" placeholder="inputValue" />
+
+                <select id="templateDropdown" @bind="templateDropdown">
+                    <option value="">-- Välj Sida --</option>
+                    @if (webpages != null)
+                    {
+                        @foreach (var item in MenyItems)
+                        {
+                            <option value="@item.Key">@item.Key</option>
+                        }
+                    }
+                </select>
+                <button type="button" @onclick="AbortItem">Avbryt</button>
+                <button type="button" @onclick="ChangeItem">Ändra</button>
         }
 
         @* <div>
