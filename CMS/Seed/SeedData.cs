@@ -189,7 +189,14 @@ namespace CMS.Seed
                     TemplateType = "BodySingleVideo",
                     TemplatePath = "Templates.Body.SingleVideoInput",
                     InputFormPath = "Templates.InputForm.SingleVideoInputForm"
+                },
+                new Template
+                {
+                    TemplateType = "BodySingleTextField",
+                    TemplatePath = "Templates.Body.SingleTextField",
+                    InputFormPath = "Templates.InputForm.SingleTextFieldInputForm"
                 }
+
             };
 
             return list;
