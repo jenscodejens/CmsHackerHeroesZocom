@@ -1,21 +1,23 @@
 ﻿@namespace Templates.Body
 
 <!-- Video Preview Section -->
-<div class="video-container" style="margin-top: 20px; text-align:@VideoAlignment;">
+<div class="video-container" style="margin-top: 20px;">
     @if (IsYouTubeUrl(VideoUrl))
     {
-        <iframe width="560" style="display: block;"  height="315" src="@GetYouTubeEmbedUrl(VideoUrl)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe style="width: @VideoWidth; height: @VideoHeight; display: block; margin: 0 auto;"
+                src="@GetYouTubeEmbedUrl(VideoUrl)"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
     }
     else
     {
-        <video src="@VideoUrl" style="width: @VideoWidth; height: @VideoHeight;" controls>
+        <video src="@VideoUrl" style="width: @VideoWidth; height: @VideoHeight; display: block; margin: 0 auto;" controls>
             Your browser does not support the video tag.
         </video>
     }
 </div>
-
-
-
 
 @code {
     [Parameter] public int TemplateId { get; set; }
@@ -26,23 +28,24 @@
 
     // Video Properties
     [Parameter] public string VideoUrl { get; set; } = string.Empty;
-    [Parameter] public string VideoWidth { get; set; } = "100%";
-    [Parameter] public string VideoHeight { get; set; } = "auto";
-    [Parameter] public string VideoAlignment { get; set; } = "left";
+    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
+    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
+    [Parameter] public string VideoAlignment { get; set; } = "center";
 
-
-    // Method to construct a dictionary of video attributes
+    // Method to check if the video URL is from YouTube
     private bool IsYouTubeUrl(string url)
     {
         return url.Contains("youtube.com/watch") || url.Contains("youtu.be/");
     }
 
+    // Method to get YouTube embed URL
     private string GetYouTubeEmbedUrl(string url)
     {
         var videoId = ExtractYouTubeVideoId(url);
         return $"https://www.youtube.com/embed/{videoId}";
     }
 
+    // Method to extract YouTube video ID from URL
     private string ExtractYouTubeVideoId(string url)
     {
         var uri = new Uri(url);

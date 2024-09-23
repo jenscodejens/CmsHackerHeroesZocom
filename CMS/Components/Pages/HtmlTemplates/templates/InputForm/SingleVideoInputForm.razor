@@ -56,9 +56,9 @@
 
     // Video Properties
     [Parameter] public string VideoUrl { get; set; } = string.Empty;
-    [Parameter] public string VideoWidth { get; set; } = "100%";
-    [Parameter] public string VideoHeight { get; set; } = "auto";
-    [Parameter] public string VideoAlignment { get; set; } = "left";
+    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
+    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
+    [Parameter] public string VideoAlignment { get; set; } = "center";
 
 
     // Save all inputs to the database when the "Save" button is clicked

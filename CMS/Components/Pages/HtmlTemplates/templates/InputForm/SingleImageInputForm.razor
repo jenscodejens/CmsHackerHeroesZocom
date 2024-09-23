@@ -73,18 +73,19 @@
     [Parameter] public int WebPageId { get; set; }
 
     [Parameter] public string ContentName { get; set; } = string.Empty;
+
     [Parameter] public string ImageInput1 { get; set; } = string.Empty;
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
-    [Parameter] public string ImageWidth { get; set; } = "100%";
-    [Parameter] public string ImageHeight { get; set; } = "auto";
-    [Parameter] public decimal BorderWidth { get; set; } = 2;
-    [Parameter] public string BorderColor { get; set; } = "#cccccc";
-    [Parameter] public decimal BorderRadius { get; set; } = 0;
-    [Parameter] public string BoxShadow { get; set; } = "none";
+    [Parameter] public string ImageWidth { get; set; } 
+    [Parameter] public string ImageHeight { get; set; }
+    [Parameter] public decimal BorderWidth { get; set; }
+    [Parameter] public string BorderColor { get; set; }
+    [Parameter] public decimal BorderRadius { get; set; }
+    [Parameter] public string BoxShadow { get; set; }
     [Parameter] public string BackgroundColor { get; set; }
-    [Parameter] public string Textcolor { get; set; }
-    [Parameter] public string ImageAlignment { get; set; } = "center";
+    //[Parameter] public string Textcolor { get; set; }
+    [Parameter] public string ImageAlignment { get; set; }
 
 
     // Save all inputs to the database when the "Save" button is clicked
@@ -103,7 +104,7 @@
             { "BorderRadius", BorderRadius },
             { "BoxShadow", BoxShadow },
             { "BackgroundColor", BackgroundColor },
-            { "Textcolor", Textcolor },
+            //{ "Textcolor", Textcolor },
             { "ImageAlignment", ImageAlignment }
         };
 
