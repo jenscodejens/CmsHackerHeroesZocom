@@ -2,6 +2,7 @@
 using CMS.Entities;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -37,9 +38,10 @@ namespace Templates.InputForm
         [Parameter] public string templateDropdown { get; set; } = string.Empty;
 
         private string inputValue = string.Empty;
-        private string inputUrl = string.Empty;
+        private string inputKey = string.Empty;
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
+        private string oldKey = string.Empty;
         //private string inputItemValue = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
@@ -152,21 +154,40 @@ namespace Templates.InputForm
                 currentStep = InputStep.AddItem; // Hoppa till second input
         }
 
-        private void Edit()
+        private void Edit(string href)
         {
             foreach (var item in AddMenyItems)
             {
 
-                templateDropdown = item.Value;
-                inputValue = item.Key;
-
+                if (item.Key == href)
+                { 
+                    inputValue = item.Key;
+                    oldKey = item.Key;
+                    templateDropdown = item.Value;
+                }
+                //int a = 0;
 
             }
             currentStep = InputStep.Edit;
         }
 
-        private void ChangeItem()
+        private void UpdateItem()
         {
+            if (!AddMenyItems.ContainsKey(inputValue))
+            {
+                AddMenyItems.Add(inputValue, templateDropdown);
+            }
+
+            if (AddMenyItems.ContainsKey(oldKey))
+            {
+                string value = AddMenyItems[oldKey];
+
+                AddMenyItems.Remove(oldKey);
+
+                
+                AddMenyItems[inputValue] = templateDropdown;
+            }
+            inputValue = string.Empty;
             currentStep = InputStep.Wait;
         }
 
@@ -176,6 +197,11 @@ namespace Templates.InputForm
             currentStep = InputStep.Wait;
         }
 
+        private void DeleteItem()
+        {
+            AddMenyItems.Remove(oldKey);
+            currentStep = InputStep.Wait;
+        }
         private async Task Save()
         {
          
@@ -187,6 +213,8 @@ namespace Templates.InputForm
         // Hårdkodat WebPageId, den icke-hårdkodade koden får du fixa
         private async Task SaveToDatabase()
         {
+            //Todo:Test this:
+            AddMenyItems.Remove("Länk saknas")
             await using var context = DbFactory.CreateDbContext();
 
             // Ensure WebPageId exists in WebPages table

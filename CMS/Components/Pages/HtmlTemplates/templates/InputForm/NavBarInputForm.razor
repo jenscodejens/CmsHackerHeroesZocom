@@ -28,41 +28,13 @@
 
                 @foreach (var item in AddMenyItems)
                 {
-                    
                     <li class="nav-item">
-                        <NavLink class="nav-link"  @onclick="@Edit">
+                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)">
                             @item.Key
                         </NavLink>
                     </li>
                 }
-                @*  <li class="nav-item">
-                <NavLink class="nav-link" href="@TextInput2">
-                @TextInput1
-                </NavLink>
-
-                </li>
-                <li class="nav-item">
-                <NavLink class="nav-link" href="@TextInput4">
-                @TextInput3
-                </NavLink>
-                </li>
-
-                <li class="nav-item">
-                <NavLink class="nav-link" href="@TextInput6">
-                @TextInput5
-                </NavLink>
-                </li>
-
-                <li class="nav-item">
-                <NavLink class="nav-link" href="@TextInput8">
-                @TextInput7
-                </NavLink>
-                </li>
-                <li class="nav-item">
-                <NavLink class="nav-link" href="@TextInput9">
-                @TextInput9
-                </NavLink>
-                </li> *@
+              
             </ul>
         </div>
     </nav>
@@ -123,7 +95,8 @@
                     }
                 </select>
                 <button type="button" @onclick="AbortItem">Avbryt</button>
-                <button type="button" @onclick="ChangeItem">Ändra</button>
+                <button type="button" @onclick="UpdateItem">Ändra</button>
+                <button type="button" @onclick="DeleteItem">Ta bort</button>
         }
 
         @* <div>
