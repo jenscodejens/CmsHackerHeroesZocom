@@ -1,0 +1,54 @@
+﻿@page "/content/details"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h4>Content</h4>
+    <hr />
+    @if (content is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">WebSiteId</dt>
+            <dd class="col-sm-10">@content.ContentId</dd>
+            <dt class="col-sm-2">WebpageId</dt>
+            <dd class="col-sm-10">@content.WebPageId</dd>
+            <dt class="col-sm-2">ContentName</dt>
+            <dd class="col-sm-10">@content.ContentName</dd>
+        </dl>
+        <div>
+            <a href="@($"/content/edit?contentid={content.ContentId}")">Edit</a> |
+            <a href="@($"/content")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    Content? content;
+
+    [SupplyParameterFromQuery]
+    public int ContentId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        content = await context.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+
+        if (content is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

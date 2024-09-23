@@ -1,0 +1,27 @@
+﻿@using CMS.Services
+@inject VisitorCounterService VisitorCounterService
+@inject NavigationManager NavigationManager
+
+
+<p>Visits @VisitCount times.</p>
+
+@code {
+[Parameter]
+public int WebSiteId { get; set; }
+
+private int VisitCount { get; set; }
+private string CurrentPageUrl => NavigationManager.Uri;
+
+protected override async Task OnInitializedAsync()
+{
+// Increment the visit count for this specific page
+await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
+
+// Get the updated visit count for this page
+VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
+}
+}
+
+
+
+

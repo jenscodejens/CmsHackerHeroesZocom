@@ -1,0 +1,131 @@
+﻿@page "/content/createcontent"
+@namespace htmltemplates.templates
+@using CMS.Data
+@using CMS.Models
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<h3>Create a Content</h3>
+
+<div>
+    <label for="templateDropdown">Choose a Template:</label>
+    <select id="templateDropdown" @onchange="OnTemplateChanged">
+        <option value="">-- Select Template --</option>
+        @if (templates != null)
+        {
+            @foreach (var template in templates)
+            {
+                <option value="@template.TemplatePath">@template.TemplateType</option>
+            }
+        }
+    </select>
+</div>
+
+@if (!string.IsNullOrEmpty(selectedTemplatePath))
+{
+    <div>
+        @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(selectedInputFormPath))
+{
+    <div>
+        @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
+        {
+            { "TemplateId", templateParameters["TemplateId"] },
+            { "WebPageId", templateParameters["WebPageId"] },
+            { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
+        })
+    </div>
+}
+
+@code {
+
+    // [SupplyParameterFromQuery]
+    // public int? WebPageId { get; set; } // Accept WebPageId from query parameters
+
+    [Parameter] 
+    [SupplyParameterFromQuery]
+    public int? WebPageId { get; set; } // Accept WebPageId as a parameter
+
+    private List<Template> templates = new List<Template>(); // Initialize with an empty list
+    private string selectedTemplatePath;
+    private string selectedInputFormPath;
+    private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var dbContext = DbContextFactory.CreateDbContext();
+        templates = await dbContext.Templates.ToListAsync();
+
+        // Initialize parameters with WebPageId
+        if (WebPageId.HasValue)
+        {
+            templateParameters["WebPageId"] = WebPageId.Value;
+        }
+
+    }
+
+    private void OnTemplateChanged(ChangeEventArgs e)
+    {
+        selectedTemplatePath = e.Value?.ToString();
+        var selectedTemplate = templates.FirstOrDefault(t => t.TemplatePath == selectedTemplatePath);
+        if (selectedTemplate != null)
+        {
+            selectedInputFormPath = selectedTemplate.InputFormPath; // Get the input form path
+                                                                    
+            // Initialize parameters for the selected template
+            templateParameters.Clear();
+            templateParameters["TemplateId"] = selectedTemplate.TemplateId; // Pass the TemplateId
+
+            // Add WebPageId to parameters if available
+            if (WebPageId.HasValue)
+            {
+                templateParameters["WebPageId"] = WebPageId.Value;
+            }
+
+        }
+        else
+        {
+            selectedInputFormPath = null; // Clear input form if no template selected
+        }
+    }
+
+    private RenderFragment RenderDynamicComponent(string componentPath, Dictionary<string, object> parameters)
+    {
+        if (!string.IsNullOrEmpty(componentPath))
+        {
+            var type = Type.GetType(componentPath);
+            if (type != null)
+            {
+                return builder =>
+                {
+                    builder.OpenComponent(0, type);
+                    foreach (var parameter in parameters)
+                    {
+                        builder.AddAttribute(1, parameter.Key, parameter.Value);
+                    }
+                    builder.CloseComponent();
+                };
+            }
+            else
+            {
+                return builder => builder.AddContent(0, "Component not found.");
+            }
+        }
+        return builder => builder.AddContent(0, "No component selected.");
+    }
+
+    private void OnInputFormSubmit(Dictionary<string, object> formValues)
+    {
+        // Update the parameters for the selected template based on form values
+        foreach (var kvp in formValues)
+        {
+            templateParameters[kvp.Key] = kvp.Value;
+        }
+    }
+}

@@ -1,0 +1,74 @@
+﻿@page "/webpages"
+@attribute [Authorize]
+
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
+@implements IAsyncDisposable
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index Web Pages</h1>
+@if (WebSiteId != null)
+{
+    <p>
+        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Create New</a>
+    </p>
+}
+@if (webpages == null || !webpages.Any())
+{
+    <p>No webpages available.</p>
+}
+else
+{
+    <QuickGrid Class="table" Items="webpages">
+        <!-- Changed from context.WebPages to webpages -->
+        <PropertyColumn Property="webpage => webpage.WebPageId"/>
+        <PropertyColumn Property="webpage => webpage.WebSiteId"/>
+        <PropertyColumn Property="webpage => webpage.Header"/>
+        <PropertyColumn Property="webpage => webpage.Body"/>
+        <PropertyColumn Property="webpage => webpage.Footer"/>
+
+        <TemplateColumn Context="webpage">
+            @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
+            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Preview WebPage</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")"> See all Contents</a> |
+            @* <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
+            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
+            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Details</a> |
+            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
+
+@code {
+    IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
+    [SupplyParameterFromQuery] public int? WebSiteId { get; set; }
+    ApplicationDbContext context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        if (WebSiteId != null)
+        {
+            webpages = context.WebPages.Include(w => w.WebSite)
+                .Where(wp => wp.WebSiteId == WebSiteId);
+        }
+        else
+        {
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
+            if (user != null)
+            {
+                webpages = context.WebPages.Include(w => w.WebSite)
+                    .Where(wp => wp.WebSite.UserId == user.Id);
+            }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await context.DisposeAsync();
+    }
+
+}

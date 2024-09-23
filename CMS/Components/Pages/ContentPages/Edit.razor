@@ -1,0 +1,122 @@
+﻿@page "/content/edit"
+
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h4>Content</h4>
+<hr />
+@if (Content is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Content" OnValidSubmit="UpdateContent" FormName="create" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" />
+                <div class="mb-3">
+                    <label for="contentid" class="form-label">ContentId:</label>
+                    <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly/>
+                    <ValidationMessage For="() => Content.ContentId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="webpageid" class="form-label">WebPageId:</label>
+                    <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
+                    <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contentname" class="form-label">Content Input:</label>
+                    <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
+                    <ValidationMessage For="() => Content" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="textJsonInput" class="form-label">textJson Input:</label>
+                    <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
+                    <ValidationMessage For="() => Content" class="text-danger" />
+                </div>
+                @* <div class="mb-3">
+                    <label for="contentbackground" class="form-label">Background Input:</label>
+                    <InputText id="contentbackground" @bind-Value="Content.Backgroundcolor" class="form-control" />
+                    <ValidationMessage For="() => Content" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="contentTextColor" class="form-label">contentTextColor Input:</label>
+                    <InputText id="contentTextColor" @bind-Value="Content.Textcolor" class="form-control" />
+                    <ValidationMessage For="() => Content" class="text-danger" />
+                </div> *@
+                <div class="mb-3">
+                    <label for="contentTemplateID" class="form-label">contentTemplateID Input:</label>
+                    <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
+                    <ValidationMessage For="() => Content" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Create</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/content">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int ContentId { get; set; }
+
+
+    [SupplyParameterFromForm]
+    public Content? Content { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Content ??= await context.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+
+        if (Content is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see https://aka.ms/RazorPagesCRUD.
+    public async Task UpdateContent()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Content!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ContentExists(Content!.ContentId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo($"/contents?webpageid={Content.WebPageId}");
+    }
+
+    bool ContentExists(int contentid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Contents.Any(e => e.ContentId == contentid);
+    }
+}

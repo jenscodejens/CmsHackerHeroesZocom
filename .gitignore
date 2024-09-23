@@ -361,3 +361,25 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Migrations
+**/Migrations/
+
+# Win / Mac users use different syntax
+appsettings.json
+**/appsettings.json
+CMS/appsettings.json
+# VS History extension
+.vshistory
+*.vs
+.vscode/settings.json
+
+# Rider IDE 
+.idea/
+# Ignore .idea directory
+
+.idea/.idea.CMS/.idea/
+
+# Ignore qodana.yaml file
+qodana.yaml
+
