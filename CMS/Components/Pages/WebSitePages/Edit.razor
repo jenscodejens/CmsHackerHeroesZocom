@@ -27,6 +27,11 @@ else
                     <ValidationMessage For="() => WebSite.Title" class="text-danger" />
                 </div>
                 <div class="mb-3">
+                    <label for="image" class="form-label">Bild:</label>
+                    <InputText id="description" @bind-Value="WebSite.ImageUrl" class="form-control" />
+                    <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
+                </div>
+                <div class="mb-3">
                     <label for="description" class="form-label">Description:</label>
                     <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
                     <ValidationMessage For="() => WebSite.Description" class="text-danger" />
@@ -51,6 +56,10 @@ else
                     <InputText id="userid" @bind-Value="WebSite.UserId" class="form-control" />
                     <ValidationMessage For="() => WebSite.UserId" class="text-danger" />
                 </div>
+
+                <SetLandingPage WebSiteId="@WebSiteId" />
+
+                <br />
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>
