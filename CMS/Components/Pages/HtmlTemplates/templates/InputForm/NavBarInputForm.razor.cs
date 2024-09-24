@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using Templates.SingleInput;
-
+using CMS.Shared;
 
 
 namespace Templates.InputForm
@@ -48,8 +48,8 @@ namespace Templates.InputForm
         private string currentLabelText = string.Empty;
 
 
-        public Dictionary<string, string> MenyItems = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
-        public Dictionary<string, string> AddMenyItems = new Dictionary<string, string>();
+        public Dictionary<string, string> MenuItems = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
+        public Dictionary<string, string> AddMenuItems = new Dictionary<string, string>();
         //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
         //[SupplyParameterFromQuery]
@@ -74,11 +74,11 @@ namespace Templates.InputForm
             //        .Where(wp => wp.WebSiteId == WebSiteId.Value);
 
             //    foreach(var site in webpages) {
-            //        MenyItems.Add(site.WebSite.Title, "https://Github.com");
+            //        MenuItems.Add(site.WebSite.Title, "https://Github.com");
             //    }
 
             //     IEnMenyItems = new List<Dictionary<string, string>>()
-            //    { MenyItems };
+            //    { MenuItems };
 
             //}
             //if (WebPageId.HasValue)
@@ -99,13 +99,13 @@ namespace Templates.InputForm
             {
                 if (site.WebPageName != null)
                 {
-                    MenyItems.Add(site.WebPageName, site.WebPageName);
+                    MenuItems.Add(site.WebPageName, site.WebPageName);
                 }
             }
 
 
             //IEnMenyItems = new List<Dictionary<string, string>>()
-            //{ MenyItems };
+            //{ MenuItems };
 
             //}
             //else
@@ -132,9 +132,9 @@ namespace Templates.InputForm
         {
             if (!string.IsNullOrEmpty(templateDropdown) && !string.IsNullOrEmpty(inputValue))
             {
-                if (!AddMenyItems.ContainsKey(inputValue))
+                if (!AddMenuItems.ContainsKey(inputValue))
                 {
-                    AddMenyItems.Add(inputValue, templateDropdown);
+                    AddMenuItems.Add(inputValue, templateDropdown);
                     inputValue = string.Empty;
                     currentStep = InputStep.Wait;
                 }
@@ -153,7 +153,7 @@ namespace Templates.InputForm
 
         private void Edit(string href)
         {
-            foreach (var item in AddMenyItems)
+            foreach (var item in AddMenuItems)
             {
                 //Todo: Set Alertmessage?: error is not found.
                 if (item.Key == href)
@@ -172,7 +172,7 @@ namespace Templates.InputForm
         {
             //ToDo: Check, not 2 keys with the same values.
             // Check if the new key already exists
-            if (AddMenyItems.ContainsKey(inputValue) && oldKey != inputValue)
+            if (AddMenuItems.ContainsKey(inputValue) && oldKey != inputValue)
             {
 
 
@@ -183,16 +183,16 @@ namespace Templates.InputForm
             }
 
 
-            if (AddMenyItems.ContainsKey(oldKey))
+            if (AddMenuItems.ContainsKey(oldKey))
             {
              
-                string value = AddMenyItems[oldKey];
+                string value = AddMenuItems[oldKey];
 
                 
-                AddMenyItems.Remove(oldKey);
+                AddMenuItems.Remove(oldKey);
 
                 
-                AddMenyItems[inputValue] = templateDropdown; // Maintain the same value while keeping insertion order
+                AddMenuItems[inputValue] = templateDropdown; // Maintain the same value while keeping insertion order
 
                 
                 inputValue = string.Empty;
@@ -201,22 +201,22 @@ namespace Templates.InputForm
             else
             {
                 
-                AddMenyItems.Add(inputValue, templateDropdown); // Add new key-value
+                AddMenuItems.Add(inputValue, templateDropdown); // Add new key-value
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
-            //if (!AddMenyItems.ContainsKey(inputValue))
+            //if (!AddMenuItems.ContainsKey(inputValue))
             //{
-            //    AddMenyItems.Add(inputValue, templateDropdown);
+            //    AddMenuItems.Add(inputValue, templateDropdown);
 
-            //    if (AddMenyItems.ContainsKey(oldKey))
+            //    if (AddMenuItems.ContainsKey(oldKey))
             //    {
-            //        string value = AddMenyItems[oldKey];
+            //        string value = AddMenuItems[oldKey];
 
-            //        AddMenyItems.Remove(oldKey);
+            //        AddMenuItems.Remove(oldKey);
 
 
-            //        AddMenyItems[inputValue] = templateDropdown;
+            //        AddMenuItems[inputValue] = templateDropdown;
 
             //        inputValue = string.Empty;
             //        currentStep = InputStep.Wait;
@@ -238,7 +238,7 @@ namespace Templates.InputForm
 
         private void DeleteItem()
         {
-            AddMenyItems.Remove(oldKey);
+            AddMenuItems.Remove(oldKey);
             currentStep = InputStep.Wait;
         }
       
@@ -247,26 +247,13 @@ namespace Templates.InputForm
             await SaveToDatabase();
         }
 
-        private object CreateTextInputs()
-        {
-            var textInputs = new Dictionary<string, string>();
-
-            int index = 1;
-            foreach (var item in AddMenyItems)
-            {
-                textInputs[$"TextInput{index}"] = item.Value;
-                index++;
-            }
-
-            return textInputs;
-        }
+        
 
 
-        // Hårdkodat WebPageId, den icke-hårdkodade koden får du fixa
         private async Task SaveToDatabase()
         {
             //Todo:Test this:
-            if (!AddMenyItems.Any()|| inputValueContentName == string.Empty)
+            if (!AddMenuItems.Any()|| inputValueContentName == string.Empty)
             {
                 if(inputValueContentName == string.Empty)
                 {
@@ -290,11 +277,14 @@ namespace Templates.InputForm
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
 
+            var menuItemsWrapper = new MenuItemsWrapper("AddMenuItems", "Dictionary<string, string>", AddMenuItems);
+   
+
             var content = new Content
             {
                 ContentName = inputValueContentName,
                 WebPageId = WebPageId,
-                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(AddMenyItems),
+                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(menuItemsWrapper), // Serialize the wrapper
                 Backgroundcolor = Backgroundcolor,
                 Textcolor = Textcolor,
                 TemplateId = TemplateId
@@ -314,15 +304,14 @@ namespace Templates.InputForm
 
             // Mapping to ensure inputs are stored properly
             var formValues = new Dictionary<string, object>
-{
-    { "ContentName", inputValueContentName },
-    { "TextInput9", WebPageName },
-    { "Backgroundcolor", Backgroundcolor },
-    { "Textcolor", Textcolor }
-};
+            {
+                { "ContentName", inputValueContentName },
+                { "Backgroundcolor", Backgroundcolor },
+                { "Textcolor", Textcolor }
+            };
 
             // Add dictionary values to formValues
-            foreach (var item in AddMenyItems)
+            foreach (var item in AddMenuItems)
             {
                 formValues[item.Key] = item.Value; // Use the keys directly
             }

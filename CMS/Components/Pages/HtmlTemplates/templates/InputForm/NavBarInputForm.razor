@@ -26,7 +26,7 @@
         <div class="collapse navbar-collapse" id="navbaris">
             <ul class="navbar-nav mr-auto">
 
-                @foreach (var item in AddMenyItems)
+                @foreach (var item in AddMenuItems)
                 {
                     <li class="nav-item">
                         <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {Textcolor};")">
@@ -45,7 +45,7 @@
     {
         <form>
             
-                    <label for="meny">Meny namn:</label>
+                    <label for="meny">Meny-namn:</label>
                     <input type="text" @bind="inputValue" placeholder="" />
                     <button type="button" @onclick="AddMenuName">Lägg till</button>
            
@@ -64,7 +64,7 @@
                     <option value="">-- Välj Sida --</option>
                     @if (webpages != null)
                     {
-                        @foreach (var item in MenyItems)
+                        @foreach (var item in MenuItems)
                         {
                             <option value="@item.Key">@item.Key</option>
                         }
@@ -89,7 +89,7 @@
                     <option value="">-- Välj Sida --</option>
                     @if (webpages != null)
                     {
-                        @foreach (var item in MenyItems)
+                        @foreach (var item in MenuItems)
                         {
                             <option value="@item.Key">@item.Key</option>
                         }
