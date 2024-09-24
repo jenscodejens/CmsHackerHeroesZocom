@@ -18,7 +18,7 @@
     /Jens
 *@
 
-    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
+    <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {Backgroundcolor}; color: {Textcolor}; font-size: 20px;")">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -29,7 +29,7 @@
                 @foreach (var item in AddMenyItems)
                 {
                     <li class="nav-item">
-                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)">
+                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {Textcolor};")">
                             @item.Key
                         </NavLink>
                     </li>
@@ -38,6 +38,7 @@
             </ul>
         </div>
     </nav>
+    <a>Tryck på en titel i menyn för att editera valet.</a>
 
     <div>
     @{if (currentStep == InputStep.ContentNameInput)
@@ -55,9 +56,9 @@
             
 
         
-                <label for="title">Menyval nam:</label>
+                <label for="title">Menyval namn:</label>
 
-                <input type="text" @bind="inputValue" placeholder="Menyval nam" />
+                <input type="text" @bind="inputValue" placeholder="Menyval namn" />
 
                     <select id="templateDropdown" @bind="templateDropdown">
                     <option value="">-- Välj Sida --</option>
@@ -95,7 +96,7 @@
                     }
                 </select>
                 <button type="button" @onclick="AbortItem">Avbryt</button>
-                <button type="button" @onclick="UpdateItem">Ändra</button>
+                <button type="button" @onclick="UpdateItem">Spara</button>
                 <button type="button" @onclick="DeleteItem">Ta bort</button>
         }
 
@@ -113,11 +114,13 @@
         <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
         
         <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+       
     </div>
     </div>
 
     <div style="margin-top: 10px;">
-        <button type="button" @onclick="Done">Spara meny</button>
+        <button type="button" @onclick="Save">Spara meny</button>
+        <button type="button" @onclick="Done">Gå till innehåll utan att spara</button>
 @*  Eftersom vi nu (enligt Mikael borde) sparar direkt i Db när ett textfält läggs till så tog jag bort min Cancel kod nedan.
     Det vi kan göra är att ladda templaten och sparar över det man redan tryck igenom om man trycker på cancel, eftersom koden blir nu automatiskt sparad direkt man trycker på Add (vilket sker efter varje textinput).
     Jag påbörjade men slutade och rullade tillbaka försök att få rullningsmenyn över färger att automatiskt uppdateras dynamiskt så som input av texter fungerar.

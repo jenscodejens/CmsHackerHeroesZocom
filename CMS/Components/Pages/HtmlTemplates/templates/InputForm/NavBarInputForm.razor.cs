@@ -121,6 +121,7 @@ namespace Templates.InputForm
         // Är här man loopas igenom så rätt label visas och det sparas ned under rätt del av json objektet.
         private void AddMenuName()
         {
+
             inputValueContentName = inputValue; // Input NavBar name
             inputValue = string.Empty;
             currentStep = InputStep.AddItem; // Hoppa till second input
@@ -134,38 +135,34 @@ namespace Templates.InputForm
                 if (!AddMenyItems.ContainsKey(inputValue))
                 {
                     AddMenyItems.Add(inputValue, templateDropdown);
+                    inputValue = string.Empty;
+                    currentStep = InputStep.Wait;
                 }
-                //else
-                //{
-                //    //should be removed and replaced by verification + alertmessages 
-                //    while (AddMenyItems.ContainsKey(inputValue))
-                //    {
-                //        string add = "{Finns redan}";
-                //        inputValue = $"{inputValue}{add}";
-                //    }
-                //}
+                else 
+                {
+                    //Todo: Set Alertmessage: You can not use the same name for two items.
+                    currentStep = InputStep.AddItem;
+                }
             }
-
-            inputValue = string.Empty;//Loop
             
         }
         private void NewItem()
         {          
-                currentStep = InputStep.AddItem; // Hoppa till second input
+                currentStep = InputStep.AddItem; 
         }
 
         private void Edit(string href)
         {
             foreach (var item in AddMenyItems)
             {
-
+                //Todo: Set Alertmessage?: error is not found.
                 if (item.Key == href)
-                { 
+                {
                     inputValue = item.Key;
                     oldKey = item.Key;
                     templateDropdown = item.Value;
                 }
-                //int a = 0;
+
 
             }
             currentStep = InputStep.Edit;
@@ -173,22 +170,64 @@ namespace Templates.InputForm
 
         private void UpdateItem()
         {
-            if (!AddMenyItems.ContainsKey(inputValue))
+            //ToDo: Check, not 2 keys with the same values.
+            // Check if the new key already exists
+            if (AddMenyItems.ContainsKey(inputValue) && oldKey != inputValue)
             {
-                AddMenyItems.Add(inputValue, templateDropdown);
+
+
+                    //ToDo: Alert message: You cannot use the same name for two items.
+
+                   return; // Exit the method to prevent adding the same key
+                
             }
+
 
             if (AddMenyItems.ContainsKey(oldKey))
             {
+             
                 string value = AddMenyItems[oldKey];
 
+                
                 AddMenyItems.Remove(oldKey);
 
                 
-                AddMenyItems[inputValue] = templateDropdown;
+                AddMenyItems[inputValue] = templateDropdown; // Maintain the same value while keeping insertion order
+
+                
+                inputValue = string.Empty;
+                currentStep = InputStep.Wait;
             }
-            inputValue = string.Empty;
-            currentStep = InputStep.Wait;
+            else
+            {
+                
+                AddMenyItems.Add(inputValue, templateDropdown); // Add new key-value
+                inputValue = string.Empty;
+                currentStep = InputStep.Wait;
+            }
+            //if (!AddMenyItems.ContainsKey(inputValue))
+            //{
+            //    AddMenyItems.Add(inputValue, templateDropdown);
+
+            //    if (AddMenyItems.ContainsKey(oldKey))
+            //    {
+            //        string value = AddMenyItems[oldKey];
+
+            //        AddMenyItems.Remove(oldKey);
+
+
+            //        AddMenyItems[inputValue] = templateDropdown;
+
+            //        inputValue = string.Empty;
+            //        currentStep = InputStep.Wait;
+            //    }
+            //}
+            //else 
+            //{
+            //    //Todo: Set Alertmessage: You can not use the same name for two items.
+            //}
+
+
         }
 
         private void AbortItem()
@@ -202,10 +241,9 @@ namespace Templates.InputForm
             AddMenyItems.Remove(oldKey);
             currentStep = InputStep.Wait;
         }
+      
         private async Task Save()
         {
-         
-
             await SaveToDatabase();
         }
                 
@@ -214,7 +252,21 @@ namespace Templates.InputForm
         private async Task SaveToDatabase()
         {
             //Todo:Test this:
-            AddMenyItems.Remove("Länk saknas")
+            if (!AddMenyItems.Any()|| inputValueContentName == string.Empty)
+            {
+                if(inputValueContentName == string.Empty)
+                {
+                    //Todo: Add alertmessage: Menu name is mandatory.
+                    currentStep = InputStep.ContentNameInput;
+                    return;
+                }
+                else
+                {
+                    //Todo: Add alertmessage: The navbar needs at least one item.
+                    currentStep = InputStep.Wait;
+                    return;
+                }
+            }
             await using var context = DbFactory.CreateDbContext();
 
             // Ensure WebPageId exists in WebPages table
