@@ -246,7 +246,21 @@ namespace Templates.InputForm
         {
             await SaveToDatabase();
         }
-                
+
+        private object CreateTextInputs()
+        {
+            var textInputs = new Dictionary<string, string>();
+
+            int index = 1;
+            foreach (var item in AddMenyItems)
+            {
+                textInputs[$"TextInput{index}"] = item.Value;
+                index++;
+            }
+
+            return textInputs;
+        }
+
 
         // Hårdkodat WebPageId, den icke-hårdkodade koden får du fixa
         private async Task SaveToDatabase()
@@ -280,19 +294,7 @@ namespace Templates.InputForm
             {
                 ContentName = inputValueContentName,
                 WebPageId = WebPageId,
-                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-
-                    //TextInput1 = inputValue1,
-                    //TextInput2 = inputValue2,
-                    //TextInput3 = inputValue3,
-                    //TextInput4 = inputValue4,
-                    //TextInput5 = inputValue5,
-                    //TextInput6 = inputValue6,
-                    //TextInput7 = inputValue7,
-                    //TextInput8 = inputValue8,
-                    //TextInput9 = inputValue9
-                }),
+                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(AddMenyItems),
                 Backgroundcolor = Backgroundcolor,
                 Textcolor = Textcolor,
                 TemplateId = TemplateId
@@ -310,23 +312,20 @@ namespace Templates.InputForm
                 throw;
             }
 
-            // mapping del så inputs hamnar där de ska
+            // Mapping to ensure inputs are stored properly
             var formValues = new Dictionary<string, object>
-        {
-            { "ContentName", inputValueContentName },
-            { "TextInput9", WebPageName },
-            //{ "TextInput1", inputValue1 },
-            //{ "TextInput2", inputValue2 },
-            //{ "TextInput3", inputValue3 },
-            //{ "TextInput4", inputValue4 },
-            //{ "TextInput5", inputValue5 },
-            //{ "TextInput6", inputValue6 },
-            //{ "TextInput7", inputValue7 },
-            //{ "TextInput8", inputValue8 },
-            { "Backgroundcolor", Backgroundcolor },
-            { "Textcolor", Textcolor }
+{
+    { "ContentName", inputValueContentName },
+    { "TextInput9", WebPageName },
+    { "Backgroundcolor", Backgroundcolor },
+    { "Textcolor", Textcolor }
+};
 
-        };
+            // Add dictionary values to formValues
+            foreach (var item in AddMenyItems)
+            {
+                formValues[item.Key] = item.Value; // Use the keys directly
+            }
 
             await OnSubmit.InvokeAsync(formValues);
         }
