@@ -27,6 +27,11 @@ else
                     <ValidationMessage For="() => WebSite.Title" class="text-danger" />
                 </div>
                 <div class="mb-3">
+                    <label for="image" class="form-label">Bild:</label>
+                    <InputText id="description" @bind-Value="WebSite.ImageUrl" class="form-control" />
+                    <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
+                </div>
+                <div class="mb-3">
                     <label for="description" class="form-label">Description:</label>
                     <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
                     <ValidationMessage For="() => WebSite.Description" class="text-danger" />
@@ -51,6 +56,10 @@ else
                     <InputText id="userid" @bind-Value="WebSite.UserId" class="form-control" />
                     <ValidationMessage For="() => WebSite.UserId" class="text-danger" />
                 </div>
+
+                <SetLandingPage WebSiteId="@WebSiteId"/>
+
+                <br />
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>
         </div>
@@ -88,13 +97,23 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateWebSite()
     {
         using var context = DbFactory.CreateDbContext();
-        WebSite!.LastUpdated = DateOnly.FromDateTime(DateTime.Today);
-        context.Attach(WebSite!).State = EntityState.Modified;
+
+        var existingWebSite = await context.WebSites.FindAsync(WebSite!.WebSiteId);
+
+        if (existingWebSite == null)
+        {
+            NavigationManager.NavigateTo("notfound");
+            return;
+        }
+
+        // Endast följande fält skall sparas när UpdateWebSite() körs, detta är en fulfix för UpdateWebSite() alltid sätter LandingPage till null.
+        existingWebSite.Title = WebSite.Title;
+        existingWebSite.ImageUrl = WebSite.ImageUrl;
+        existingWebSite.Description = WebSite.Description;
+        existingWebSite.LastUpdated = DateOnly.FromDateTime(DateTime.Today);
 
         try
         {
@@ -102,7 +121,7 @@ else
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!WebSiteExists(WebSite!.WebSiteId))
+            if (!WebSiteExists(WebSite.WebSiteId))
             {
                 NavigationManager.NavigateTo("notfound");
             }
@@ -111,9 +130,9 @@ else
                 throw;
             }
         }
-
         NavigationManager.NavigateTo("/websites");
     }
+
 
     bool WebSiteExists(int websiteid)
     {

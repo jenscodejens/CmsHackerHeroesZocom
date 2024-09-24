@@ -20,7 +20,9 @@ namespace CMS.Extensions
 
                 try
                 {
-                    await SeedData.InitAsync(context, registerService, roleManager);
+                    // Ändra till: await SeedData.InitAsync(context, registerService, roleManager);
+                    // Om du vill ha tidigare seed med mock users/websites/webpages
+                    await SeedWithoutWebsites.InitAsync(context, registerService, roleManager);
                 }
                 catch (Exception ex)
                 {
