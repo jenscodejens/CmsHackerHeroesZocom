@@ -8,16 +8,6 @@
 @namespace Templates.InputForm
 
 <div>
-@*  Patrik, för att förklara lite hur jag gick tillväga för att ha ett input field för samtliga: inputValue, inputValue1 och inputValue2.
-    Gjorde en loop (kan vara switch case med) som håller reda på vilken av de tre ovan som är den aktuella för inputen vid ett givet tillfälle.
-    Anledningen var att det är ser mer cleant ut att ha endast ett fält med tillhörande knapp än att alltid visa flera fält varav ett alltid är tomt.
-    GetPlaceholderText() lade jag till så det inte gav intrycket att man måste ha två olika textinputs, ingen aning om det är något du vill behålla.
-    Done() är en knapp med tillhörade funtion som tar användare till "/content". Mer info längre ned i texten.
-    Jag tror inte jag ändrade så mycket mer, eventuellt till async Task i någon fil men nu börjar jag snart blanda ihop allt själv (din kod).
-    Så det är endast denna filen som är totalt ändrad. Men nu sparar den korrekt i Db, och preview fungerar.
-    /Jens
-*@
-
     <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {Backgroundcolor}; color: {Textcolor}; font-size: 20px;")">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -26,7 +16,7 @@
         <div class="collapse navbar-collapse" id="navbaris">
             <ul class="navbar-nav mr-auto">
 
-                @foreach (var item in AddMenuItems)
+                @foreach (var item in MenuItems)
                 {
                     <li class="nav-item">
                         <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {Textcolor};")">
@@ -41,93 +31,78 @@
     <a>Tryck på en titel i menyn för att editera valet.</a>
 
     <div>
-    @{if (currentStep == InputStep.ContentNameInput)
-    {
-        <form>
+        @{if (currentStep == InputStep.ContentNameInput)
+        {
+            <form>
             
-                    <label for="meny">Meny-namn:</label>
-                    <input type="text" @bind="inputValue" placeholder="" />
-                    <button type="button" @onclick="AddMenuName">Lägg till</button>
+                        <label for="meny">Meny-namn:</label>
+                        <input type="text" @bind="inputValue" placeholder="" />
+                        <button type="button" @onclick="AddMenuName">Lägg till</button>
            
-        </form>
-    }
-        else if ((currentStep == InputStep.AddItem))
-    {
+            </form>
+        }
+            else if ((currentStep == InputStep.AddItem))
+        {
             
 
         
-                <label for="title">Menyval namn:</label>
+                    <label for="title">Menyval namn:</label>
 
-                <input type="text" @bind="inputValue" placeholder="Menyval namn" />
+                    <input type="text" @bind="inputValue" placeholder="Menyval namn" />
+
+                        <select id="templateDropdown" @bind="templateDropdown">
+                        <option value="">-- Välj Sida --</option>
+                        @if (webpages != null)
+                        {
+                            @foreach (var item in Pages)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
+                        }
+                    </select>
+                    <button type="button" @onclick="AddItem">Lägg till</button>
+                    <button type="button" @onclick="AbortItem">Avbryt</button>
+
+            
+            }
+            else if ((currentStep == InputStep.Wait))
+            {
+                    <button type="button" @onclick="NewItem">Lägg till menyval</button>
+            }
+            else if ((currentStep == InputStep.Edit))
+            {
+                    <label for="title">Menyval nam:</label>
+
+                    <input type="text" @bind="inputValue" placeholder="inputValue" />
 
                     <select id="templateDropdown" @bind="templateDropdown">
-                    <option value="">-- Välj Sida --</option>
-                    @if (webpages != null)
-                    {
-                        @foreach (var item in MenuItems)
+                        <option value="">-- Välj Sida --</option>
+                        @if (webpages != null)
                         {
-                            <option value="@item.Key">@item.Key</option>
+                            @foreach (var item in Pages)
+                            {
+                                <option value="@item.Key">@item.Key</option>
+                            }
                         }
-                    }
-                </select>
-                <button type="button" @onclick="AddItem">Lägg till</button>
-                <button type="button" @onclick="AbortItem">Avbryt</button>
+                    </select>
+                    <button type="button" @onclick="AbortItem">Avbryt</button>
+                    <button type="button" @onclick="UpdateItem">Spara</button>
+                    <button type="button" @onclick="DeleteItem">Ta bort</button>
+            }
 
-            
         }
-        else if ((currentStep == InputStep.Wait))
-        {
-                <button type="button" @onclick="NewItem">Lägg till menyval</button>
-        }
-        else if ((currentStep == InputStep.Edit))
-        {
-                <label for="title">Menyval nam:</label>
-
-                <input type="text" @bind="inputValue" placeholder="inputValue" />
-
-                <select id="templateDropdown" @bind="templateDropdown">
-                    <option value="">-- Välj Sida --</option>
-                    @if (webpages != null)
-                    {
-                        @foreach (var item in MenuItems)
-                        {
-                            <option value="@item.Key">@item.Key</option>
-                        }
-                    }
-                </select>
-                <button type="button" @onclick="AbortItem">Avbryt</button>
-                <button type="button" @onclick="UpdateItem">Spara</button>
-                <button type="button" @onclick="DeleteItem">Ta bort</button>
-        }
-
-        @* <div>
-            <label>@currentLabelText</label>
-            <input type="text" @bind="inputValue" placeholder="" />
-            <button type="button" @onclick="HandleSubmit">Edit</button>
-        </div> *@
-    
-
-    }
-
-    
-    <div>
-        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-        
-        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
-       
-    </div>
+  
+        <div>
+            <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />      
+            <TextColorSelector @bind-SelectedTextColor="Textcolor" />    
+        </div>
     </div>
 
     <div style="margin-top: 10px;">
         <button type="button" @onclick="Save">Spara meny</button>
-        <button type="button" @onclick="Done">Gå till innehåll utan att spara</button>
-@*  Eftersom vi nu (enligt Mikael borde) sparar direkt i Db när ett textfält läggs till så tog jag bort min Cancel kod nedan.
-    Det vi kan göra är att ladda templaten och sparar över det man redan tryck igenom om man trycker på cancel, eftersom koden blir nu automatiskt sparad direkt man trycker på Add (vilket sker efter varje textinput).
-    Jag påbörjade men slutade och rullade tillbaka försök att få rullningsmenyn över färger att automatiskt uppdateras dynamiskt så som input av texter fungerar.
-    Det blev för bökigt och det är redan rörigt i mitt huvud eftersom det är kod jag inte skapat från början :)
-    
-    <span style="margin-left: 10px;"></span>
-    <button type="button" @onclick="CancelTemplate">Cancel</button> *@
+        <br>
+        <button type="button" @onclick="Done">Gå till innehåll</button>
+
     </div>
 </div>
 

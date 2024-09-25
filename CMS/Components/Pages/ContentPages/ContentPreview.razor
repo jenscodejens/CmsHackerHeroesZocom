@@ -37,20 +37,27 @@
 
                 // Pass all text inputs to templateParameters
                 templateParameters.Clear();
-
+                //Todo: Divide code in to functions.
                 bool Navbar = false;
                 if (textInputs != null)
                 {
 
                     foreach (var input in textInputs)
                     {
-
                         var test = ConvertJsonElement(input.Value);
-                        string menuItemName = "AddMenuItems";
-                        if (menuItemName == test.ToString())
-                         {
-                             Navbar = true;
-                         }
+                        if (test != null)
+                        {
+                            //Todo: Change the use of the string "MenuItems" if variable name changed, this can be missed and lead to error.
+                            string menuItemName = "MenuItems";
+                            if (menuItemName == test.ToString())
+                            {
+                                Navbar = true;
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Data for contents name is invalid.");
+                        }
                     }
 
 
