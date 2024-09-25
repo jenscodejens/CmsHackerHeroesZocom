@@ -19,7 +19,7 @@ else
     <!-- Header Section -->
     <header class="header-section">
         <p>HEADER</p>
-        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></htmltemplates.templates.CreateContent>
     </header>
 
     <!-- Main Body Sections -->
@@ -28,17 +28,19 @@ else
         {
             <div class="main-body-section">
                 <p>BODY</p>
-                <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+                <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></htmltemplates.templates.CreateContent>
             </div>
         }
         <button @onclick="AddNewContent" class="add-button">Add New Content</button>
     </main>
-
     <!-- Footer Section -->
     <footer class="footer-section">
         <p>FOOTER</p>
-        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></htmltemplates.templates.CreateContent>
     </footer>
+
+    <!-- Save Button -->
+    <button @onclick="SaveAllContents" class="save-button">Save All Contents</button>
 }
 
 @code {
@@ -46,6 +48,9 @@ else
     WebPage? webpage;
 
     private List<int> contentIndexes = new List<int>();
+    private bool saveBtnClicked = false; // Track if save button has been clicked
+    private bool multipagemode = true;
+
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }
@@ -63,10 +68,15 @@ else
 
     private void AddNewContent()
     {
-        // Add a new index to the list to render an additional CreateContent component
         contentIndexes.Add(contentIndexes.Count);
     }
+
+    private void SaveAllContents()
+    {
+        saveBtnClicked = true; // Set to true when save button is clicked
+    }
 }
+
 
 <!-- Add your CSS here or in a separate stylesheet -->
 <style>
