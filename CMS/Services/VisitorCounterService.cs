@@ -14,7 +14,7 @@ public class VisitorCounterService
         _context = context;
     }
 
-    public async Task IncrementPageVisitAsync(string websiteId, string pageUrl)
+    public async Task IncrementPageVisitAsync(int websiteId, string pageUrl)
     {
         var pageVisit = await _context.WebSiteVisits
             .FirstOrDefaultAsync(wv => wv.WebSiteId == websiteId && wv.PageUrl == pageUrl);
@@ -37,14 +37,14 @@ public class VisitorCounterService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<int> GetPageVisitCountAsync(string websiteId, string pageUrl)
+    public async Task<int> GetPageVisitCountAsync(int websiteId, string pageUrl)
     {
         var pageVisit = await _context.WebSiteVisits
             .FirstOrDefaultAsync(wv => wv.WebSiteId == websiteId && wv.PageUrl == pageUrl);
         return pageVisit?.VisitCount ?? 0;
     }
 
-    public async Task<IEnumerable<WebSiteVisit>> GetAllPageVisitsAsync(string websiteId)
+    public async Task<IEnumerable<WebSiteVisit>> GetAllPageVisitsAsync(int websiteId)
     {
         return await _context.WebSiteVisits
             .Where(wv => wv.WebSiteId == websiteId)
@@ -53,38 +53,3 @@ public class VisitorCounterService
 }
 
 
-/*
-public class VisitorCounterService
-{
-    private readonly ApplicationDbContext _context;
-
-    public VisitorCounterService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
-
-    public async Task IncrementWebsiteVisitAsync(string websiteId)
-    {
-        // Find the existing website visit record or create a new one
-        var websiteVisit = await _context.WebSiteVisits.FirstOrDefaultAsync(wv => wv.WebSiteId == websiteId);
-
-        if (websiteVisit == null)
-        {
-            websiteVisit = new WebSiteVisit { WebSiteId = websiteId, VisitCount = 1 };
-            _context.WebSiteVisits.Add(websiteVisit);
-        }
-        else
-        {
-            websiteVisit.VisitCount++;
-        }
-
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task<int> GetWebsiteVisitCountAsync(string websiteId)
-    {
-        var websiteVisit = await _context.WebSiteVisits.FirstOrDefaultAsync(wv => wv.WebSiteId == websiteId);
-        return websiteVisit?.VisitCount ?? 0;
-    }
-}
-*/

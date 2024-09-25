@@ -5,6 +5,7 @@ using Bogus;
 using CMS.Services;
 using CMS.Entities;
 using CMS.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CMS.Seed
 {
@@ -13,13 +14,13 @@ namespace CMS.Seed
 
         private static Faker faker = new Faker();
         private static Random random = new Random();
-        public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService)
+        public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService, RoleManager<IdentityRole> roleManager)
         {
 
-            //if (context.WebSites.Any() && context.WebSites.Count() < 10)
-            //{
-            //    return;
-            //}
+            if (context.WebSites.Any())
+            {
+                return;
+            }
 
            // //adds templates we have made in folder if we haven't any values in the template table
             //if (!context.Templates.Any())//Templates.Any())
@@ -28,14 +29,24 @@ namespace CMS.Seed
             //    await context.Templates.AddRangeAsync(templates);
             //}
 
-            //for (int i = 0; i < 4; i++)
-            //{
-            //    var fName = faker.Name.FirstName();
-            //    var lName = faker.Name.LastName();
-            //    var email = faker.Internet.Email(fName, lName, "zocom.se");
-            //    var result = await registerService.CreateUser(email, "pSrkXHN6z8s%KHW@");
-            //    Console.WriteLine(result);
-            //}
+            // Seed roles
+            var roles = new[] { "Admin", "User" };
+            foreach (var role in roles)
+            {
+                if (!await roleManager.RoleExistsAsync(role))
+                {
+                    await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+
+            for (int i = 0; i < 4; i++)
+            {
+                var fName = faker.Name.FirstName();
+                var lName = faker.Name.LastName();
+                var email = faker.Internet.Email(fName, lName, "zocom.se");
+                var result = await registerService.CreateUser(email, "pSrkXHN6z8s%KHW@");
+                Console.WriteLine(result);
+            }
 
             //var result1 = await registerService.CreateUser(@"test@test.com", "pSrkXHN6z8s%KHW@");
             //Console.WriteLine(result1);
@@ -46,8 +57,8 @@ namespace CMS.Seed
             //    return;
             //}
 
-           
-            //var menus = CreateWebSites(userId);
+
+            var menus = CreateWebSites(userId);
 
             //await context.AddRangeAsync(menus);
             //context.SaveChanges();
@@ -161,6 +172,24 @@ namespace CMS.Seed
                     TemplatePath = "Templates.SingleInput.Template1NavBar",
                     InputFormPath = "Templates.InputForm.NavBarInputForm"
                 },
+                   new Template
+                {
+                    TemplateType = "BodyImageCard",
+                    TemplatePath = "Templates.Body.Body1",
+                    InputFormPath = "Templates.InputForm.Body1InputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "BodySingleImage",
+                    TemplatePath = "Templates.Body.SingleImage",
+                    InputFormPath = "Templates.InputForm.SingleImageInputForm"
+                },
+                   new Template
+                {
+                    TemplateType = "BodySingleVideo",
+                    TemplatePath = "Templates.Body.SingleVideoInput",
+                    InputFormPath = "Templates.InputForm.SingleVideoInputForm"
+                }
             };
 
             return list;

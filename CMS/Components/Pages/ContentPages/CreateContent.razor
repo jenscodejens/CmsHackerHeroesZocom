@@ -6,12 +6,14 @@
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
-<h3>Create a Content</h3>
+@attribute [Authorize]
+
+<h3>Skapa ett innehåll</h3>
 
 <div>
-    <label for="templateDropdown">Choose a Template:</label>
+    <label for="templateDropdown">Välj en mall:</label>
     <select id="templateDropdown" @onchange="OnTemplateChanged">
-        <option value="">-- Select Template --</option>
+        <option value="">-- Välj mall --</option>
         @if (templates != null)
         {
             @foreach (var template in templates)
@@ -43,8 +45,12 @@
 
 @code {
 
+    // [SupplyParameterFromQuery]
+    // public int? WebPageId { get; set; } // Accept WebPageId from query parameters
+
+    [Parameter] 
     [SupplyParameterFromQuery]
-    public int? WebPageId { get; set; } // Accept WebPageId from query parameters
+    public int? WebPageId { get; set; } // Accept WebPageId as a parameter
 
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;

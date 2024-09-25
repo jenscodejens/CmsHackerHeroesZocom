@@ -7,6 +7,8 @@
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 
+@attribute [Authorize]
+
 @code {
     [Parameter] public int ContentId { get; set; }
 
@@ -93,8 +95,8 @@
                 }
 
                 // Add the colors to the template parameters
-                templateParameters["Backgroundcolor"] = content.Backgroundcolor ?? "grey";
-                templateParameters["Textcolor"] = content.Textcolor ?? "black";
+                //templateParameters["Backgroundcolor"] = content.Backgroundcolor ?? "grey";
+                //templateParameters["Textcolor"] = content.Textcolor ?? "black";
                 templateParameters["Contentname"] = content.ContentName ?? "no info entered"; /* ny */
             }
             else
@@ -155,7 +157,7 @@
     }
 }
 
-<h3>Content Preview</h3>
+@* <h3>Content Preview</h3> *@
 @if (!string.IsNullOrEmpty(selectedTemplatePath))
 {
     @RenderDynamicComponent(selectedTemplatePath, templateParameters)

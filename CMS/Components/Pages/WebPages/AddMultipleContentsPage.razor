@@ -1,0 +1,102 @@
+﻿@page "/webpages/createmulti"
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize]
+
+@rendermode InteractiveServer
+
+<h3>Lägg till flera innehållssidor</h3>
+
+@if (webpage is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <!-- Header Section -->
+    <header class="header-section">
+        <p>RUBRIK</p>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+    </header>
+
+    <!-- Main Body Sections -->
+    <main class="main-body-sections">
+        @foreach (var index in contentIndexes)
+        {
+            <div class="main-body-section">
+                <p>KROPP</p>
+                <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+            </div>
+        }
+        <button @onclick="AddNewContent" class="add-button">Lägg till nytt innehåll</button>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="footer-section">
+        <p>Sidfoten</p>
+        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+    </footer>
+}
+
+@code {
+
+    WebPage? webpage;
+
+    private List<int> contentIndexes = new List<int>();
+
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        webpage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
+        if (webpage is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private void AddNewContent()
+    {
+        // Add a new index to the list to render an additional CreateContent component
+        contentIndexes.Add(contentIndexes.Count);
+    }
+}
+
+<!-- Add your CSS here or in a separate stylesheet -->
+<style>
+    .page-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .debug-info {
+        font-style: italic;
+        color: #888;
+    }
+
+    .header-section, .main-body-section, .footer-section {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+
+    .header-section {
+        background-color: #f4f4f4;
+    }
+
+    .main-body-section {
+        background-color: #ffffff;
+    }
+
+    .footer-section {
+        background-color: #f4f4f4;
+    }
+</style>

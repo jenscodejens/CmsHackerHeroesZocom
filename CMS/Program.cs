@@ -3,6 +3,7 @@ using CMS.Components.Account;
 using CMS.Data;
 using CMS.Extensions;
 using CMS.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace CMS
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -48,14 +49,17 @@ namespace CMS
             builder.Services.AddQuickGridEntityFrameworkAdapter();
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+            // Add roles and identity services
             builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>() // enable roles
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddSignInManager()
+                .AddRoleManager<RoleManager<IdentityRole>>() // Role manager to handle roles
                 .AddDefaultTokenProviders();
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
             builder.Services.AddScoped<ICreateUserService, CreateUserService>();
-            builder.Services.AddScoped<GetCurrentUserIdService>();
+            builder.Services.AddScoped<IGetCurrentUserService, GetCurrentUserService>();
 
             var app = builder.Build();
 
@@ -76,7 +80,6 @@ namespace CMS
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
-            app.UseAntiforgery();
 
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
@@ -84,7 +87,14 @@ namespace CMS
             // Add additional endpoints required by the Identity /Account Razor components.
             app.MapAdditionalIdentityEndpoints();
 
+            // Use authentication and authorization middleware
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseAntiforgery();
+
             app.Run();
         }
+
     }
 }

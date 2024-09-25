@@ -18,28 +18,25 @@
 
             <AuthorizeView>
                 <NotAuthorized>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meny
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 20px;">
-                            <a class="dropdown-item" href="#">Vad du får</a>
-                            <a class="dropdown-item" href="#">Prismodell</a>
-                             <a class="dropdown-item" href="#">Teamet</a>
-                            <a class="dropdown-item" href="#">Om Oss</a>
-                            
-                            <div class="dropdown-divider"></div>
-                           
-                             <a class="dropdown-item" href="Account/Login">Logga In</a>
-                             <a class="dropdown-item" href="Account/Register">Registera dig nu</a>
-                        </div>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            Kontakta oss
+                        </NavLink>
+                    </li>                    
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            Vad Du Får
+                        </NavLink>
                     </li>
+                    <li class="nav-item active">
+                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                            Prismodell
+                        </NavLink>
+                    </li>                    
                 </NotAuthorized>
 
                 <Authorized>
-                   
-                    
-                      <li class="nav-item">
+                    <li class="nav-item">
                         <NavLink class="nav-link" href="websites/create">
                             Skapa Hemsida
                         </NavLink>
@@ -49,23 +46,22 @@
                             Sparade Webbsidor
                         </NavLink>
                     </li>
-
-                   
+                    <li class="nav-item">
+                        <NavLink class="nav-link" href="Websites">
+                            Om oss
+                        </NavLink>
+                    </li>                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meny
+                            Inställningar
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="font-size: 20px;">
                             <a class="dropdown-item" href="Account/Manage">Profil</a>
-                            <a class="dropdown-item" href="Account/Manage/Email">Email</a>
+                            <a class="dropdown-item" href="Account/Manage/Email">E-post</a>
                             <a class="dropdown-item" href="Account/Manage/ChangePassword">Lösenord</a>
                             <a class="dropdown-item" href="Account/Manage/TwoFactorAuthentication">Två stegs verifering</a>
-                            
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Om Oss</a>
-                             <a class="dropdown-item" href="webpages">webpages</a>
                             <a class="dropdown-item" href="auth">Authentisering</a>
-                             
+                            <div class="dropdown-divider"></div>
                         </div>
                     </li>
                 </Authorized>
@@ -94,12 +90,12 @@
                     </li>
                     <li class="nav-item">
                         <form action="Account/Logout" method="post" class="form-inline" style="font-size:20px; margin-right:10px;">
-    <AntiforgeryToken />
-    <input type="hidden" name="ReturnUrl" value="#" />
-    <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" style="font-size:20px; margin-right:10px; margin-left:10px;">
-        Logout
-    </button>
-</form>
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                            <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" style="font-size:20px; margin-right:10px; margin-left:10px;">
+                                Logga ut
+                            </button>
+                        </form>
                     </li>
                 </Authorized>
             </AuthorizeView>

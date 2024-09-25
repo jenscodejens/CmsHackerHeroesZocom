@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Bogus" Version="35.6.0" />
+    <PackageReference Include="Markdig" Version="0.37.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
@@ -18,10 +19,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
+    <PackageReference Include="PSC.Blazor.Components.MarkdownEditor" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Components\BlazorComponent\Footer.css" />
+    <None Remove="Components\Pages\WebSitePages\Index.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Services\GetCurrentUserIdService.cs" />
   </ItemGroup>
 
   <ItemGroup>

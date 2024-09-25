@@ -1,10 +1,8 @@
 ﻿@page "/webpages/delete"
+@attribute [Authorize]
 
-@using Microsoft.EntityFrameworkCore
-@using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-
 
 <PageTitle>Delete</PageTitle>
 
@@ -64,6 +62,6 @@
         using var context = DbFactory.CreateDbContext();
         context.WebPages.Remove(webpage!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/webpages");
+        NavigationManager.NavigateTo($"/webpages?websiteid={webpage.WebSiteId}");
     }
 }

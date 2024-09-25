@@ -1,65 +1,74 @@
 ﻿@page "/webpages"
+@attribute [Authorize]
 
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
-@using CMS.Entities
-@using CMS.Data
-@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index Web Pages</h1>
-
-<p>
-    <a href="webpages/create">Create New</a>
-</p>
-
+<h1>Index webbsidor</h1>
+@if (WebSiteId != null)
+{
+    <p>
+        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa nytt</a>
+    </p>
+}
 @if (webpages == null || !webpages.Any())
 {
-    <p>No webpages available.</p>
+    <p>Inga webbsidor tillgängliga.</p>
 }
 else
 {
-    <QuickGrid Class="table" Items="webpages"> <!-- Changed from context.WebPages to webpages -->
-        <PropertyColumn Property="webpage => webpage.WebPageId" />
-        <PropertyColumn Property="webpage => webpage.WebSiteId" />
-        <PropertyColumn Property="webpage => webpage.Header" />
-        <PropertyColumn Property="webpage => webpage.Body" />
-        <PropertyColumn Property="webpage => webpage.Footer" />
+    <QuickGrid Class="table" Items="webpages">
+        <!-- Changed from context.WebPages to webpages -->
+        <PropertyColumn Property="webpage => webpage.WebPageId"/>
+        <PropertyColumn Property="webpage => webpage.WebSiteId"/>
+        <PropertyColumn Property="webpage => webpage.Header"/>
+        <PropertyColumn Property="webpage => webpage.Body"/>
+        <PropertyColumn Property="webpage => webpage.Footer"/>
 
         <TemplateColumn Context="webpage">
-            <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> |
-            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
-            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Details</a> |
-            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Delete</a>
+            @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
+            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Förhandsgranska webbsida</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")"> Se alla Innehåll</a> |
+            @* <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
+            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
+            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Detaljer</a> |
+            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Radera</a>
         </TemplateColumn>
     </QuickGrid>
 }
 
 @code {
     IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-    [SupplyParameterFromQuery]
-    public int? WebSiteId { get; set; }
-
+    [SupplyParameterFromQuery] public int? WebSiteId { get; set; }
     ApplicationDbContext context = default!;
 
     protected override async Task OnInitializedAsync()
     {
         context = DbFactory.CreateDbContext();
 
-        if (WebSiteId.HasValue)
+        if (WebSiteId != null)
         {
-            // Fetch WebPages filtered by WebSiteId
-            webpages = context.WebPages
-                .Where(wp => wp.WebSiteId == WebSiteId.Value);
+            webpages = context.WebPages.Include(w => w.WebSite)
+                .Where(wp => wp.WebSiteId == WebSiteId);
         }
         else
         {
-            // Fetch all WebPages if no WebSiteId is provided
-            webpages = context.WebPages;
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
+            if (user != null)
+            {
+                webpages = context.WebPages.Include(w => w.WebSite)
+                    .Where(wp => wp.WebSite.UserId == user.Id);
+            }
         }
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        await context.DisposeAsync();
+    }
+
 }
