@@ -3,6 +3,7 @@
 @using CMS.Models
 @using CMS.Entities
 @using System.Text.Json
+@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 
@@ -11,7 +12,7 @@
 
     private string selectedTemplatePath = string.Empty;
     private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
-
+    private MenuItemsWrapper? menuItemsWrapper;
     protected override async Task OnInitializedAsync()
     {
 
@@ -26,6 +27,8 @@
             // Deserialize TextInputsJson to extract the inputs dynamically
             var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
 
+
+
             // Set the template path based on the TemplateId
             var template = await dbContext.Templates.FindAsync(content.TemplateId);
             if (template != null)
@@ -34,13 +37,52 @@
 
                 // Pass all text inputs to templateParameters
                 templateParameters.Clear();
+
+                bool Navbar = false;
                 if (textInputs != null)
                 {
+
                     foreach (var input in textInputs)
                     {
-                        // Convert JsonElement to the appropriate type
-                        templateParameters[input.Key] = ConvertJsonElement(input.Value);
+
+                        var test = ConvertJsonElement(input.Value);
+                        string menuItemName = "AddMenuItems";
+                        if (menuItemName == test.ToString())
+                         {
+                             Navbar = true;
+                         }
                     }
+
+
+                    if (Navbar)
+                    {
+                        var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(content.TextInputsJson);
+                        if (menuItemsWrapper != null)
+                        {
+
+
+                            var menu = menuItemsWrapper.ToDictionary();
+                            templateParameters[menuItemsWrapper.Name] = menuItemsWrapper.ToDictionary();
+
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Data for menu is invalid.");
+                        }
+                    }
+                        else
+                        {
+                            foreach (var input in textInputs)
+                            {
+                                // Convert JsonElement to the appropriate type
+                                templateParameters[input.Key] = ConvertJsonElement(input.Value);
+                            }
+                        }
+                    
+                }
+                else
+                {
+                    Console.WriteLine($"Data for textInputs is missing.");
                 }
 
                 // Add the colors to the template parameters
@@ -58,6 +100,7 @@
             Console.WriteLine($"Content with ID {ContentId} not found.");
         }
     }
+
 
     private object? ConvertJsonElement(JsonElement jsonElement)
     {

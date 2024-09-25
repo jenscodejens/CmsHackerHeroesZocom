@@ -310,11 +310,11 @@ namespace Templates.InputForm
                 { "Textcolor", Textcolor }
             };
 
-            // Add dictionary values to formValues
-            foreach (var item in AddMenuItems)
-            {
-                formValues[item.Key] = item.Value; // Use the keys directly
-            }
+            //// Add dictionary values to formValues
+            //foreach (var item in AddMenuItems)
+            //{
+            //    formValues[item.Key] = item.Value; // Use the keys directly
+            //}
 
             await OnSubmit.InvokeAsync(formValues);
         }
