@@ -3,11 +3,11 @@
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Redigera</PageTitle>
 
-<h1>Edit</h1>
+<h1>Redigera</h1>
 
-<h4>WebSite</h4>
+<h4>Hemsida</h4>
 <hr />
 @if (WebSite is null)
 {
@@ -22,7 +22,7 @@ else
                 <ValidationSummary />
                 <input type="hidden" name="WebSite.WebSiteId" value="@WebSite.WebSiteId" />
                 <div class="mb-3">
-                    <label for="title" class="form-label">Title:</label>
+                    <label for="title" class="form-label">Titel:</label>
                     <InputText id="title" @bind-Value="WebSite.Title" class="form-control" />
                     <ValidationMessage For="() => WebSite.Title" class="text-danger" />
                 </div>
@@ -32,12 +32,12 @@ else
                     <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description:</label>
+                    <label for="description" class="form-label">Beskrivning:</label>
                     <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
                     <ValidationMessage For="() => WebSite.Description" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="creationdate" class="form-label">CreationDate:</label>
+                    <label for="creationdate" class="form-label">Skapad:</label>
                     <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
                     <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
                 </div>
@@ -45,7 +45,7 @@ else
                 @if (LastUpdatedDateTime.HasValue)
                 {
                     <div class="mb-3">
-                        <label for="lastupdated" class="form-label">LastUpdated:</label>
+                        <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
                         <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
                         <ValidationMessage For="() => WebSite.LastUpdated" class="text-danger" />
                     </div>
@@ -60,14 +60,14 @@ else
                 <SetLandingPage WebSiteId="@WebSiteId"/>
 
                 <br />
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary">Spara</button>
             </EditForm>
         </div>
     </div>
 }
 
 <div>
-    <a href="/websites">Back to List</a>
+    <a href="/websites">Tillbaka till listan</a>
 </div>
 
 @code {
