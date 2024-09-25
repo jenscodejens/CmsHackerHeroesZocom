@@ -25,8 +25,23 @@
     [Parameter] public string Textcolor { get; set; } = "black"; // Add TextColor parameter
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+
+    // protected override void OnParametersSet()
+    // {
+    //     if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+    //     {
+    //         SaveToDatabase(); // Call the save method
+    //         hasSaved = true; // Set the flag to prevent further saves
+    //     }
+    // }
+
     private string inputValue1 = string.Empty;
     private string inputValue2 = string.Empty;
+
+
 
     private async Task HandleSubmit()
     {

@@ -39,7 +39,10 @@
 
         <div style="margin-top: 10px;">
             <button type="button" @onclick="PreviewImage">PreviewImage</button>
-            <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+            @if (!MultiPageMode) // Show button only if not in multi-page mode
+            {
+                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+            }
         </div>
     </form>
 </div>
@@ -59,6 +62,19 @@
     [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
     [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
     [Parameter] public string VideoAlignment { get; set; } = "center";
+
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+
+    protected override void OnParametersSet()
+    {
+        if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+        {
+            SaveToDatabase(); // Call the save method
+            hasSaved = true; // Set the flag to prevent further saves
+        }
+    }
 
 
     // Save all inputs to the database when the "Save" button is clicked

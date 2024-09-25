@@ -97,6 +97,19 @@
     private InputStep currentStep = InputStep.ContentNameInput;
     private string currentLabelText = string.Empty;
 
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+
+    // protected override void OnParametersSet()
+    // {
+    //     if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+    //     {
+    //         SaveToDatabase(); // Call the save method
+    //         hasSaved = true; // Set the flag to prevent further saves
+    //     }
+    // }
+
     protected override void OnInitialized()
     {
         currentLabelText = LabelText1;
