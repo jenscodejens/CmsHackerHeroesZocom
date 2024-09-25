@@ -13,7 +13,7 @@
 <PageTitle>Log in</PageTitle>
 <div class="login-page">
 
-<h1 class="spaced-heading">LogInPage</h1>
+<h1 class="spaced-heading">Inloggningssida</h1>
 <hr />
 
 <div class="row">
@@ -22,42 +22,42 @@
             <StatusMessage Message="@errorMessage" />
             <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2 class="bold">Welcome back!</h2>
-                <h6 class="bold">Enter your Credentials to access your account</h6>
+                <h2 class="bold">Välkommen tillbaka!</h2>
+                <h6 class="bold">Ange dina inloggningsuppgifter för att komma åt ditt konto</h6>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="mb-3">
-                    <label for="email" class="form-label label-bold">Email</label>
+                    <label for="email" class="form-label label-bold">E-post</label>
                     <InputText id="email" @bind-Value="Input.Email" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="Enter your email" />
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="password" class="form-label label-bold">Password</label>
+                    <label for="password" class="form-label label-bold">Lösenord</label>
                     <InputText type="password" @bind-Value="Input.Password" class="form-control round-border" autocomplete="current-password" aria-required="true" placeholder="password" />
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
+                        Minns mig
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg section-color label-bold round-border">Log in</button>
+                    <button type="submit" class="w-100 btn btn-lg section-color label-bold round-border">Logga in</button>
                 </div>
                 <div>
                     <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
+                        <a href="Account/ForgotPassword">Har du glömt ditt lösenord?</a>
                     </p>
                     <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Registrera dig som ny användare</a>
                     </p>
                     <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                        <a href="Account/ResendEmailConfirmation">Skicka ny e-postbekräftelse</a>
                     </p>
                 </div>
                 <div class="col-mb-3 mt-4">
-                        <span class="bold">Don't have an acount? <a class="bold no-underline" href="Account/Register"> Sign Up</a></span>
+                        <span class="bold">Har du inget konto? <a class="bold no-underline" href="Account/Register"> Registrera dig</a></span>
                 </div>
             </EditForm>
         </section>
