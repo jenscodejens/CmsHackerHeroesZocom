@@ -7,10 +7,10 @@
 
 <PageTitle>Details</PageTitle>
 
-<h1>Details</h1>
+<h1>Detaljer</h1>
 
 <div>
-    <h4>WebSite</h4>
+    <h4>WebSida</h4>
     <hr />
     @if (website is null)
     {
@@ -19,13 +19,13 @@
     else
     {
     <dl class="row">
-        <dt class="col-sm-2">Title</dt>
+        <dt class="col-sm-2">Titel</dt>
         <dd class="col-sm-10">@website.Title</dd>
-        <dt class="col-sm-2">Description</dt>
+        <dt class="col-sm-2">Beskrivning</dt>
         <dd class="col-sm-10">@website.Description</dd>
-        <dt class="col-sm-2">CreationDate</dt>
+        <dt class="col-sm-2">Skapande datum</dt>
         <dd class="col-sm-10">@website.CreationDate</dd>
-        <dt class="col-sm-2">LastUpdated</dt>
+        <dt class="col-sm-2">Senast uppdaterad</dt>
         <dd class="col-sm-10">@website.LastUpdated</dd>
         <AuthorizeView Roles="Admin">
             <dt class="col-sm-2">UserId</dt>
@@ -33,12 +33,12 @@
         </AuthorizeView>
     </dl>
 
-    <p>This page has been visited @VisitCount times.</p>
+    <p>Denna sida har besökts @VisitCount gånger.</p>
     
     <div>
-        <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
-        <a href="@($"/webpages?websiteid={website.WebSiteId}")">Web Pages</a> |
-        <a href="@($"/websites")">Back to List</a>
+        <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
+        <a href="@($"/webpages?websiteid={website.WebSiteId}")">Webbsidor</a> |
+        <a href="@($"/websites")">Tillbaka till listan</a>
     </div>
     
     }
