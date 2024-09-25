@@ -27,8 +27,10 @@
         <dd class="col-sm-10">@website.CreationDate</dd>
         <dt class="col-sm-2">LastUpdated</dt>
         <dd class="col-sm-10">@website.LastUpdated</dd>
-        <dt class="col-sm-2">UserId</dt>
-        <dd class="col-sm-10">@website.UserId</dd>
+        <AuthorizeView Roles="Admin">
+            <dt class="col-sm-2">UserId</dt>
+            <dd class="col-sm-10">@website.UserId</dd>
+        </AuthorizeView>
     </dl>
 
     <p>This page has been visited @VisitCount times.</p>
