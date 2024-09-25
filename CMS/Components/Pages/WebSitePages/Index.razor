@@ -13,7 +13,7 @@
 <h1>Index</h1>
 
 <p>
-    <a href="websites/create">Create New</a>
+    <a href="websites/create">Skapa nytt</a>
 </p>
 @if (UserId != null)
 {
@@ -38,10 +38,10 @@
              <p style="font-size: small"> @website.Description</p>
             <p style="font-size: small"> @website.CreationDate</p>
 
-            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
-            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
-            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a> |
-            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Add Page</a>
+            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
+            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Detaljer</a> |
+            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Radera</a> |
+            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Lägg till sida</a>
         </div>
     }
     </div>

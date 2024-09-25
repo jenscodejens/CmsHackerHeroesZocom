@@ -8,7 +8,7 @@
 
 @rendermode InteractiveServer
 
-<h3>Add Multiple Contents Page</h3>
+<h3>Lägg till flera innehållssidor</h3>
 
 @if (webpage is null)
 {
@@ -18,7 +18,7 @@ else
 {
     <!-- Header Section -->
     <header class="header-section">
-        <p>HEADER</p>
+        <p>RUBRIK</p>
         <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
     </header>
 
@@ -27,16 +27,16 @@ else
         @foreach (var index in contentIndexes)
         {
             <div class="main-body-section">
-                <p>BODY</p>
+                <p>KROPP</p>
                 <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
             </div>
         }
-        <button @onclick="AddNewContent" class="add-button">Add New Content</button>
+        <button @onclick="AddNewContent" class="add-button">Lägg till nytt innehåll</button>
     </main>
 
     <!-- Footer Section -->
     <footer class="footer-section">
-        <p>FOOTER</p>
+        <p>Sidfoten</p>
         <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
     </footer>
 }
