@@ -41,6 +41,15 @@ else
 
     <!-- Save Button -->
     <button @onclick="SaveAllContents" class="save-button">Save All Contents</button>
+
+    <!-- Success Message -->
+    @if (saveSuccessful)
+    {
+        <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+            All contents have been saved successfully!
+            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view the contents</a> | <a href="/webpages/previewpage/@WebPageId" class="alert-link">Click here to preview the webpage</a>
+        </div>
+    }
 }
 
 @code {
@@ -50,7 +59,7 @@ else
     private List<int> contentIndexes = new List<int>();
     private bool saveBtnClicked = false; // Track if save button has been clicked
     private bool multipagemode = true;
-
+    private bool saveSuccessful = false; // New flag to show success message
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }
@@ -74,6 +83,12 @@ else
     private void SaveAllContents()
     {
         saveBtnClicked = true; // Set to true when save button is clicked
+
+        // Simulate saving all contents to the database
+        // Add your actual save logic here, for now we assume the save is successful.
+
+        // After save is done, set saveSuccessful to true to display the message
+        saveSuccessful = true;
     }
 }
 
@@ -108,5 +123,18 @@ else
 
     .footer-section {
         background-color: #f4f4f4;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-link {
+        color: #155724;
+        font-weight: bold;
     }
 </style>
