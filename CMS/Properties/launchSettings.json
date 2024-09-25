@@ -27,7 +27,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "https-w": {
+    "https-windows": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
