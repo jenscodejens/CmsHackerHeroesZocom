@@ -16,18 +16,19 @@ namespace CMS.Seed
         private static Random random = new Random();
         public static async Task InitAsync(ApplicationDbContext context, ICreateUserService registerService, RoleManager<IdentityRole> roleManager)
         {
+            if (!context.Templates.Any())//Templates.Any())
+            {
+                var templates = CreateTemplates();
+                await context.Templates.AddRangeAsync(templates);
+                context.SaveChanges();
+            }
 
             if (context.WebSites.Any())
             {
                 return;
             }
 
-           // //adds templates we have made in folder if we haven't any values in the template table
-            //if (!context.Templates.Any())//Templates.Any())
-            //{
-            //    var templates = CreateTemplates();
-            //    await context.Templates.AddRangeAsync(templates);
-            //}
+            // //adds templates we have made in folder if we haven't any values in the template table
 
             // Seed roles
             var roles = new[] { "Admin", "User" };
@@ -58,7 +59,7 @@ namespace CMS.Seed
             //}
 
 
-            var menus = CreateWebSites(userId);
+            //var menus = CreateWebSites(userId);
 
             //await context.AddRangeAsync(menus);
             //context.SaveChanges();

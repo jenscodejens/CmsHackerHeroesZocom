@@ -16,7 +16,7 @@
         {
             var dictionary = new Dictionary<string, string>();
 
-            
+
             foreach (var item in Items)
             {
                 dictionary[item.Key] = item.Value;

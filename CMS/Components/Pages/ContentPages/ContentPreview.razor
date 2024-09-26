@@ -40,20 +40,34 @@
                 // Pass all text inputs to templateParameters
                 templateParameters.Clear();
                 //Todo: Divide code in to functions.
-                bool Navbar = false;
                 if (textInputs != null)
                 {
 
                     foreach (var input in textInputs)
                     {
-                        var test = ConvertJsonElement(input.Value);
+                        var test = input.Key;
                         if (test != null)
                         {
                             //Todo: Change the use of the string "MenuItems" if variable name changed, this can be missed and lead to error.
                             string menuItemName = "MenuItems";
                             if (menuItemName == test.ToString())
                             {
-                                Navbar = true;
+                                string jsonString = input.Value.GetRawText();
+                                //Navbar = true;
+                                var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
+                                if (menuItemsWrapper != null)
+                                {
+
+
+                                    
+                                    templateParameters[menuItemsWrapper.Name] = menuItemsWrapper.ToDictionary();
+
+                                }
+                            }
+                            else
+                            {
+                                // Convert JsonElement to the appropriate type
+                                templateParameters[input.Key] = ConvertJsonElement(input.Value);
                             }
                         }
                         else
@@ -63,30 +77,30 @@
                     }
 
 
-                    if (Navbar)
-                    {
-                        var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(content.TextInputsJson);
-                        if (menuItemsWrapper != null)
-                        {
+                    // if (Navbar)
+                    // {
+                    //     var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(content.TextInputsJson);
+                    //     if (menuItemsWrapper != null)
+                    //     {
 
 
-                            var menu = menuItemsWrapper.ToDictionary();
-                            templateParameters[menuItemsWrapper.Name] = menuItemsWrapper.ToDictionary();
+                    //         var menu = menuItemsWrapper.ToDictionary();
+                    //         templateParameters[menuItemsWrapper.Name] = menuItemsWrapper.ToDictionary();
 
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Data for menu is invalid.");
-                        }
-                    }
-                        else
-                        {
-                            foreach (var input in textInputs)
-                            {
-                                // Convert JsonElement to the appropriate type
-                                templateParameters[input.Key] = ConvertJsonElement(input.Value);
-                            }
-                        }
+                    //     }
+                    //     else
+                    //     {
+                    //         Console.WriteLine($"Data for menu is invalid.");
+                    //     }
+                    // }
+                    //     else
+                    //     {
+                    //         foreach (var input in textInputs)
+                    //         {
+                    //             // Convert JsonElement to the appropriate type
+                    //             templateParameters[input.Key] = ConvertJsonElement(input.Value);
+                    //         }
+                    //     }
                     
                 }
                 else

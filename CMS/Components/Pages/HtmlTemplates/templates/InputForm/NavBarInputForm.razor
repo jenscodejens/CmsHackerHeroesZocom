@@ -56,7 +56,7 @@
                         {
                             @foreach (var item in Pages)
                             {
-                                <option value="@item.Key">@item.Key</option>
+                                <option value="@item.Value">@item.Key</option>
                             }
                         }
                     </select>
@@ -81,7 +81,7 @@
                         {
                             @foreach (var item in Pages)
                             {
-                                <option value="@item.Key">@item.Key</option>
+                                <option value="@item.Value">@item.Key</option>
                             }
                         }
                     </select>
@@ -100,8 +100,8 @@
 
     <div style="margin-top: 10px;">
         <button type="button" @onclick="Save">Spara meny</button>
-        <br>
-        <button type="button" @onclick="Done">Gå till innehåll</button>
+        // <br>
+        // <button type="button" @onclick="Done">Gå till innehåll</button>
 
     </div>
 </div>

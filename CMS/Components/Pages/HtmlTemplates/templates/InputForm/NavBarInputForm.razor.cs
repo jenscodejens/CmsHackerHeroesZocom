@@ -73,9 +73,9 @@ namespace Templates.InputForm
 
             foreach (var site in webpages1)
             {
-                if (site.WebPageName != null)
+                if (site.Header != null)
                 {
-                    Pages.Add(site.WebPageName, site.WebPageName);
+                    Pages.Add(site.Header, site.WebPageId.ToString());
                 }
             }
 
@@ -208,13 +208,22 @@ namespace Templates.InputForm
             }
 
             var menuItemsWrapper = new MenuItemsWrapper("MenuItems", "Dictionary<string, string>", MenuItems);
+
+            var textInputJson = new NavBarTextInputJson
+            {
+                MenuItems = menuItemsWrapper,
+                Textcolor = Textcolor,
+                Backgroundcolor = Backgroundcolor
+            };
+
+
             var content = new Content
             {
                 ContentName = inputValueContentName,
                 WebPageId = WebPageId,
-                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(menuItemsWrapper), // Serialize the wrapper
-                Backgroundcolor = Backgroundcolor,
-                Textcolor = Textcolor,
+                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                //Backgroundcolor = Backgroundcolor,
+                //Textcolor = Textcolor,
                 TemplateId = TemplateId
             };
 
@@ -233,6 +242,7 @@ namespace Templates.InputForm
             // Mapping to ensure inputs are stored properly
             var formValues = new Dictionary<string, object>
             {
+                { "MenuItems", MenuItems},
                 { "ContentName", inputValueContentName },
                 { "Backgroundcolor", Backgroundcolor },
                 { "Textcolor", Textcolor }
