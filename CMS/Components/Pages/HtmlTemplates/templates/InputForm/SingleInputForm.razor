@@ -10,8 +10,12 @@
             <label>@LabelText1</label>
             <input type="text" @bind="inputValue1" />
         </div>
-        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        <!--Color Controls -->
+        <label>Background Color:</label>
+        <input type="color" @bind="Backgroundcolor" />
+        <br>
+        <label>Text Color:</label>
+        <input type="color" @bind="Textcolor" />
         <button type="submit">Submit</button>
     </form>
 </div>

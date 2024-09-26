@@ -29,9 +29,12 @@
         </div>
 
         <div>
-            <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
+            <!--Color Controls -->
+            <label>Background Color:</label>
+            <input type="color" @bind="Backgroundcolor" />
             <br>
-            <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+            <label>Text Color:</label>
+            <input type="color" @bind="Textcolor" />
         </div>
 
         <div style="margin-top: 10px;">

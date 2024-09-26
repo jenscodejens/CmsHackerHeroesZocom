@@ -137,18 +137,6 @@ namespace CMS.Seed
             {
                 new Template
                 {
-                    TemplateType = "Footer2",
-                    TemplatePath = "Templates.SingleInput.Template2",
-                    InputFormPath = "Templates.InputForm.SingleInputForm"
-                },
-                new Template
-                {
-                    TemplateType = "Footer3",
-                    TemplatePath = "Templates.SingleInput.Template3",
-                    InputFormPath = "Templates.InputForm.SingleInputForm"
-                },
-                new Template
-                {
                     TemplateType = "Footer",
                     TemplatePath = "Templates.SingleInput.Template1",
                     InputFormPath = "Templates.InputForm.DoubleInputForm"
