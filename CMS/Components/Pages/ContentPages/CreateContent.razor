@@ -8,12 +8,12 @@
 
 @attribute [Authorize]
 
-<h3>Create a Content</h3>
+<h3>Skapa ett innehåll</h3>
 
 <div>
-    <label for="templateDropdown">Choose a Template:</label>
+    <label for="templateDropdown">Välj en mall:</label>
     <select id="templateDropdown" @onchange="OnTemplateChanged">
-        <option value="">-- Select Template --</option>
+        <option value="">-- Välj mall --</option>
         @if (templates != null)
         {
             @foreach (var template in templates)
