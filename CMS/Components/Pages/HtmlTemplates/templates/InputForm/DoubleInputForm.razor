@@ -32,9 +32,12 @@
     }
 
     <div>
-        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-        <br>
-        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        <!-- Color Controls -->
+        <label>Background Color:</label>
+        <input type="color" @bind="BackgroundColor" />
+
+        <label>Text Color:</label>
+        <input type="color" @bind="TextColor" />
     </div>
 
     <div style="margin-top: 10px;">
@@ -67,8 +70,8 @@
     [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
     [Parameter] public string LabelText2 { get; set; } = "Enter First Text:";
     [Parameter] public string LabelText3 { get; set; } = "Enter Second Text:";
-    [Parameter] public string Backgroundcolor { get; set; } = "grey";
-    [Parameter] public string Textcolor { get; set; } = "black";
+    [Parameter] public string BackgroundColor { get; set; } = "grey";
+    [Parameter] public string TextColor { get; set; } = "black";
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
 
@@ -145,8 +148,8 @@
 
                     TextInput1 = inputValue1,
                     TextInput2 = inputValue2,
-                    Backgroundcolor = Backgroundcolor,
-                    Textcolor = Textcolor,
+                    BackgroundColor = BackgroundColor,
+                    TextColor = TextColor
                 }),
                 TemplateId = TemplateId
             };
@@ -169,8 +172,8 @@
             { "ContentName", inputValueContentName },
             { "TextInput1", inputValue1 },
             { "TextInput2", inputValue2 },
-            { "Backgroundcolor", Backgroundcolor },
-            { "Textcolor", Textcolor }
+            { "BackgroundColor", BackgroundColor },
+            { "TextColor", TextColor }
 
         };
 

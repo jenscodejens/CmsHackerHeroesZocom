@@ -135,18 +135,7 @@ namespace CMS.Seed
         {
             var list = new List<Template>
             {
-                new Template
-                {
-                    TemplateType = "Footer2",
-                    TemplatePath = "Templates.SingleInput.Template2",
-                    InputFormPath = "Templates.InputForm.SingleInputForm"
-                },
-                new Template
-                {
-                    TemplateType = "Footer3",
-                    TemplatePath = "Templates.SingleInput.Template3",
-                    InputFormPath = "Templates.InputForm.SingleInputForm"
-                },
+
                 new Template
                 {
                     TemplateType = "Footer",

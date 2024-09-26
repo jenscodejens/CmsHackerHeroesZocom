@@ -32,9 +32,12 @@
     }
 
     <div>
-        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-        <br>
-        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        <!-- Color Controls -->
+        <label>Background Color:</label>
+        <input type="color" @bind="Backgroundcolor" />
+
+        <label>Text Color:</label>
+        <input type="color" @bind="Textcolor" />
     </div>
 
     <div style="margin-top: 10px;">
