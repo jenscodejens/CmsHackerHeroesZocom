@@ -13,6 +13,11 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
     <link href="/_content/PSC.Blazor.Components.MarkdownEditor/css/easymde.min.css" rel="stylesheet" />
 
+    @* Quill *@
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+    
     <HeadOutlet/>
 </head>
 
@@ -25,6 +30,26 @@
 
 <script src="/_content/PSC.Blazor.Components.MarkdownEditor/js/easymde.min.js"></script>
 <script src="/_content/PSC.Blazor.Components.MarkdownEditor/js/markdownEditor.js"></script>
+
+
+<script>
+        window.initializeQuillEditor = function () {
+            var quill = new Quill('#quill-editor', {
+                modules: {
+                    syntax: true,
+                    toolbar: '#toolbar-container',
+                },
+                placeholder: 'Lägg till text här',
+                theme: 'snow',
+            });
+            window.quillEditor = quill;
+        };
+
+        window.getQuillContent = function () {
+            return window.quillEditor.root.innerHTML;
+        };
+
+</script>
 
 
 </body>

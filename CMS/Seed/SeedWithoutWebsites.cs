@@ -86,7 +86,14 @@ namespace CMS.Seed
                     TemplateType = "BodySingleTextField",
                     TemplatePath = "Templates.Body.SingleTextField",
                     InputFormPath = "Templates.InputForm.SingleTextFieldInputForm"
+                },
+                new Template
+                {
+                    TemplateType = "BodySingleTextFieldQuill",
+                    TemplatePath = "Templates.Body.SingleTextFieldQuill",
+                    InputFormPath = "Templates.InputForm.TextInputformQuill"
                 }
+
             };
             return list;
         }
