@@ -6,14 +6,16 @@
 
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
 @implements IAsyncDisposable
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Mina websites</PageTitle>
 
-<h1>Index</h1>
+<h3>Mina websites</h3>
 
 <p>
-    <a href="websites/create">Skapa nytt</a>
+    <a href="websites/create">Skapa ny website</a>
 </p>
 @if (UserId != null)
 {
@@ -35,13 +37,19 @@
            
             }
              <h3> @website.Title</h3>
-             <p style="font-size: small"> @website.Description</p>
-            <p style="font-size: small"> @website.CreationDate</p>
+             <p style="font-size: small"> Beskrivning: @website.Description</p>
+            <p style="font-size: small"> Skapad: @website.CreationDate</p>
+
+@*             <button @onclick="@(() => NavigationManager.NavigateTo($"websites/edit?websiteid={website.WebSiteId}"))">Editera</button>
+            <button @onclick="@(() => NavigationManager.NavigateTo($"websites/details?websiteid={website.WebSiteId}"))">Detaljer</button>
+            <button @onclick="@(() => NavigationManager.NavigateTo($"/webpages/create?websiteid={website.WebSiteId}"))">Lägg till websida</button>
+            <button @onclick="@(() => NavigationManager.NavigateTo($"websites/delete?websiteid={website.WebSiteId}"))">Radera</button>
+            <br /> *@
 
             <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
             <a href="@($"websites/details?websiteid={website.WebSiteId}")">Detaljer</a> |
-            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Radera</a> |
-            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Lägg till sida</a>
+            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Lägg till websida</a> |
+            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Radera</a> 
         </div>
     }
     </div>
