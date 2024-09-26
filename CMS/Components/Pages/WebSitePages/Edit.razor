@@ -11,7 +11,7 @@
 <hr />
 @if (WebSite is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Laddar...</em></p>
 }
 else
 {
@@ -52,7 +52,7 @@ else
                 }
                 @* Had to keep this in order for DOM to work but made it invisible to user *@
                 <div class="mb-3" style="display: none;">
-                    <label for="userid" class="form-label">UserId:</label>
+                    <label for="userid" class="form-label">Användar Id:</label>
                     <InputText id="userid" @bind-Value="WebSite.UserId" class="form-control" />
                     <ValidationMessage For="() => WebSite.UserId" class="text-danger" />
                 </div>
@@ -67,7 +67,7 @@ else
 }
 
 <div>
-    <a href="/websites">Tillbaka till listan</a>
+    <a href="/websites">Tillbaka</a>
 </div>
 
 @code {

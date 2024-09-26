@@ -5,7 +5,7 @@
 @inject NavigationManager NavigationManager
 @inject VisitorCounterService VisitorCounterService
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Detaljer</PageTitle>
 
 <h1>Detaljer</h1>
 
@@ -23,12 +23,12 @@
         <dd class="col-sm-10">@website.Title</dd>
         <dt class="col-sm-2">Beskrivning</dt>
         <dd class="col-sm-10">@website.Description</dd>
-        <dt class="col-sm-2">Skapande datum</dt>
+        <dt class="col-sm-2">Skapad</dt>
         <dd class="col-sm-10">@website.CreationDate</dd>
         <dt class="col-sm-2">Senast uppdaterad</dt>
         <dd class="col-sm-10">@website.LastUpdated</dd>
         <AuthorizeView Roles="Admin">
-            <dt class="col-sm-2">UserId</dt>
+            <dt class="col-sm-2">Användar Id</dt>
             <dd class="col-sm-10">@website.UserId</dd>
         </AuthorizeView>
     </dl>
@@ -38,7 +38,7 @@
     <div>
         <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
         <a href="@($"/webpages?websiteid={website.WebSiteId}")">Webbsidor</a> |
-        <a href="@($"/websites")">Tillbaka till listan</a>
+        <a href="@($"/websites")">Tillbaka</a>
     </div>
     
     }

@@ -9,7 +9,7 @@
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Two-factor authentication (2FA)</PageTitle>
+<PageTitle>Två-faktor autentisering (2FA)</PageTitle>
 
 <StatusMessage />
 <h3>Två-faktor autentisering (2FA)</h3>
@@ -51,7 +51,7 @@
         <a href="Account/Manage/GenerateRecoveryCodes" class="btn btn-primary">Generera återvinningskoder</a>
     }
 
-    <h4>Authenticator app</h4>
+    <h4>Autentisering app</h4>
     @if (!hasAuthenticator)
     {
         <a href="Account/Manage/EnableAuthenticator" class="btn btn-primary">Lägg till autentiseringsapp</a>
