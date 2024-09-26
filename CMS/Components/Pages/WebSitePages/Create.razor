@@ -4,7 +4,7 @@
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Skapa Webbsida</PageTitle>
 
 <h1>Skapa webbsida</h1>
 <hr />
@@ -29,7 +29,7 @@
                 <ValidationMessage For="() => WebSite.Description" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="creationdate" class="form-label">Skapande datum:</label>
+                <label for="creationdate" class="form-label">Skapad:</label>
                 <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
                 <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
             </div>
@@ -39,7 +39,7 @@
 </div>
 
 <div>
-    <a href="/websites">Tillbaka till listan</a>
+    <a href="/websites">Tillbaka</a>
 </div>
 
 @code {

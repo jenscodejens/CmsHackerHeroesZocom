@@ -5,7 +5,7 @@
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Skapa webbsida</PageTitle>
 
 <h1>Skapa</h1>
 
@@ -31,19 +31,19 @@
                 <MarkdownEditor @bind-Value="@WebPage.Body"
                                 SpellChecker="false">
                     <Toolbar>
-                        <MarkdownToolbarButton Action="MarkdownAction.Bold" Icon="fa fa-bold" Title="Bold" />
-                        <MarkdownToolbarButton Action="MarkdownAction.Italic" Icon="fa fa-italic" Title="Italic" />
-                        <MarkdownToolbarButton Action="MarkdownAction.Code" Icon="fa fa-code" Title="Code" />
-                        <MarkdownToolbarButton Action="MarkdownAction.Heading" Icon="fa fa-header" Title="Heading" />
-                        <MarkdownToolbarButton Action="MarkdownAction.UnorderedList" Icon="fa fa-list-ul" Title="Generic List" />
-                        <MarkdownToolbarButton Action="MarkdownAction.OrderedList" Icon="fa fa-list-ol" Title="Numbered List" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Bold" Icon="fa fa-bold" Title="Fetstil" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Italic" Icon="fa fa-italic" Title="Kursiv" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Code" Icon="fa fa-code" Title="Kod" />
+                        <MarkdownToolbarButton Action="MarkdownAction.Heading" Icon="fa fa-header" Title="Rubrik" />
+                        <MarkdownToolbarButton Action="MarkdownAction.UnorderedList" Icon="fa fa-list-ul" Title="Osorterad Lista" />
+                        <MarkdownToolbarButton Action="MarkdownAction.OrderedList" Icon="fa fa-list-ol" Title="Numrerad Lista" />
                     </Toolbar>
                 </MarkdownEditor>
                 <ValidationMessage For="() => WebPage.Body" class="text-danger" />
             </div>
 
             <div class="mb-3">
-                <label for="footer" class="form-label">Sidfoten:</label> 
+                <label for="footer" class="form-label">Underrubrik:</label> 
                 <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" /> 
                 <ValidationMessage For="() => WebPage.Footer" class="text-danger" /> 
             </div>        
@@ -53,7 +53,7 @@
 </div>
 
 <div>
-    <a href="/webpages">Tillbaka till listan</a>
+    <a href="/webpages">Tillbaka</a>
 </div>
 
 @code {

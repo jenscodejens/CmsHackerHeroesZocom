@@ -1,0 +1,69 @@
+﻿@using CMS.Services
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@rendermode InteractiveServer
+
+@if (WebPages == null || !WebPages.Any())
+{
+    <p>Webbsiten har inga webbsidor.</p>
+}
+else
+{
+    <div class="landing-page-container">
+        <p>Startsida: </p>
+        <select id="landingpage" @bind="selectedWebPageId" @bind:after="SaveLandingPage">
+            <option value="">Välj startsida</option>
+            @foreach (var webpageheader in WebPages)
+            {
+                <option value="@webpageheader.WebPageId">@webpageheader.Header</option>
+            }
+        </select>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int WebSiteId { get; set; }
+
+    private IEnumerable<WebPage>? WebPages { get; set; }
+    private int? selectedWebPageId { get; set; }
+    private string? landingPageHeader { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Hämta alla webpages som tillhör WebSiteId
+        WebPages = await context.WebPages
+            .Where(wp => wp.WebSiteId == WebSiteId)
+            .ToListAsync();
+
+        // Hämta websitens data
+        var website = await context.WebSites
+            .FirstOrDefaultAsync(ws => ws.WebSiteId == WebSiteId);
+
+        if (website?.LandingPage != null)
+        {
+            selectedWebPageId = website.LandingPage;
+
+            // Hämta Header(rubrik, vi får byta namn senare) för den valda startsidan
+            var landingPage = await context.WebPages
+                .FirstOrDefaultAsync(wp => wp.WebPageId == website.LandingPage);
+
+            landingPageHeader = landingPage?.Header;
+        }
+    }
+
+    public async Task SaveLandingPage()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        var website = await context.WebSites
+            .FirstOrDefaultAsync(ws => ws.WebSiteId == WebSiteId);
+
+        if (website != null)
+        {
+            website.LandingPage = selectedWebPageId;
+            await context.SaveChangesAsync();
+        }
+    }
+}
