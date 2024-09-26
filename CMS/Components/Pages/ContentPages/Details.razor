@@ -7,16 +7,16 @@
 
 @attribute [Authorize]
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Detaljer</PageTitle>
 
-<h1>Details</h1>
+<h1>Detaljer</h1>
 
 <div>
-    <h4>Content</h4>
+    <h4>Innehåll</h4>
     <hr />
     @if (content is null)
     {
-        <p><em>Loading...</em></p>
+        <p><em>Laddar...</em></p>
     }
     else
     {
@@ -25,12 +25,12 @@
             <dd class="col-sm-10">@content.ContentId</dd>
             <dt class="col-sm-2">WebpageId</dt>
             <dd class="col-sm-10">@content.WebPageId</dd>
-            <dt class="col-sm-2">ContentName</dt>
+            <dt class="col-sm-2">Innehållsnamn</dt>
             <dd class="col-sm-10">@content.ContentName</dd>
         </dl>
         <div>
-            <a href="@($"/content/edit?contentid={content.ContentId}")">Edit</a> |
-            <a href="@($"/content")">Back to List</a>
+            <a href="@($"/content/edit?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"/content")">Tillbaka</a>
         </div>
     }
 </div>

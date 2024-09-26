@@ -7,15 +7,15 @@
 
 @attribute [Authorize]
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Redigera</PageTitle>
 
-<h1>Edit</h1>
+<h1>Redigera</h1>
 
-<h4>Content</h4>
+<h4>Innehåll</h4>
 <hr />
 @if (Content is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Laddar...</em></p>
 }
 else
 {
@@ -25,22 +25,22 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" />
                 <div class="mb-3">
-                    <label for="contentid" class="form-label">ContentId:</label>
+                    <label for="contentid" class="form-label">Innehålls Id:</label>
                     <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly/>
                     <ValidationMessage For="() => Content.ContentId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="webpageid" class="form-label">WebPageId:</label>
+                    <label for="webpageid" class="form-label">Webbsida Id:</label>
                     <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
                     <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="contentname" class="form-label">Content Input:</label>
+                    <label for="contentname" class="form-label">Namn/Beskrivning:</label>
                     <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="textJsonInput" class="form-label">textJson Input:</label>
+                    <label for="textJsonInput" class="form-label">Innehåll:</label>
                     <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
@@ -55,18 +55,19 @@ else
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div> *@
                 <div class="mb-3">
-                    <label for="contentTemplateID" class="form-label">contentTemplateID Input:</label>
+                    <label for="contentTemplateID" class="form-label">Innehållsmall Id:</label>
                     <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Create</button>
+                <button type="submit" class="btn btn-primary">Skapa</button>
             </EditForm>
         </div>
     </div>
 }
 
 <div>
-    <a href="/content">Back to List</a>
+    Död länk
+    <a href="/content">Tillbaka</a>
 </div>
 
 @code {

@@ -4,17 +4,17 @@
 @inject NavigationManager NavigationManager
 
 
-<PageTitle>Delete</PageTitle>
+<PageTitle>Radera</PageTitle>
 
 <h1>Radera</h1>
 
-<h3>Är du säker på att du vill ta bort det här?</h3>
+<h3>Är du säker på att du vill radera webbsiten?</h3>
 <div>
-    <h4>Webbsida</h4>
+    <h4>Webbsite</h4>
     <hr />
     @if (website is null)
     {
-        <p><em>Loading...</em></p>
+        <p><em>Laddar...</em></p>
     }
     else {
         <dl class="row">
@@ -26,7 +26,7 @@
             <dd class="col-sm-10">@website.Description</dd>
         </dl>
         <dl class="row">
-            <dt class="col-sm-2">Skapande datum</dt>
+            <dt class="col-sm-2">Skapad</dt>
             <dd class="col-sm-10">@website.CreationDate</dd>
         </dl>
         <dl class="row">
@@ -34,12 +34,12 @@
             <dd class="col-sm-10">@website.LastUpdated</dd>
         </dl>
         <dl class="row">
-            <dt class="col-sm-2">UserId</dt>
+            <dt class="col-sm-2">Användar Id</dt>
             <dd class="col-sm-10">@website.UserId</dd>
         </dl>
         <EditForm method="post" Model="website" OnValidSubmit="DeleteWebSite" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(website is null)">Radera</button> |
-            <a href="/websites">Tillbaka till listan</a>
+            <a href="/websites">Tillbaka</a>
         </EditForm>
     }
 </div>

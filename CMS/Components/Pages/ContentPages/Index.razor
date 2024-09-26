@@ -11,16 +11,16 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index Content</h1>
+<h1>Index Innehåll</h1>
 
 <p>
-    <a href="content/create">(Scaffolded)Create New</a> |
-    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Create New</a>
+    <a href="content/create">(Scaffolded)Skapa innehåll(ta bort denna?)</a> |
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa innehåll</a>
 </p>
 
 @if (contents == null || !contents.Any())
 {
-    <p>No content available for this webpage.</p>
+    <p>Denna webbsidan har inget innehåll.</p>
 }
 else
 {
@@ -34,10 +34,10 @@ else
         <PropertyColumn Property="content => content.TemplateId" />
 
         <TemplateColumn Context="content">
-            <a href="@($"/preview/{content.ContentId}")">Preview</a> |
-            <a href="@($"content/edit?contentid={content.ContentId}")">Edit</a> |
-            <a href="@($"content/details?contentid={content.ContentId}")">Details</a> |
-            <a href="@($"content/delete?contentid={content.ContentId}")">Delete</a>
+            <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
+            <a href="@($"content/edit?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |
+            <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a>
         </TemplateColumn>
     </QuickGrid>
 }

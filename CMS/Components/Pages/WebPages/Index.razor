@@ -6,13 +6,13 @@
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Index webbsidor</PageTitle>
 
 <h1>Index webbsidor</h1>
 @if (WebSiteId != null)
 {
     <p>
-        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa nytt</a>
+        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa ny webbsida</a>
     </p>
 }
 @if (webpages == null || !webpages.Any())
@@ -31,8 +31,8 @@ else
 
         <TemplateColumn Context="webpage">
             @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
-            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Förhandsgranska webbsida</a> |
-            <a href="@($"/contents?webpageid={webpage.WebPageId}")"> Se alla Innehåll</a> |
+            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Förhandsgranska</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Innehållslista</a> |
             @* <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
             <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
             <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Detaljer</a> |
