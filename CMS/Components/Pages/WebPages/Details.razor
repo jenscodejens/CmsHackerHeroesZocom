@@ -6,16 +6,16 @@
 @inject NavigationManager NavigationManager
 @using Markdig
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Detaljer</PageTitle>
 
-<h1>Details</h1>
+<h1>Detaljer</h1>
 
 <div>
-    <h4>WebPage</h4>
+    <h4>Webbsida</h4>
     <hr />
     @if (webpage is null)
     {
-        <p><em>Loading...</em></p>
+        <p><em>Laddar...</em></p>
     }
     else {
         <div style="width:100%;justify-content: center;align-content: center; text-align: center">
@@ -33,9 +33,9 @@
         </div>
         
         <div>
-            <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
-            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Content</a> | <!-- Add link to Content -->
-            <a href="@($"/webpages")">Back to List</a>
+            <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Innehåll</a> | <!-- Add link to Content -->
+            <a href="@($"/webpages")">Tillbaka</a>
         </div>
     }
 </div>
