@@ -1,7 +1,7 @@
 ﻿@namespace Templates.SingleInput
 
 
-<footer class="text-white py-4" style="background-color:@Backgroundcolor;">
+<footer class="text-white py-4" style="background-color:@BackgroundColor;">
     <div class="container">
         <div class="text-center mb-3 mb-md-0" style="color:@Textcolor;">
             <h1 class="d-block">@TextInput1</h1>
@@ -17,6 +17,6 @@
     [Parameter] public string ContentName { get; set; } = string.Empty;
     [Parameter] public string TextInput1 { get; set; } = "Default HeaderText 1 for Template 1";
     [Parameter] public string TextInput2 { get; set; } = "Default HeaderText 2 for Template 1";
-    [Parameter] public string Backgroundcolor { get; set; } = "grey";
+    [Parameter] public string BackgroundColor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; 
 }
