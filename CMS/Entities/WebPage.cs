@@ -19,6 +19,6 @@ namespace CMS.Entities
         [Required]
         public string Footer { get; set; } 
         public ICollection<Content> Contents { get; set; }
-        public string? WebPageName { get; set; }
+     
     }
 }

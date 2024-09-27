@@ -12,7 +12,7 @@
             {
 
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="@item.Value" style="@($"color: {Textcolor};")">
+                    <NavLink class="nav-link" href="@($"/webpages/previewpage/{item.Value}")" style="@($"color: {Textcolor};")">
                         @item.Key
                 </NavLink>
                 </li>

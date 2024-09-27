@@ -68,6 +68,7 @@
             else if ((currentStep == InputStep.Wait))
             {
                     <button type="button" @onclick="NewItem">Lägg till menyval</button>
+                    <button type="button" @onclick="Save">Spara meny</button>
             }
             else if ((currentStep == InputStep.Edit))
             {
@@ -98,12 +99,6 @@
         </div>
     </div>
 
-    <div style="margin-top: 10px;">
-        <button type="button" @onclick="Save">Spara meny</button>
-        // <br>
-        // <button type="button" @onclick="Done">Gå till innehåll</button>
-
-    </div>
 </div>
 
 
