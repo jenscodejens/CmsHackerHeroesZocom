@@ -19,6 +19,8 @@
 }
 else
 {
+    switch(ContentType)
+    case:   menu
     <div class="row">
         <div class="col-md-4">
             <EditForm method="post" Model="Content" OnValidSubmit="UpdateContent" FormName="create" Enhance>
@@ -69,13 +71,21 @@ else
     <a href="/content">Back to List</a>
 </div>
 
-@code {
-    [SupplyParameterFromQuery]
-    public int ContentId { get; set; }
+    @code {
+        [SupplyParameterFromQuery]
+        public int ContentId { get; set; }
 
 
-    [SupplyParameterFromForm]
-    public Content? Content { get; set; }
+        [SupplyParameterFromForm]
+        public Content? Content { get; set; }
+
+    private enum ContentType
+    {
+        Menu,
+        Others
+    }
+
+    private ContentType contentType = ContentType.Others;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,6 +96,19 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+
+        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
+
+        
+          foreach (var input in textInputs)
+                    {
+                        var test = input.Key;
+                        if (test != null)
+                        {
+                            //Todo: Change the use of the string "MenuItems" if variable name changed, this can be missed and lead to error.
+                            string menuItemName = "MenuItems";
+                            if (menuItemName == test.ToString())
+                            {
     }
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.

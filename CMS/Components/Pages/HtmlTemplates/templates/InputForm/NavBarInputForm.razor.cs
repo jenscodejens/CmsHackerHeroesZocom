@@ -51,21 +51,40 @@ namespace Templates.InputForm
 
         public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
         public Dictionary<string, string> MenuItems = new Dictionary<string, string>();
-        //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-        //[SupplyParameterFromQuery]
-        //private int? WebSiteId { get; set; }
+
        
 
         protected override async Task OnInitializedAsync()
         {
             await using var context = DbFactory.CreateDbContext();
+            //ToDo: add user verification.
 
+            if (ContentId != null)
+            {
+                if (ContentExists((int)ContentId))
+                {
+                    var meny = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                    if (meny != null)
+                    {
+                        MenuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(meny.TextInputsJson).ToDictionary();
+                        var contentwebPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == meny.WebPageId);
+                        if (!contentwebPageExists)
+                        {
+                            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+                        }
+                    }
+
+                }
+            }
+            else 
+            {
             // Ensure WebPageId exists in WebPages table
             var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
             if (!webPageExists)
             {
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+            }
             }
 
 
@@ -85,7 +104,11 @@ namespace Templates.InputForm
             {
                 if (ContentExists((int)ContentId))
                 {
-
+                    var meny = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                    if (meny != null) 
+                    { 
+                    MenuItems = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(meny.TextInputsJson).ToDictionary();
+                    }
 
                 }
             }
