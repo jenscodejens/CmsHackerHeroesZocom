@@ -27,6 +27,7 @@ namespace Templates.InputForm
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
+        [SupplyParameterFromQuery] public int? ContentId { get; set; }
         [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
         [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 
@@ -66,21 +67,36 @@ namespace Templates.InputForm
             {
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
-          
+
+
+
                 var pages = await context.WebPages.ToListAsync();
-                var page  = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
+                var page = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
                 var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
 
-            foreach (var site in webpages1)
-            {
-                if (site.Header != null)
+                foreach (var site in webpages1)
                 {
-                    Pages.Add(site.Header, site.WebPageId.ToString());
+                    if (site.Header != null)
+                    {
+                        Pages.Add(site.Header, site.WebPageId.ToString());
+                    }
+                }
+            if(ContentId != null)
+            {
+                if (ContentExists((int)ContentId))
+                {
+
+
                 }
             }
 
         }
-
+        //ToDo: Used in multiple files move function to shared folder.
+        bool ContentExists(int contentid)
+        {
+            using var context = DbFactory.CreateDbContext();
+            return context.Contents.Any(e => e.ContentId == contentid);
+        }
         private void AddMenuName()
         {
 
