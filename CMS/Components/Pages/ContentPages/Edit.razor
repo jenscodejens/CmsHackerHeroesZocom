@@ -1,9 +1,12 @@
 ﻿@page "/content/edit"
 
+@using System.Text.Json
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
+@using Templates.InputForm
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 @attribute [Authorize]
 
@@ -19,65 +22,83 @@
 }
 else
 {
-    switch(ContentType)
-    case:   menu
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Content" OnValidSubmit="UpdateContent" FormName="create" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary class="text-danger" />
-                <div class="mb-3">
-                    <label for="contentid" class="form-label">ContentId:</label>
-                    <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly/>
-                    <ValidationMessage For="() => Content.ContentId" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="webpageid" class="form-label">WebPageId:</label>
-                    <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
-                    <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="contentname" class="form-label">Content Input:</label>
-                    <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="textJsonInput" class="form-label">textJson Input:</label>
-                    <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                @* <div class="mb-3">
-                    <label for="contentbackground" class="form-label">Background Input:</label>
-                    <InputText id="contentbackground" @bind-Value="Content.Backgroundcolor" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="contentTextColor" class="form-label">contentTextColor Input:</label>
-                    <InputText id="contentTextColor" @bind-Value="Content.Textcolor" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div> *@
-                <div class="mb-3">
-                    <label for="contentTemplateID" class="form-label">contentTemplateID Input:</label>
-                    <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Create</button>
-            </EditForm>
-        </div>
-    </div>
+    switch (contentType)
+    {
+        case ContentType.Menu:
+            {
+                <CascadingValue Value="@Content.ContentId">
+                    <NavBarInputForm />
+                </CascadingValue>
+                break;
+            }
+        default:
+            {
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <EditForm method="post" Model="Content" OnValidSubmit="UpdateContent" FormName="create"        
+                    Enhance
+                         >
+                             <DataAnnotationsValidator />
+                             <ValidationSummary class="text-danger" />
+                             <div class="mb-3">
+                                 <label for="contentid" class="form-label">ContentId:</label>
+                                 <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly/>
+                                 <ValidationMessage For="() => Content.ContentId" class="text-danger" />
+                             </div>
+                             <div class="mb-3">
+                                 <label for="webpageid" class="form-label">WebPageId:</label>
+                                 <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
+                                 <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
+                             </div>
+                             <div class="mb-3">
+                                 <label for="contentname" class="form-label">Content Input:</label>
+                                 <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
+                                 <ValidationMessage For="() => Content" class="text-danger" />
+                             </div>
+                             <div class="mb-3">
+                                 <label for="textJsonInput" class="form-label">textJson Input:</label>
+                                 <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
+                                 <ValidationMessage For="() => Content" class="text-danger" />
+                             </div>
+                             @* <div class="mb-3">
+                            <label for="contentbackground" class="form-label">Background Input:</label>
+                            <InputText id="contentbackground" @bind-Value="Content.Backgroundcolor" class="form-control" />
+                            <ValidationMessage For="() => Content" class="text-danger" />
+                        </div>
+                        <div class="mb-3">
+                            <label for="contentTextColor" class="form-label">contentTextColor Input:</label>
+                            <InputText id="contentTextColor" @bind-Value="Content.Textcolor" class="form-control" />
+                            <ValidationMessage For="() => Content" class="text-danger" />
+                        </div> *@
+                             <div class="mb-3">
+                                 <label for="contentTemplateID" class="form-label">contentTemplateID Input:</label>
+                                 <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
+                                 <ValidationMessage For="() => Content" class="text-danger" />
+                             </div>
+                             <button type="submit" class="btn btn-primary">Create</button>
+                         </EditForm>
+                     </div>
+                 </div>
+                break;
+            }
+    }
 }
 
 <div>
     <a href="/content">Back to List</a>
 </div>
 
-    @code {
-        [SupplyParameterFromQuery]
-        public int ContentId { get; set; }
+@code {
+    [SupplyParameterFromQuery]
+    public int ContentId { get; set; }
 
 
-        [SupplyParameterFromForm]
-        public Content? Content { get; set; }
+    [SupplyParameterFromForm]
+    public Content? Content { get; set; }
+
+
 
     private enum ContentType
     {
@@ -97,20 +118,26 @@ else
             NavigationManager.NavigateTo("notfound");
         }
 
-        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
+        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.TextInputsJson);
+        if (textInputs == null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
 
-        
-          foreach (var input in textInputs)
-                    {
-                        var test = input.Key;
-                        if (test != null)
-                        {
-                            //Todo: Change the use of the string "MenuItems" if variable name changed, this can be missed and lead to error.
-                            string menuItemName = "MenuItems";
-                            if (menuItemName == test.ToString())
-                            {
+        foreach (var input in textInputs)
+        {
+            var test = input.Key;
+            if (test != null)
+            {
+                //Todo: Change the use of the string "MenuItems" if variable name changed, this can be missed and lead to error.
+                string menuItemName = "MenuItems";
+                if (menuItemName == test.ToString())
+                {
+                    contentType = ContentType.Menu;
+                }
+            }
+        }
     }
-
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateContent()
