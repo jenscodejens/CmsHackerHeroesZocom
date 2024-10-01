@@ -5,9 +5,9 @@
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
 
-@namespace InputFormsForTemplates
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
-<h3>Single Video Input Form</h3>
+<h3>Single Image Input Form</h3>
 
 <div>
     <form>
@@ -15,27 +15,48 @@
             <label>Content Name</label>
             <input type="text" @bind="ContentName" placeholder="Enter name for content" />
 
-            <!-- Video URL Input -->
-            <label>Video URL</label>
-            <input type="text" @bind="VideoUrl" placeholder="Enter Video URL" />
+            <label>Image URL</label>
+            <input type="text" @bind="ImageInput1" placeholder="Enter Image URL" />
 
-            <!-- Video Size Controls -->
-            <label>Video Width (px or %):</label>
-            <input type="text" @bind="VideoWidth" placeholder="e.g., 100% or 500px" />
+            <!-- Image Size Controls -->
+            <label>Image Width (px or %):</label>
+            <input type="text" @bind="ImageWidth" placeholder="e.g., 100% or 500px" />
 
-            <label>Video Height (px or %):</label>
-            <input type="text" @bind="VideoHeight" placeholder="e.g., auto or 300px" />
+            <label>Image Height (px or %):</label>
+            <input type="text" @bind="ImageHeight" placeholder="e.g., auto or 300px" />
 
-            <!-- Video Alignment Controls -->
-            <label>Video Alignment:</label>
-            <select @bind="VideoAlignment">
+            <!-- Image Border Controls -->
+            <label>Border Width (px):</label>
+            <input type="number" @bind="BorderWidth" placeholder="Enter border width" />
+
+            <label>Border Color:</label>
+            <input type="color" @bind="BorderColor" />
+
+            <label>Border Radius (px):</label>
+            <input type="number" @bind="BorderRadius" placeholder="Enter border radius" />
+
+            <!-- Image Shadow Controls -->
+            <label>Box Shadow (CSS format):</label>
+            <input type="text" @bind="BoxShadow" placeholder="e.g., 0 4px 8px rgba(0, 0, 0, 0.2)" />
+
+            <!-- Background Color Controls -->
+            <label>Background Color:</label>
+            <input type="color" @bind="BackgroundColor" />
+
+            <!-- Image Alignment Controls -->
+            <label>Image Alignment:</label>
+            <select @bind="ImageAlignment">
                 <option value="left">Left</option>
                 <option value="center">Center</option>
                 <option value="right">Right</option>
             </select>
-
         </div>
-
+@* 
+        <div>
+            <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
+            <br>
+            <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        </div> *@
 
         <div style="margin-top: 10px;">
             <button type="button" @onclick="PreviewImage">PreviewImage</button>
@@ -52,6 +73,7 @@
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
             Content saved successfully!
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+
         </div>
     }
 </div>
@@ -64,13 +86,19 @@
     [Parameter] public int WebPageId { get; set; }
 
     [Parameter] public string ContentName { get; set; } = string.Empty;
+
+    [Parameter] public string ImageInput1 { get; set; } = string.Empty;
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
-    // Video Properties
-    [Parameter] public string VideoUrl { get; set; } = string.Empty;
-    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
-    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
-    [Parameter] public string VideoAlignment { get; set; } = "center";
+    [Parameter] public string ImageWidth { get; set; } 
+    [Parameter] public string ImageHeight { get; set; }
+    [Parameter] public decimal BorderWidth { get; set; }
+    [Parameter] public string BorderColor { get; set; }
+    [Parameter] public decimal BorderRadius { get; set; }
+    [Parameter] public string BoxShadow { get; set; }
+    [Parameter] public string BackgroundColor { get; set; }
+    //[Parameter] public string Textcolor { get; set; }
+    [Parameter] public string ImageAlignment { get; set; }
 
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
@@ -87,7 +115,6 @@
         }
     }
 
-
     // Save all inputs to the database when the "Save" button is clicked
     private async Task PreviewImage()
     {
@@ -95,16 +122,21 @@
         // Mapping section to pass form values to a parent component or handler
         var formValues = new Dictionary<string, object>
         {
-            { "VideoUrl", VideoUrl },
-            { "VideoWidth", VideoWidth },
-            { "VideoHeight", VideoHeight },
-            { "VideoAlignment", VideoAlignment },
+            { "ContentName", ContentName },
+            { "ImageInput1", ImageInput1 },
+            { "ImageWidth", ImageWidth },
+            { "ImageHeight", ImageHeight },
+            { "BorderWidth", BorderWidth },
+            { "BorderColor", BorderColor },
+            { "BorderRadius", BorderRadius },
+            { "BoxShadow", BoxShadow },
+            { "BackgroundColor", BackgroundColor },
+            //{ "Textcolor", Textcolor },
+            { "ImageAlignment", ImageAlignment }
         };
 
         await OnSubmit.InvokeAsync(formValues);
-
-        // Navigate to the contents page
-        //Done();
+        
     }
 
     // Save all inputs to the database when the "Save" button is clicked
@@ -125,10 +157,15 @@
                 WebPageId = WebPageId,
                 TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
-                    VideoUrl = VideoUrl,
-                    VideoWidth = VideoWidth,
-                    VideoHeight = VideoHeight,
-                    VideoAlignment = VideoAlignment
+                    ImageInput1 = ImageInput1,
+                    ImageWidth = ImageWidth,
+                    ImageHeight = ImageHeight,
+                    BorderWidth = BorderWidth,
+                    BorderColor = BorderColor,
+                    BorderRadius = BorderRadius,
+                    BoxShadow = BoxShadow,
+                    Backgroundcolor = BackgroundColor,
+                    ImageAlignment = ImageAlignment
                 }),
                 TemplateId = TemplateId
             };
@@ -145,6 +182,7 @@
             throw;
         }
 
+        // Set the flag to true to show the success message
         saveSuccessful = true;
     }
 
