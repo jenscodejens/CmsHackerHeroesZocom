@@ -8,6 +8,8 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using Templates.SingleInput;
 using CMS.Shared;
+using System.Text.Json;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
 namespace Templates.InputForm
@@ -23,10 +25,11 @@ namespace Templates.InputForm
             Done
         }
 
+        private bool Update = false;
 
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
+        //[CascadingParameter] public int? ContentId { get; set; }
         [SupplyParameterFromQuery] public int? ContentId { get; set; }
         [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
         [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
@@ -51,16 +54,77 @@ namespace Templates.InputForm
 
         public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
         public Dictionary<string, string> MenuItems = new Dictionary<string, string>();
-        //public IEnumerable<Dictionary<string, string>>? IEnMenyItems;
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-        //[SupplyParameterFromQuery]
-        //private int? WebSiteId { get; set; }
-       
+
+
 
         protected override async Task OnInitializedAsync()
         {
             await using var context = DbFactory.CreateDbContext();
+            //ToDo: add user verification.
 
+            if (ContentId != null)
+            {
+                if (ContentExists((int)ContentId))
+                {
+                    var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                    if (content != null)
+                    {
+                        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
+                        if (textInputs != null)
+                        {
+                            foreach (var input in textInputs)
+                            {
+                                var test = input.Key;
+                                if (test != null)
+                                {
+                                    //Todo: used in multiple files make into a shared function.
+                                    string ContentParameterName = "MenuItems";
+                                    if (ContentParameterName == test.ToString())
+                                    {
+                                        string jsonString = input.Value.GetRawText();
+                                        var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
+                                        if (menuItemsWrapper != null)
+                                        {
+                                            MenuItems = menuItemsWrapper.ToDictionary();
+                                            currentStep = InputStep.Wait;
+                                            TemplateId = content.TemplateId;
+                                            inputValueContentName = content.ContentName; 
+                                            ContentId = content.ContentId;
+                                            WebPageId = content.WebPageId;
+                                            Update = true;
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                        if (test.ToString() == "Backgroundcolor")
+                                        {
+                                            Backgroundcolor = ConvertJsonElement(input.Value).ToString();
+                                        }
+                                        else if(test.ToString() == "Textcolor")
+                                        {
+                                            Textcolor = ConvertJsonElement(input.Value).ToString();
+                                        }
+                                        else
+                                        { 
+                                            var error = ConvertJsonElement(input.Value).ToString();
+                                        Console.WriteLine($"NavbarInputForm can not match value : {error}.");
+                                        }
+
+                                        }
+                                }
+                                else
+                                {
+                                    Console.WriteLine($"Data for contents name is invalid.");
+                                }
+                            }
+                        }
+                    }
+
+
+                }
+            }
             // Ensure WebPageId exists in WebPages table
             var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
             if (!webPageExists)
@@ -68,29 +132,42 @@ namespace Templates.InputForm
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
 
+            var pages = await context.WebPages.ToListAsync();
+            var page = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
+            var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
 
-
-                var pages = await context.WebPages.ToListAsync();
-                var page = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
-                var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
-
-                foreach (var site in webpages1)
-                {
-                    if (site.Header != null)
-                    {
-                        Pages.Add(site.Header, site.WebPageId.ToString());
-                    }
-                }
-            if(ContentId != null)
+            foreach (var site in webpages1)
             {
-                if (ContentExists((int)ContentId))
+                if (site.Header != null)
                 {
-
-
+                    Pages.Add(site.Header, site.WebPageId.ToString());
                 }
             }
 
+
+
         }
+        //ToDo: Used in multipleFiles move to shared repository.
+        private object? ConvertJsonElement(JsonElement jsonElement)
+        {
+            switch (jsonElement.ValueKind)
+            {
+                case JsonValueKind.String:
+                    return jsonElement.GetString();
+                case JsonValueKind.Number:
+                    return jsonElement.GetDecimal();
+                case JsonValueKind.True:
+                case JsonValueKind.False:
+                    return jsonElement.GetBoolean();
+                case JsonValueKind.Object:
+                    return jsonElement.GetRawText(); // Handle objects if needed
+                case JsonValueKind.Array:
+                    return jsonElement.ToString(); // Handle arrays if needed
+                default:
+                    return null;
+            }
+        }
+
         //ToDo: Used in multiple files move function to shared folder.
         bool ContentExists(int contentid)
         {
@@ -233,17 +310,31 @@ namespace Templates.InputForm
             };
 
 
-            var content = new Content
+            if (Update)
             {
-                ContentName = inputValueContentName,
-                WebPageId = WebPageId,
-                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
-                //Backgroundcolor = Backgroundcolor,
-                //Textcolor = Textcolor,
-                TemplateId = TemplateId
-            };
+                var content = new Content
+                {
+                    ContentName = inputValueContentName,
+                    WebPageId = WebPageId,
+                    TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                    TemplateId = TemplateId,
+                    ContentId = (int)ContentId
+                };
+                //ToDo: Secure handling of Id needs to be evaluated avoiding change of id through unallowed methods. 
+                context.Contents.Update(content);
+            }
+            else
+            {
+                var content = new Content
+                {
+                    ContentName = inputValueContentName,
+                    WebPageId = WebPageId,
+                    TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                    TemplateId = TemplateId,
+                };
+                context.Contents.Add(content);
+            }
 
-            context.Contents.Add(content);
             try
             {
                 await context.SaveChangesAsync();
