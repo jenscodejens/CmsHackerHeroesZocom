@@ -1,4 +1,5 @@
 ﻿@page "/content/edit"
+@attribute [Authorize]
 
 @using System.Text.Json
 @using BlazorComponents.HtmlTemplates
@@ -7,6 +8,7 @@
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
+@inject IGetCurrentUserService GetCurrentUserService
 
 @attribute [Authorize]
 
@@ -95,7 +97,6 @@ else
     [SupplyParameterFromQuery]
     public int ContentId { get; set; }
 
-
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
 
@@ -109,6 +110,11 @@ else
 
     private ContentType contentType = ContentType.Others;
 
+    public string UserId { get; set; }
+    ApplicationDbContext context = default!;
+
+    private DateTime? LastUpdatedDateTime { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -118,6 +124,14 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+        else
+        {
+            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
+            LastUpdatedDateTime = Content.LastUpdated.HasValue
+                ? Content.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+                : null;
+        }
+    }
 
         var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.TextInputsJson);
         if (textInputs == null)
@@ -144,6 +158,10 @@ else
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateContent()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        UserId = user.Id;
+        Content!.UserId = UserId;
+
         using var context = DbFactory.CreateDbContext();
         context.Attach(Content!).State = EntityState.Modified;
 
@@ -165,6 +183,8 @@ else
 
         NavigationManager.NavigateTo($"/contents?webpageid={Content.WebPageId}");
     }
+
+
 
     bool ContentExists(int contentid)
     {

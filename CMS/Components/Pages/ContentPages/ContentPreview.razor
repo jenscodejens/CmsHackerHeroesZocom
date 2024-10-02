@@ -1,4 +1,6 @@
 ﻿@page "/preview/{contentId:int}"
+@attribute [Authorize]
+
 @using CMS.Data
 @using CMS.Models
 @using CMS.Entities
@@ -6,8 +8,8 @@
 @using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@rendermode InteractiveServer
 
-@attribute [Authorize]
 
 @code {
     [Parameter] public int ContentId { get; set; }
@@ -25,8 +27,8 @@
 
         if (content != null)
         {
-            // Deserialize TextInputsJson to extract the inputs dynamically
-            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
+            // Deserialize ContentJson to extract the inputs dynamically
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
 
 
 
