@@ -93,9 +93,10 @@ else
         else
         {
             // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
-            LastUpdatedDateTime = WebPage.LastUpdated.HasValue
-                ? WebPage.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
-                : null;
+            // LastUpdatedDateTime = WebPage.LastUpdated.HasValue
+            //     ? WebPage.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+            //     : null;
+            WebPage.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
         }
     }
 
