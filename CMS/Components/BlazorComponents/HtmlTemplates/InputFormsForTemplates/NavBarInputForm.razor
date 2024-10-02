@@ -6,6 +6,7 @@
 @using System.Threading.Tasks;
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
+@inject IGetCurrentUserService GetCurrentUserService
 
 <h3>Input Form</h3>
 
@@ -191,7 +192,7 @@
     private async Task SaveToDatabase()
     {
         await using var context = DbFactory.CreateDbContext();
-
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
         // Ensure WebPageId exists in WebPages table
         var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
         if (!webPageExists)
@@ -201,8 +202,11 @@
 
         var content = new Content
             {
+                UserId = user.Id,
                 ContentName = inputValueContentName,
                 WebPageId = WebPageId,
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
                 ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
 
