@@ -27,13 +27,13 @@ else
     {
         <div>
             @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
-    {
-    { "TemplateId", templateParameters["TemplateId"] },
-    { "WebPageId", templateParameters["WebPageId"] },
-    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
-    { "SaveBtnClicked", SaveBtnClicked }, // Pass the save button state
-    { "MultiPageMode", MultiPageMode } // Pass the MultiPageMode parameter
-    })
+            {
+                { "TemplateId", templateParameters["TemplateId"] },
+                { "WebPageId", templateParameters["WebPageId"] },
+                { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
+                { "SaveBtnClicked", SaveBtnClicked }, // Pass the save button state
+                { "MultiPageMode", MultiPageMode } // Pass the MultiPageMode parameter
+            })
         </div>
     }
 }
@@ -68,8 +68,13 @@ else
                 .Where(p => p.TemplateId == Content.TemplateId)
                 .Select(p => p.TemplatePath)
                 .FirstOrDefaultAsync();
+            selectedInputFormPath = await dbContext.Templates
+                .Where(p => p.TemplateId == Content.TemplateId)
+                .Select(p => p.InputFormPath)
+                .FirstOrDefaultAsync();
 
             templateParameters["WebPageId"] = Content.WebPageId;
+            templateParameters["TemplateId"] = Content.TemplateId;
         }
         else
         {
