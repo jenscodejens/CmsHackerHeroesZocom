@@ -107,11 +107,11 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                                     else
                                     {
 
-                                        if (test.ToString() == "BackgroundColor")
+                                        if (test.ToString() == "Backgroundcolor")
                                         {
                                             BackgroundColor = ConvertJsonElement(input.Value).ToString();
                                         }
-                                        else if (test.ToString() == "TextColor")
+                                        else if (test.ToString() == "Textcolor")
                                         {
                                             TextColor = ConvertJsonElement(input.Value).ToString();
                                         }
@@ -340,13 +340,15 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             if (Update)
             {
+                var updatetime = DateOnly.FromDateTime(DateTime.Now);
                 var content = new Content
                 {
                     ContentName = inputValueContentName,
                     WebPageId = WebPageId,
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
-                    ContentId = (int)ContentId
+                    ContentId = (int)ContentId,
+                    LastUpdated = updatetime
                 };
                 //ToDo: Secure handling of Id needs to be evaluated avoiding change of id through unallowed methods. 
                 context.Contents.Update(content);
