@@ -14,8 +14,9 @@
 <h1>Index Innehåll</h1>
 
 <p>
-    <a href="content/create">(Scaffolded)Skapa innehåll(ta bort denna?)</a> |
-    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa innehåll</a>
+    @* <a href="content/create">(Scaffolded)Skapa innehåll(ta bort denna?)</a> | *@
+    <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a>
 </p>
 
 @if (contents == null || !contents.Any())

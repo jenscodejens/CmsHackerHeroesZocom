@@ -1,11 +1,11 @@
-﻿@using CMS.Components.Pages.HtmlTemplates.templates
+﻿@using CMS.Components.BlazorComponents.HtmlTemplates
 @using CMS.Data;
 @using CMS.Entities;
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.EntityFrameworkCore;
 @using System.Threading.Tasks;
 
-@namespace Templates.InputForm
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 <h3>Input Form</h3>
 
@@ -25,16 +25,19 @@
         <form>
             <div>
                 <label>@currentLabelText</label>
-                <input type="text" @bind="inputValue" placeholder="@GetPlaceholderText()" />
+                <input type="text" @bind="inputValue" placeholder="" />
                 <button type="button" @onclick="HandleSubmit">Add</button>
             </div>
         </form>
     }
 
     <div>
-        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
+        <!--Color Controls -->
+        <label>Background Color:</label>
+        <input type="color" @bind="Backgroundcolor" />
         <br>
-        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        <label>Text Color:</label>
+        <input type="color" @bind="Textcolor" />
     </div>
 
     <div style="margin-top: 10px;">
@@ -55,6 +58,12 @@
         ContentNameInput,
         FirstInput,
         SecondInput,
+        ThInput,
+        FoInput,
+        FiInput,
+        SiInput,
+        SeInput,
+        EiInput,
         Done
     }
 
@@ -65,8 +74,14 @@
     [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 
     [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
-    [Parameter] public string LabelText2 { get; set; } = "Enter First Text:";
-    [Parameter] public string LabelText3 { get; set; } = "Enter Second Text:";
+    [Parameter] public string LabelText2 { get; set; } = "Enter First Item Name:";
+    [Parameter] public string LabelText3 { get; set; } = "Enter First URL:";
+    [Parameter] public string LabelText4 { get; set; } = "Enter Second Item Name:";
+    [Parameter] public string LabelText5 { get; set; } = "Enter Second URL:";
+    [Parameter] public string LabelText6 { get; set; } = "Enter third Item Name:";
+    [Parameter] public string LabelText7 { get; set; } = "Enter third URL:";
+    [Parameter] public string LabelText8 { get; set; } = "Enter Fourth Item Name:";
+    [Parameter] public string LabelText9 { get; set; } = "Enter Fourth URL:";
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black";
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
@@ -75,8 +90,28 @@
     private string inputValueContentName = string.Empty;
     private string inputValue1 = string.Empty;
     private string inputValue2 = string.Empty;
+    private string inputValue3 = string.Empty;
+    private string inputValue4 = string.Empty;
+    private string inputValue5 = string.Empty;
+    private string inputValue6 = string.Empty;
+    private string inputValue7 = string.Empty;
+    private string inputValue8 = string.Empty;
+  
     private InputStep currentStep = InputStep.ContentNameInput;
     private string currentLabelText = string.Empty;
+
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+
+    // protected override void OnParametersSet()
+    // {
+    //     if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+    //     {
+    //         SaveToDatabase(); // Call the save method
+    //         hasSaved = true; // Set the flag to prevent further saves
+    //     }
+    // }
 
     protected override void OnInitialized()
     {
@@ -89,7 +124,7 @@
         if (currentStep == InputStep.ContentNameInput)
         {
             inputValueContentName = inputValue; // spara first input
-            inputValue = string.Empty; 
+            inputValue = string.Empty;
             currentStep = InputStep.FirstInput; // Hoppa till second input
             currentLabelText = LabelText2; // Ändra label till den för second input
         }
@@ -103,6 +138,48 @@
         else if (currentStep == InputStep.SecondInput)
         {
             inputValue2 = inputValue;
+            inputValue = string.Empty;
+            currentStep = InputStep.ThInput;
+            currentLabelText = LabelText4;
+        }
+        else if (currentStep == InputStep.ThInput)
+        {
+            inputValue3 = inputValue;
+            inputValue = string.Empty;
+            currentStep = InputStep.FoInput;
+            currentLabelText = LabelText5;
+        }
+        else if (currentStep == InputStep.FoInput)
+        {
+            inputValue4 = inputValue;
+            inputValue = string.Empty;
+            currentStep = InputStep.FiInput;
+            currentLabelText = LabelText6;
+        }
+        else if (currentStep == InputStep.FiInput)
+        {
+            inputValue5 = inputValue;
+            inputValue = string.Empty;
+            currentStep = InputStep.SiInput;
+            currentLabelText = LabelText7;
+        }
+        else if (currentStep == InputStep.SiInput)
+        {
+            inputValue6 = inputValue;
+            inputValue = string.Empty;
+            currentStep = InputStep.SeInput;
+            currentLabelText = LabelText8;
+        }
+        else if (currentStep == InputStep.SeInput)
+        {
+            inputValue7 = inputValue;
+            inputValue = string.Empty;
+            currentStep = InputStep.EiInput;
+            currentLabelText = LabelText9;
+        }
+        else if (currentStep == InputStep.EiInput)
+        {
+            inputValue8 = inputValue;
             inputValue = string.Empty;
             currentStep = InputStep.Done;
 
@@ -131,9 +208,16 @@
 
                     TextInput1 = inputValue1,
                     TextInput2 = inputValue2,
+                    TextInput3 = inputValue3,
+                    TextInput4 = inputValue4,
+                    TextInput5 = inputValue5,
+                    TextInput6 = inputValue6,
+                    TextInput7 = inputValue7,
+                    TextInput8 = inputValue8,
                     Backgroundcolor = Backgroundcolor,
                     Textcolor = Textcolor,
                 }),
+
                 TemplateId = TemplateId
             };
 
@@ -155,6 +239,12 @@
             { "ContentName", inputValueContentName },
             { "TextInput1", inputValue1 },
             { "TextInput2", inputValue2 },
+            { "TextInput3", inputValue3 },
+            { "TextInput4", inputValue4 },
+            { "TextInput5", inputValue5 },
+            { "TextInput6", inputValue6 },
+            { "TextInput7", inputValue7 },
+            { "TextInput8", inputValue8 },
             { "Backgroundcolor", Backgroundcolor },
             { "Textcolor", Textcolor }
 
@@ -179,8 +269,8 @@
         NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
     }
 
-    private string GetPlaceholderText()
-    {
-        return currentStep == InputStep.SecondInput ? "optional" : string.Empty;
-    }
+    // private string GetPlaceholderText()
+    // {
+    //     return currentStep == InputStep.SecondInput ? "optional" : string.Empty;
+    // }
 }

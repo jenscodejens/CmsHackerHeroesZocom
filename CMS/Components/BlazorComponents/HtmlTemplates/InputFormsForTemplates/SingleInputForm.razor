@@ -1,6 +1,6 @@
-﻿@namespace Templates.InputForm
-@using CMS.Components.Pages.HtmlTemplates.templates
+﻿@using CMS.Components.BlazorComponents.HtmlTemplates
 
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 <h3>Input Form</h3>
 
@@ -10,8 +10,12 @@
             <label>@LabelText1</label>
             <input type="text" @bind="inputValue1" />
         </div>
-        <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-        <TextColorSelector @bind-SelectedTextColor="Textcolor" />
+        <!--Color Controls -->
+        <label>Background Color:</label>
+        <input type="color" @bind="Backgroundcolor" />
+        <br>
+        <label>Text Color:</label>
+        <input type="color" @bind="Textcolor" />
         <button type="submit">Submit</button>
     </form>
 </div>
@@ -25,8 +29,23 @@
     [Parameter] public string Textcolor { get; set; } = "black"; // Add TextColor parameter
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+
+    // protected override void OnParametersSet()
+    // {
+    //     if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+    //     {
+    //         SaveToDatabase(); // Call the save method
+    //         hasSaved = true; // Set the flag to prevent further saves
+    //     }
+    // }
+
     private string inputValue1 = string.Empty;
     private string inputValue2 = string.Empty;
+
+
 
     private async Task HandleSubmit()
     {
