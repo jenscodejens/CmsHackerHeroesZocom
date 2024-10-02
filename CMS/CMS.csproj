@@ -23,12 +23,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Components\BlazorComponents\ConnectedWebPagesInfo.razor.css" />
     <None Remove="Components\BlazorComponents\Footer.css" />
     <None Remove="Components\Pages\WebSitePages\Index.css" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="Services\GetCurrentUserIdService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Components\BlazorComponents\ConnectedWebPagesInfo.razor.css" />
   </ItemGroup>
 
 
