@@ -1,9 +1,9 @@
 ﻿@page "/content/edit"
 
 @using System.Text.Json
+@using BlazorComponents.HtmlTemplates
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
-@using Templates.InputForm
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
@@ -27,7 +27,7 @@ else
         case ContentType.Menu:
             {
                 <CascadingValue Value="@Content.ContentId">
-                    <NavBarInputForm />
+                    <BlazorComponents.HtmlTemplates.InputFormsForTemplates.NavBarInputForm/>
                 </CascadingValue>
                 break;
             }
