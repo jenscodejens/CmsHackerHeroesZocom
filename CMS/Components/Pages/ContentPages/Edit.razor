@@ -10,15 +10,15 @@
 
 @attribute [Authorize]
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Redigera</PageTitle>
 
-<h1>Edit</h1>
+<h1>Redigera</h1>
 
-<h4>Content</h4>
+<h4>Innehåll</h4>
 <hr />
 @if (Content is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Laddar...</em></p>
 }
 else
 {
@@ -87,7 +87,8 @@ else
 }
 
 <div>
-    <a href="/content">Back to List</a>
+    Död länk
+    <a href="/content">Tillbaka</a>
 </div>
 
 @code {

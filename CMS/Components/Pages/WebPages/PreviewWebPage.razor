@@ -7,11 +7,11 @@
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
-<h3>WebPage Content Preview</h3>
+<h3>Förhandsgranskning Webbsida</h3>
 
 @if (contentList == null)
 {
-    <p>Loading...</p>
+    <p>Laddar...</p>
 }
 else if (contentList.Count == 0)
 {

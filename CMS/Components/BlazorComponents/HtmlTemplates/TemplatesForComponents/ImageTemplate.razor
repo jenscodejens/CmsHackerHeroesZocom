@@ -1,0 +1,34 @@
+﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
+
+<div class="image-container" style="background-color: @BackgroundColor; padding: 10px; box-shadow: @BoxShadow; text-align:@ImageAlignment;">
+    <img src="@ImageInput1" class="custom-image" 
+    style="
+            width: @ImageWidth; 
+            height: @ImageHeight; 
+            border-radius: @(BorderRadius.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px");
+            border: @(BorderWidth.ToString(System.Globalization.CultureInfo.InvariantCulture) + "px solid " + BorderColor);
+" />
+</div>
+
+
+
+@code {
+    [Parameter] public int TemplateId { get; set; }
+    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+
+    // all parameters the user must fill in
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+
+    [Parameter] public string ImageInput1 { get; set; }
+
+    //user preferences to change the image as he wants
+    [Parameter] public string ImageWidth { get; set; }
+    [Parameter] public string ImageHeight { get; set; }
+    [Parameter] public decimal BorderWidth { get; set; }
+    [Parameter] public string BorderColor { get; set; }
+    [Parameter] public decimal BorderRadius { get; set; }
+    [Parameter] public string BoxShadow { get; set; }
+    [Parameter] public string BackgroundColor { get; set; }
+    //[Parameter] public string Textcolor { get; set; } = "black";
+    [Parameter] public string ImageAlignment { get; set; }
+}

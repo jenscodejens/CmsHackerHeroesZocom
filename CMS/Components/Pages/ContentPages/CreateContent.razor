@@ -1,5 +1,5 @@
 ﻿@page "/content/createcontent"
-@namespace htmltemplates.templates
+@namespace BlazorComponents.HtmlTemplates
 @using CMS.Data
 @using CMS.Models
 @using Microsoft.EntityFrameworkCore
@@ -35,22 +35,25 @@
 {
     <div>
         @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
-        {
-            { "TemplateId", templateParameters["TemplateId"] },
-            { "WebPageId", templateParameters["WebPageId"] },
-            { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
-        })
+    {
+    { "TemplateId", templateParameters["TemplateId"] },
+    { "WebPageId", templateParameters["WebPageId"] },
+    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
+    { "SaveBtnClicked", SaveBtnClicked }, // Pass the save button state
+    { "MultiPageMode", MultiPageMode } // Pass the MultiPageMode parameter
+    })
     </div>
 }
 
 @code {
-
-    // [SupplyParameterFromQuery]
-    // public int? WebPageId { get; set; } // Accept WebPageId from query parameters
-
-    [Parameter] 
+    [Parameter]
     [SupplyParameterFromQuery]
-    public int? WebPageId { get; set; } // Accept WebPageId as a parameter
+    public int? WebPageId { get; set; }
+
+    [Parameter]
+    public bool SaveBtnClicked { get; set; } // New parameter to handle save button click
+
+    [Parameter] public bool MultiPageMode { get; set; } = false; // Default to false
 
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;
@@ -67,7 +70,6 @@
         {
             templateParameters["WebPageId"] = WebPageId.Value;
         }
-
     }
 
     private void OnTemplateChanged(ChangeEventArgs e)
@@ -76,22 +78,19 @@
         var selectedTemplate = templates.FirstOrDefault(t => t.TemplatePath == selectedTemplatePath);
         if (selectedTemplate != null)
         {
-            selectedInputFormPath = selectedTemplate.InputFormPath; // Get the input form path
-                                                                    
+            selectedInputFormPath = selectedTemplate.InputFormPath;
+
             // Initialize parameters for the selected template
             templateParameters.Clear();
             templateParameters["TemplateId"] = selectedTemplate.TemplateId; // Pass the TemplateId
-
-            // Add WebPageId to parameters if available
             if (WebPageId.HasValue)
             {
                 templateParameters["WebPageId"] = WebPageId.Value;
             }
-
         }
         else
         {
-            selectedInputFormPath = null; // Clear input form if no template selected
+            selectedInputFormPath = null;
         }
     }
 

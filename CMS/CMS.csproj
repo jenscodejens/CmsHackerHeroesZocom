@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Components\BlazorComponent\Footer.css" />
+    <None Remove="Components\BlazorComponents\Footer.css" />
     <None Remove="Components\Pages\WebSitePages\Index.css" />
   </ItemGroup>
 

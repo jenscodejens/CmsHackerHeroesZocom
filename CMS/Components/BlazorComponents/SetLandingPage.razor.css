@@ -1,0 +1,17 @@
+﻿.landing-page-container {
+    display: flex;
+    align-items: center; /* This ensures vertical centering */
+    gap: 20px;
+    width: 100%;
+}
+
+    .landing-page-container p {
+        margin: 0; /* Removes any default margin that may misalign the text */
+        display: flex; /* Ensures the paragraph is treated like flex child */
+        align-items: center; /* Vertically centers the text in the paragraph */
+    }
+
+#landingpage {
+    width: 40%;
+    height: auto; /* Ensures the dropdown height is consistent */
+}
