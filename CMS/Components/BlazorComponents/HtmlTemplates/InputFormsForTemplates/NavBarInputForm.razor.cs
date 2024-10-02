@@ -33,13 +33,17 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
         [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 
-        [Parameter] public string Backgroundcolor { get; set; } = "grey";
+        [Parameter] public string BackgroundColor { get; set; } = "grey";
         [Parameter] public string WebPageName { get; set; } = string.Empty;
         [Parameter] public string Textcolor { get; set; } = "black";
         [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
         [Parameter] public string templateDropdown { get; set; } = string.Empty;
+        [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+        [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
 
+
+        private bool hasSaved = false; // Flag to track if save has been executed
         private string inputValue = string.Empty;
         private string inputKey = string.Empty;
         private string inpuItemtURL = string.Empty;
@@ -97,9 +101,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                                     else
                                     {
 
-                                        if (test.ToString() == "Backgroundcolor")
+                                        if (test.ToString() == "BackgroundColor")
                                         {
-                                            Backgroundcolor = ConvertJsonElement(input.Value).ToString();
+                                            BackgroundColor = ConvertJsonElement(input.Value).ToString();
                                         }
                                         else if(test.ToString() == "Textcolor")
                                         {
@@ -137,7 +141,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             foreach (var site in webpages1)
             {
-                if (site.Header != null)
+                if (site.Header != null&& !Pages.ContainsKey(site.Header))
                 {
                     Pages.Add(site.Header, site.WebPageId.ToString());
                 }
@@ -146,6 +150,16 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 
         }
+
+        protected override void OnParametersSet()
+        {
+            if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+            {
+                Save(); // Call the save method
+                hasSaved = true; // Set the flag to prevent further saves
+            }
+        }
+
         //ToDo: Used in multipleFiles move to shared repository.
         private object? ConvertJsonElement(JsonElement jsonElement)
         {
@@ -305,7 +319,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             {
                 MenuItems = menuItemsWrapper,
                 Textcolor = Textcolor,
-                Backgroundcolor = Backgroundcolor
+                Backgroundcolor = BackgroundColor
             };
 
 
@@ -350,7 +364,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             {
                 { "MenuItems", MenuItems},
                 { "ContentName", inputValueContentName },
-                { "Backgroundcolor", Backgroundcolor },
+                { "BackgroundColor", BackgroundColor },
                 { "Textcolor", Textcolor }
             };
 

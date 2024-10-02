@@ -4,11 +4,12 @@
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.EntityFrameworkCore;
 @using System.Threading.Tasks;
+@rendermode InteractiveServer
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {Backgroundcolor}; color: {Textcolor}; font-size: 20px;")">
+    <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {Textcolor}; font-size: 20px;")">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -92,10 +93,14 @@
             }
 
         }
-  
+
         <div>
-            <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />      
-            <TextColorSelector @bind-SelectedTextColor="Textcolor" />    
+            <!--Color Controls -->
+            <label>Background Color:</label>
+            <input type="color" @bind="BackgroundColor" />
+            <br>
+            <label>Text Color:</label>
+            <input type="color" @bind="TextColor" />
         </div>
     </div>
 
