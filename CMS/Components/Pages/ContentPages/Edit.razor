@@ -143,9 +143,9 @@ else
                 ? Content.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
                 : null;
         }
-    }
+    
 
-        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.TextInputsJson);
+        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.ContentJson);
         if (textInputs == null)
         {
             NavigationManager.NavigateTo("notfound");

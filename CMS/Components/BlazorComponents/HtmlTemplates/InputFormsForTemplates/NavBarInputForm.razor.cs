@@ -73,7 +73,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
                     if (content != null)
                     {
-                        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.TextInputsJson);
+                        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
                         if (textInputs != null)
                         {
                             foreach (var input in textInputs)
@@ -141,9 +141,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             foreach (var site in webpages1)
             {
-                if (site.Header != null&& !Pages.ContainsKey(site.Header))
+                if (site.Title != null&& !Pages.ContainsKey(site.Title))
                 {
-                    Pages.Add(site.Header, site.WebPageId.ToString());
+                    Pages.Add(site.Title, site.WebPageId.ToString());
                 }
             }
 
