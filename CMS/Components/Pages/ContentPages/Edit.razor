@@ -5,6 +5,7 @@
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject IGetCurrentUserService GetCurrentUserService
 
 @attribute [Authorize]
 
@@ -92,6 +93,9 @@ else
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
 
+    public string UserId { get; set; }
+    ApplicationDbContext context = default!;
+
     private DateTime? LastUpdatedDateTime { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -116,6 +120,10 @@ else
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateContent()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        UserId = user.Id;
+        Content!.UserId = UserId;
+
         using var context = DbFactory.CreateDbContext();
         context.Attach(Content!).State = EntityState.Modified;
 
@@ -137,6 +145,8 @@ else
 
         NavigationManager.NavigateTo($"/contents?webpageid={Content.WebPageId}");
     }
+
+
 
     bool ContentExists(int contentid)
     {
