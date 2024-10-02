@@ -1,55 +1,60 @@
-﻿using CMS.Data;
+﻿
+using CMS.Data;
 using CMS.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CMS.Services;
-
-// Services/VisitorCounterService.cs
 public class VisitorCounterService
 {
-    private readonly ApplicationDbContext _context;
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
 
-    public VisitorCounterService(ApplicationDbContext context)
+    public VisitorCounterService(IDbContextFactory<ApplicationDbContext> dbContextFactory)
     {
-        _context = context;
+        _dbContextFactory = dbContextFactory;
     }
 
-    public async Task IncrementPageVisitAsync(int websiteId, string pageUrl)
+    public async Task IncrementPageVisitAsync(int webSiteId, string pageUrl)
     {
-        var pageVisit = await _context.WebSiteVisits
-            .FirstOrDefaultAsync(wv => wv.WebSiteId == websiteId && wv.PageUrl == pageUrl);
+        using var context = _dbContextFactory.CreateDbContext();
+        var visit = await context.WebSiteVisits
+            .FirstOrDefaultAsync(v => v.WebSiteId == webSiteId && v.PageUrl == pageUrl);
 
-        if (pageVisit == null)
+        if (visit == null)
         {
-            pageVisit = new WebSiteVisit 
-            { 
-                WebSiteId = websiteId, 
-                PageUrl = pageUrl, 
-                VisitCount = 1 
+            visit = new WebSiteVisit
+            {
+                WebSiteId = webSiteId,
+                PageUrl = pageUrl,
+                VisitCount = 1
             };
-            _context.WebSiteVisits.Add(pageVisit);
+            context.WebSiteVisits.Add(visit);
         }
         else
         {
-            pageVisit.VisitCount++;
+            visit.VisitCount++;
         }
 
-        await _context.SaveChangesAsync();
+        await context.SaveChangesAsync();
     }
 
-    public async Task<int> GetPageVisitCountAsync(int websiteId, string pageUrl)
+    public async Task<int> GetPageVisitCountAsync(int webSiteId, string pageUrl)
     {
-        var pageVisit = await _context.WebSiteVisits
-            .FirstOrDefaultAsync(wv => wv.WebSiteId == websiteId && wv.PageUrl == pageUrl);
-        return pageVisit?.VisitCount ?? 0;
+        using var context = _dbContextFactory.CreateDbContext();
+        var visit = await context.WebSiteVisits
+            .FirstOrDefaultAsync(v => v.WebSiteId == webSiteId && v.PageUrl == pageUrl);
+
+        return visit?.VisitCount ?? 0;
     }
 
-    public async Task<IEnumerable<WebSiteVisit>> GetAllPageVisitsAsync(int websiteId)
+    public async Task<IEnumerable<WebSiteVisit>> GetAllPageVisitsAsync(int webSiteId)
     {
-        return await _context.WebSiteVisits
-            .Where(wv => wv.WebSiteId == websiteId)
+        using var context = _dbContextFactory.CreateDbContext();
+        return await context.WebSiteVisits
+            .Where(v => v.WebSiteId == webSiteId)
             .ToListAsync();
     }
 }
+
+
+
 
 
