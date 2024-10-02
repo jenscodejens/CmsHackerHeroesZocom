@@ -1,4 +1,5 @@
 ﻿@page "/content/edit"
+@attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
@@ -35,13 +36,27 @@ else
                     <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="contentname" class="form-label">Namn/Beskrivning:</label>
+                    <label for="contentname" class="form-label">Innehållsnamn:</label>
                     <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
                 <div class="mb-3">
+                    <label for="creationdate" class="form-label">Skapad:</label>
+                    <InputDate id="creationdate" @bind-Value="Content.CreationDate" class="form-control" readonly />
+                    <ValidationMessage For="() => Content.CreationDate" class="text-danger" />
+                </div>
+                @* If the Content has had no update yet then the form wont show *@
+                @if (LastUpdatedDateTime.HasValue)
+                {
+                    <div class="mb-3">
+                        <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
+                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                        <ValidationMessage For="() => Content.LastUpdated" class="text-danger" />
+                    </div>
+                }
+                <div class="mb-3">
                     <label for="textJsonInput" class="form-label">Innehåll:</label>
-                    <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
+                    <InputText id="textJsonInput" @bind-Value="Content.ContentJson" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
                 @* <div class="mb-3">
@@ -74,9 +89,10 @@ else
     [SupplyParameterFromQuery]
     public int ContentId { get; set; }
 
-
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
+
+    private DateTime? LastUpdatedDateTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,6 +102,13 @@ else
         if (Content is null)
         {
             NavigationManager.NavigateTo("notfound");
+        }
+        else
+        {
+            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
+            LastUpdatedDateTime = Content.LastUpdated.HasValue
+                ? Content.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+                : null;
         }
     }
 

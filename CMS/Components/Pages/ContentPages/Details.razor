@@ -1,4 +1,5 @@
 ﻿@page "/content/details"
+@attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
@@ -27,6 +28,12 @@
             <dd class="col-sm-10">@content.WebPageId</dd>
             <dt class="col-sm-2">Innehållsnamn</dt>
             <dd class="col-sm-10">@content.ContentName</dd>
+            <dt class="col-sm-2">Template Id</dt>
+            <dd class="col-sm-10">@content.Template.TemplateType</dd>
+            <dt class="col-sm-2">Skapad</dt>
+            <dd class="col-sm-10">@content.CreationDate</dd>
+            <dt class="col-sm-2">Senast uppdaterad</dt>
+            <dd class="col-sm-10">@content.LastUpdated</dd>
         </dl>
         <div>
             <a href="@($"/content/edit?contentid={content.ContentId}")">Redigera</a> |

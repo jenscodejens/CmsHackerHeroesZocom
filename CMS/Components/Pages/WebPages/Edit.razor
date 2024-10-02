@@ -1,5 +1,6 @@
 ﻿@page "/WebPages/edit"
 @attribute [Authorize]
+
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
@@ -27,19 +28,39 @@ else
                     <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="header" class="form-label">Rubrik:</label>
-                    <InputText id="header" @bind-Value="WebPage.Header" class="form-control" />
-                    <ValidationMessage For="() => WebPage.Header" class="text-danger" />
+                    <label for="title" class="form-label">Titel:</label>
+                    <InputText id="title" @bind-Value="WebPage.Title" class="form-control" />
+                    <ValidationMessage For="() => WebPage.Title" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="body" class="form-label">Body??:</label>
-                    <InputText id="body" @bind-Value="WebPage.Body" class="form-control" />
-                    <ValidationMessage For="() => WebPage.Body" class="text-danger" />
+                    <label for="description" class="form-label">Beskrivning:</label>
+                    <InputText id="description" @bind-Value="WebPage.Description" class="form-control" />
+                    <ValidationMessage For="() => WebPage.Description" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="footer" class="form-label">Underrubrik:</label>
-                    <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" />
-                    <ValidationMessage For="() => WebPage.Footer" class="text-danger" />
+                    <label for="creationdate" class="form-label">Skapad:</label>
+                    <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
+                    <ValidationMessage For="() => WebPage.CreationDate" class="text-danger" />
+                </div>
+                @* If the webpage has had no update yet then the form wont show *@
+                @if (LastUpdatedDateTime.HasValue)
+                {
+                    <div class="mb-3">
+                        <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
+                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                        <ValidationMessage For="() => WebPage.LastUpdated" class="text-danger" />
+                    </div>
+                }
+                <div class="mb-3">
+                    <label for="visitor-url" class="form-label">Besöks Url:</label>
+                    <InputText id="visitor-url" @bind-Value="WebPage.VisitorUrl" class="form-control" />
+                    <ValidationMessage For="() => WebPage.VisitorUrl" class="text-danger" />
+                </div>
+                @* Had to keep this in order for DOM to work but made it invisible to user *@
+                <div class="mb-3" style="display: none;">
+                    <label for="userid" class="form-label">Användar Id:</label>
+                    <InputText id="userid" @bind-Value="WebPage.UserId" class="form-control" />
+                    <ValidationMessage For="() => WebPage.UserId" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Spara</button>
             </EditForm>
@@ -58,6 +79,8 @@ else
     [SupplyParameterFromForm]
     public WebPage? WebPage { get; set; }
 
+    private DateTime? LastUpdatedDateTime { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -66,6 +89,13 @@ else
         if (WebPage is null)
         {
             NavigationManager.NavigateTo("notfound");
+        }
+        else
+        {
+            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
+            LastUpdatedDateTime = WebPage.LastUpdated.HasValue
+                ? WebPage.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+                : null;
         }
     }
 
