@@ -19,6 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="PSC.Blazor.Components.MarkdownEditor" Version="8.0.4" />
   </ItemGroup>
 
@@ -29,6 +30,12 @@
 
   <ItemGroup>
     <Compile Remove="Services\GetCurrentUserIdService.cs" />
+    <Compile Remove="Components\Pages\WebSitePages\Visit.cshtml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Components\Pages\WebSitePages\Visit.cshtml" />
+    <Content Remove="Components\BlazorComponent\VisitNav.razor" />
   </ItemGroup>
 
 
