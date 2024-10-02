@@ -35,7 +35,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         [Parameter] public string BackgroundColor { get; set; } = "grey";
         [Parameter] public string WebPageName { get; set; } = string.Empty;
-        [Parameter] public string Textcolor { get; set; } = "black";
+        [Parameter] public string TextColor { get; set; } = "black";
         [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
         [Parameter] public string templateDropdown { get; set; } = string.Empty;
@@ -59,18 +59,24 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         public Dictionary<string, string> MenuItems = new Dictionary<string, string>();
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
 
-
+        public string UserId { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
+
             await using var context = DbFactory.CreateDbContext();
-            //ToDo: add user verification.
 
             if (ContentId != null)
             {
                 if (ContentExists((int)ContentId))
                 {
                     var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                    await GetUserID();
+                    //ToDo: add user verification, if content can be edited by multiple users this will not be working:
+                    //if (content.UserId != UserId) 
+                    //{
+                    //    throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+                    //}
                     if (content != null)
                     {
                         var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
@@ -92,7 +98,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                                             MenuItems = menuItemsWrapper.ToDictionary();
                                             currentStep = InputStep.Wait;
                                             TemplateId = content.TemplateId;
-                                            inputValueContentName = content.ContentName; 
+                                            inputValueContentName = content.ContentName;
                                             ContentId = content.ContentId;
                                             WebPageId = content.WebPageId;
                                             Update = true;
@@ -105,17 +111,17 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                                         {
                                             BackgroundColor = ConvertJsonElement(input.Value).ToString();
                                         }
-                                        else if(test.ToString() == "Textcolor")
+                                        else if (test.ToString() == "TextColor")
                                         {
-                                            Textcolor = ConvertJsonElement(input.Value).ToString();
+                                            TextColor = ConvertJsonElement(input.Value).ToString();
                                         }
                                         else
-                                        { 
+                                        {
                                             var error = ConvertJsonElement(input.Value).ToString();
-                                        Console.WriteLine($"NavbarInputForm can not match value : {error}.");
+                                            Console.WriteLine($"NavbarInputForm can not match value : {error}.");
                                         }
 
-                                        }
+                                    }
                                 }
                                 else
                                 {
@@ -150,6 +156,15 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 
         }
+
+        private async Task GetUserID()
+        {
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
+            UserId = user.Id;
+        }
+
+
+
         //ToDo: Handle async method.
         protected override void OnParametersSet()
         {
@@ -318,7 +333,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             var textInputJson = new NavBarTextInputJson
             {
                 MenuItems = menuItemsWrapper,
-                Textcolor = Textcolor,
+                Textcolor = TextColor,
                 Backgroundcolor = BackgroundColor
             };
 
@@ -329,7 +344,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 {
                     ContentName = inputValueContentName,
                     WebPageId = WebPageId,
-                    TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
                     ContentId = (int)ContentId
                 };
@@ -342,7 +357,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 {
                     ContentName = inputValueContentName,
                     WebPageId = WebPageId,
-                    TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
                 };
                 context.Contents.Add(content);
@@ -365,7 +380,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 { "MenuItems", MenuItems},
                 { "ContentName", inputValueContentName },
                 { "BackgroundColor", BackgroundColor },
-                { "Textcolor", Textcolor }
+                { "TextColor", TextColor }
             };
 
             await OnSubmit.InvokeAsync(formValues);
