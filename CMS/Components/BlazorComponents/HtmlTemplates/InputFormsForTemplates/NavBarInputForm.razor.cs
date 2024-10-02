@@ -6,13 +6,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
-using Templates.SingleInput;
 using CMS.Shared;
 using System.Text.Json;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 
-namespace Templates.InputForm
+namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 {
     public partial class NavBarInputForm
     {
