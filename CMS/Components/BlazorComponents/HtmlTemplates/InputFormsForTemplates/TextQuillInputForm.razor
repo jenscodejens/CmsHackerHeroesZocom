@@ -8,6 +8,7 @@
 @rendermode InteractiveServer
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
+@inject IGetCurrentUserService GetCurrentUserService
 
 @inject IJSRuntime JSRuntime
 
@@ -123,8 +124,8 @@
         QuillContent = await JSRuntime.InvokeAsync<string>("getQuillContent");
 
         await using var context = DbFactory.CreateDbContext();
-
         var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
         if (!webPageExists)
         {
             throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
@@ -132,9 +133,12 @@
 
         var content = new Content
             {
+                UserId = user.Id,
                 ContentName = ContentName,
                 WebPageId = WebPageId,
-                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     QuillContent = QuillContent
                 }),

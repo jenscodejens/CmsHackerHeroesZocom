@@ -1,20 +1,21 @@
 ﻿@page "/contents"
+@attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using CMS.Entities
 @using CMS.Data
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
 @attribute [Authorize]
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Index innehåll</PageTitle>
 
 <h1>Index Innehåll</h1>
 
 <p>
-    @* <a href="content/create">(Scaffolded)Skapa innehåll(ta bort denna?)</a> | *@
     <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
     <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a>
 </p>
@@ -29,9 +30,9 @@ else
         <PropertyColumn Property="content => content.ContentId" />
         <PropertyColumn Property="content => content.WebPageId" />
         <PropertyColumn Property="content => content.ContentName" />
-        <PropertyColumn Property="content => content.TextInputsJson" />
-        @* <PropertyColumn Property="content => content.Backgroundcolor" />
-        <PropertyColumn Property="content => content.Textcolor" /> *@
+        <PropertyColumn Property="content => content.CreationDate" />
+        <PropertyColumn Property="content => content.LastUpdated" />
+        <PropertyColumn Property="content => content.ContentJson" />
         <PropertyColumn Property="content => content.TemplateId" />
 
         <TemplateColumn Context="content">
@@ -46,7 +47,6 @@ else
 
 @code {
     IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
-
     [SupplyParameterFromQuery]
     public int? WebPageId { get; set; }
 

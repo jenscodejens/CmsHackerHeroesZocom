@@ -1,12 +1,13 @@
 ﻿@page "/websites/create"
 @attribute [Authorize]
+
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Skapa Webbsida</PageTitle>
+<PageTitle>Skapa Webbsite</PageTitle>
 
-<h1>Skapa webbsida</h1>
+<h1>Skapa webbsite</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,14 +20,14 @@
                 <ValidationMessage For="() => WebSite.Title" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Bild:</label>
-                <InputText id="image" @bind-Value="WebSite.ImageUrl" class="form-control" />
-                <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
-            </div>
-            <div class="mb-3">
                 <label for="description" class="form-label">Beskrivning:</label>
                 <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
                 <ValidationMessage For="() => WebSite.Description" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Bild:</label>
+                <InputText id="image" @bind-Value="WebSite.ImageUrl" class="form-control" />
+                <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
             </div>
             <div class="mb-3">
                 <label for="creationdate" class="form-label">Skapad:</label>
@@ -49,7 +50,7 @@
 
     public string UserId { get; set; }
 
-     protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         var user = await GetCurrentUserService.GetCurrentUserAsync();
         this.UserId = user.Id;
