@@ -45,7 +45,9 @@ else
 
 @code {
     IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-    [SupplyParameterFromQuery] public int? WebSiteId { get; set; }
+    [SupplyParameterFromQuery] 
+    public int? WebSiteId { get; set; }
+
     ApplicationDbContext context = default!;
 
     protected override async Task OnInitializedAsync()

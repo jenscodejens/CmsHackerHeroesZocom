@@ -32,13 +32,13 @@
             <dt class="col-sm-2">Innehållsnamn</dt>
             <dd class="col-sm-10">@content.ContentName</dd>
         </dl>
-        <dl class="row">
+@*         <dl class="row">
             <dt class="col-sm-2">Innehållsmall</dt>
             <dd class="col-sm-10">@content.Template.TemplateType</dd>
-        </dl>
+        </dl> *@
         <EditForm method="post" Model="content" OnValidSubmit="DeleteContent" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(content is null)">Delete</button> |
-            <a href="/content">Back to List</a>
+            <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button> |
+            <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a>
         </EditForm>
     }
 </div>
