@@ -28,19 +28,16 @@
                     <div class="text-danger">@TitleErrorMessage</div>
                 }
             </div>
-
             <div class="mb-3">
                 <label for="description" class="form-label">Beskrivning:</label>
                 <InputText id="description" @bind-Value="WebPage.Description" class="form-control" />
                 <ValidationMessage For="() => WebPage.Description" class="text-danger" />
             </div>
-
             <div class="mb-3">
                 <label for="visitor-url" class="form-label">Besöks Url:</label>
                 <InputText id="visitor-url" @bind-Value="WebPage.VisitorUrl" class="form-control" />
                 <ValidationMessage For="() => WebPage.VisitorUrl" class="text-danger" />
             </div>
-
             <div class="mb-3">
                 <label for="creationdate" class="form-label">Skapad:</label>
                 <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
@@ -82,15 +79,10 @@
         var existingWebPageTitle = await context.WebPages.FirstOrDefaultAsync(t => t.Title == WebPage.Title && t.WebSiteId == WebSiteId);
 
         TitleExists = existingWebPageTitle != null;
-        if (TitleExists)
-        {
-            TitleErrorMessage = "Webbsiten har redan en webbsida med denna titeln.";
-        }
-        else
-        {
-            // Om !string.IsNullOrEmpty så visas alltid ett errormsg, så när titeln är godkänd får en tom sträng "visas"
-            TitleErrorMessage = string.Empty;
-        }
+        // Om !string.IsNullOrEmpty är true så visas alltid ett errormsg, så när titeln är godkänd måste en tom sträng visas
+        TitleErrorMessage = TitleExists
+            ? "Webbsiten har redan en webbsida med denna titeln."
+            : string.Empty;
     }
 
     public async Task AddWebPage()

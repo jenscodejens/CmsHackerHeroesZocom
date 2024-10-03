@@ -1,4 +1,4 @@
-@using Entities;
+@using CMS.Entities;
 
 <div class="card" style="width: 18rem;">
     @if (WebSite.ImageUrl != null)
@@ -13,10 +13,18 @@
     }
     <div class="card-body">
         <h5 class="card-title">@WebSite.Title</h5>
-        <p class="card-text">@WebSite.Description</p>
+        <p class="card-text">@WebSite.Description</p> 
+        <div class="creation-info">
+            Skapad: @WebSite.CreationDate<br />
+        </div>
+            @if (WebSite.LastUpdated.HasValue)
+            {
+            <div class="creation-info">Uppdaterad: @WebSite.LastUpdated </div>
+            }
+            <hr />
         <div>     
              @if(WebSite.WebPages != null) {
-             <a href="@($"visit?websiteid={WebSite.WebSiteId}")">Besöka</a> <span>|</span>
+             <a href="@($"visit?websiteid={WebSite.WebSiteId}")">Besök</a> <span>|</span>
 
              } 
          
