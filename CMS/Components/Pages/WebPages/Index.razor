@@ -25,9 +25,11 @@ else
         <!-- Changed from context.WebPages to webpages -->
         <PropertyColumn Property="webpage => webpage.WebPageId"/>
         <PropertyColumn Property="webpage => webpage.WebSiteId"/>
-        <PropertyColumn Property="webpage => webpage.Header"/>
-        <PropertyColumn Property="webpage => webpage.Body"/>
-        <PropertyColumn Property="webpage => webpage.Footer"/>
+        <PropertyColumn Property="webpage => webpage.Title"/>
+        <PropertyColumn Property="webpage => webpage.Description"/>
+        <PropertyColumn Property="webpage => webpage.CreationDate"/>
+        <PropertyColumn Property="webpage => webpage.LastUpdated" />
+        <PropertyColumn Property="webpage => webpage.VisitorUrl" />
 
         <TemplateColumn Context="webpage">
             @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
@@ -43,7 +45,9 @@ else
 
 @code {
     IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-    [SupplyParameterFromQuery] public int? WebSiteId { get; set; }
+    [SupplyParameterFromQuery] 
+    public int? WebSiteId { get; set; }
+
     ApplicationDbContext context = default!;
 
     protected override async Task OnInitializedAsync()

@@ -1,9 +1,11 @@
 ﻿@page "/content/edit"
+@attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject IGetCurrentUserService GetCurrentUserService
 
 @attribute [Authorize]
 
@@ -35,13 +37,27 @@ else
                     <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="contentname" class="form-label">Namn/Beskrivning:</label>
+                    <label for="contentname" class="form-label">Innehållsnamn:</label>
                     <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
                 <div class="mb-3">
+                    <label for="creationdate" class="form-label">Skapad:</label>
+                    <InputDate id="creationdate" @bind-Value="Content.CreationDate" class="form-control" readonly />
+                    <ValidationMessage For="() => Content.CreationDate" class="text-danger" />
+                </div>
+                @* If the Content has had no update yet then the form wont show *@
+                @if (LastUpdatedDateTime.HasValue)
+                {
+                    <div class="mb-3">
+                        <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
+                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                        <ValidationMessage For="() => Content.LastUpdated" class="text-danger" />
+                    </div>
+                }
+                <div class="mb-3">
                     <label for="textJsonInput" class="form-label">Innehåll:</label>
-                    <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
+                    <InputText id="textJsonInput" @bind-Value="Content.ContentJson" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
                 @* <div class="mb-3">
@@ -59,7 +75,7 @@ else
                     <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
                     <ValidationMessage For="() => Content" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Skapa</button>
+                <button type="submit" class="btn btn-primary">Spara</button>
             </EditForm>
         </div>
     </div>
@@ -74,9 +90,13 @@ else
     [SupplyParameterFromQuery]
     public int ContentId { get; set; }
 
-
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
+
+    public string UserId { get; set; }
+    ApplicationDbContext context = default!;
+
+    private DateTime? LastUpdatedDateTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -87,12 +107,23 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
+        else
+        {
+            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
+            LastUpdatedDateTime = Content.LastUpdated.HasValue
+                ? Content.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+                : null;
+        }
     }
 
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateContent()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        UserId = user.Id;
+        Content!.UserId = UserId;
+
         using var context = DbFactory.CreateDbContext();
         context.Attach(Content!).State = EntityState.Modified;
 
@@ -114,6 +145,8 @@ else
 
         NavigationManager.NavigateTo($"/contents?webpageid={Content.WebPageId}");
     }
+
+
 
     bool ContentExists(int contentid)
     {

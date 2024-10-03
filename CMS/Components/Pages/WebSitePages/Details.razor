@@ -1,16 +1,17 @@
 ﻿@page "/websites/details"
+@attribute [Authorize]
+
 @using CMS.Entities
-@using CMS.Services
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-@inject VisitorCounterService VisitorCounterService
+
 
 <PageTitle>Detaljer</PageTitle>
 
 <h1>Detaljer</h1>
 
 <div>
-    <h4>WebSida</h4>
+    <h4>WebbSida</h4>
     <hr />
     @if (website is null)
     {
@@ -27,12 +28,14 @@
         <dd class="col-sm-10">@website.CreationDate</dd>
         <dt class="col-sm-2">Senast uppdaterad</dt>
         <dd class="col-sm-10">@website.LastUpdated</dd>
+        <dt class="col-sm-2">Startsida</dt>
+        <dd class="col-sm-10">@landingPageTitle</dd>
         <AuthorizeView Roles="Admin">
             <dt class="col-sm-2">Användar Id</dt>
             <dd class="col-sm-10">@website.UserId</dd>
         </AuthorizeView>
     </dl>
-
+        <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
     <p>Denna sida har besökts @VisitCount gånger.</p>
     
     <div>
@@ -48,6 +51,7 @@
     WebSite? website;
     private int VisitCount { get; set; }
     private string CurrentPageUrl => NavigationManager.Uri;
+    private string? landingPageTitle;
 
     [SupplyParameterFromQuery]
     public int WebSiteId { get; set; }
@@ -57,18 +61,33 @@
         using var context = DbFactory.CreateDbContext();
         website = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
 
+        if (website?.LandingPage != null)
+        {
+            var landingPage = await context.WebPages
+                .FirstOrDefaultAsync(wp => wp.WebPageId == website.LandingPage);
+
+            landingPageTitle = landingPage?.Title;
+        }
+        else if (website?.LandingPage is null)
+        {
+            var hasWebPages = await context.WebPages
+                 .AnyAsync(wp => wp.WebSiteId == WebSiteId);
+
+            if (hasWebPages)
+            {
+                landingPageTitle = "Webbsiten har ingen startsida vald";
+            }
+            else
+            {
+                landingPageTitle = "Webbsiten har inga webbsidor";
+            }
+        }
+
         if (website is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
-        else
-        {
-            // Increment the visit count for this specific page
-            await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
-
-            // Get the updated visit count for this page
-            VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
-        }
     }
 }
+
 
