@@ -1,0 +1,109 @@
+  [
+    {
+    "Title": "Wonderlust",
+    "ImageUrl": "https://www.wanderlustmagazine.com/wp-content/uploads/2023/09/wanderlust-logo.svg",
+    "Description": "a Travel blog",
+    "webpages": 
+    [
+      {
+        "MenuTitle": "Home",
+        "Header": "Marvel at The Grand Palace, Bangkok",
+        "ImageUrl": "https://www.wanderlustmagazine.com/wp-content/uploads/2023/11/giants-at-grand-palace-bangkok-thailand.jpg",
+        "Body": "The Grand Palace and the breathtaking series of buildings surrounding it is now over 200 years old, and remains perhaps the most famous, recognisable destination in Bangkok.\n\nYes, it can feel like a tourist trap at times, but the complex’s vast history and gold-dripping grandeur is palpable: since 1782, it has been the official residence of the Kings of Siam (and later Thailand).\n\nWhile you’re exploring the Grand Palace, don’t miss the Emerald Buddha and nearby Wat Pho, which is home to the largest reclining Buddha in Thailand. Another must see is Wat Arun, the Temple of Dawn, which is stunning from a distance and intriguing close up, with its mosaic detailing, as you climb to the top.\n\nSunset is a particularly attractive, if busy, time to admire the palace. As the sky darkens, the Grand Palace is illuminated, and although you’ll likely still encounter the crowds even into the night, it’s a very romantic", 
+        "Footer" : "Thailand"
+    },
+      {
+        "MenuTitle": "Visit",
+        "Header": "Visit the Golden Triangle",
+        "ImageUrl": "https://www.wanderlustmagazine.com/wp-content/uploads/2023/11/golden-triangle-thailand.jpg",
+        "Body": "The point where the Mekong River meets the Ruak River is known locally as Sop Ruak, but to the rest of the world it’s the Golden Triangle: the point at which Myanmar (Burma), Laos and Thailand meet.\n\nEven standing on the Thailand river bank, you can look across to Myanmar and Laos, though you may wish to hire a boat for an even closer look. You won’t get lost: there are plenty of market stalls, Buddha and elephant statues, and plenty of signage to confirm that, yes, this is in fact the Golden Triangle.\n\nSop Ruak was once known as a prolific opium-growing area, and the exhibitions at the Hall of Opium in Golden Triangle Park, offer a solid introduction to the local history and effects of the industry, as well as the potency of the drug.\n\nOnce you’ve seen all Thailand has to offer, keep cruising along the Mekong to visit Laos.\n\n",
+        "Footer" : "Thailand"
+      },
+      {
+        "MenuTitle": "Enjoy",
+        "Header": "Enjoy an ethical elephant experience",
+        "ImageUrl": "https://www.wanderlustmagazine.com/wp-content/uploads/2023/11/elephant-nature-park-thailand.jpg",
+        "Body": "The elephant is Thailand’s national symbol and is considered a highly-revered animal. There are plenty of ways to encounter or work with the animals all over the country. Unfortunately, animal cruelty is a real problem in some elephant ‘sanctuaries’ – for instance, avoid any centre that makes the elephants perform tricks.\n\nFortunately, there are plenty of good ele’ experiences out there. The Elephant Nature Park rehabilitates rescue elephants, and your visit helps their work. To combine your elephant experience with luxury accommodation, try the award-winning Elephant Hills; a comfortable tented camp, with opportunities to interact with the animals.",
+        "Footer" : "Thailand"
+      },
+      {
+        "MenuTitle": "Islands",
+        "Header": "Hop through some of the world’s prettiest islands",
+        "ImageUrl": "https://www.wanderlustmagazine.com/wp-content/uploads/2023/11/phang-na-bay-thailand.jpg",
+        "Body": "Thailand boasts over 5,000 miles of coastline, all of which is just waiting to be explored. Travel by long-tail boat and discover as many beaches and islands as possible.\n\nSee Phang Nga Bay and the limestone rocks off Thailand’s west coast. You know the ones – they’re frequently photographed. Or island hop in the Andaman Sea off of Phuket and Krabi. Here, you’ll discover white sand beaches and abundant snorkelling on Ko Phi Phi Lee and Ko Phi Phi Don.\n\nThe calm sea and clear conditions are perfect for kayaking, too. It’s a great way to explore the islands without the masses on tourist boats or passenger ferries, and take the experience at your own pace. The coastlines of Koh Phan Ngan, Koh Tao and Koh Samui in the Gulf of Thailand are particularly picturesque.\n\n",
+        "Footer" : "Thailand"
+      },
+      {
+        "MenuTitle": "Tribes",
+        "Header": "Meet the hill tribes of northern Thailand",
+        "ImageUrl": "https://www.wanderlustmagazine.com/wp-content/uploads/2023/11/hmong-hill-tribes-northern-thailand.jpg",
+        "Body": "Akha, Lisu, Hmong and Karen tribes are found all across the north of Thailand. Take a break from the tourist trail, and spend a day or a few nights with a local family to learn and experience their way of life.\n\nChoose your tour guide wisely – ensure that they operate in an ethical and sustainable manner.",
+        "Footer" : "Thailand"
+      }
+    ]
+},
+    {
+      "Title": "Mademoiselle",
+      "ImageUrl": "https://www.mademois-elle.com/wp-content/uploads/2023/05/mademoisellelogoOCT2018-2.png",
+      "Description": "a Fashion blog",
+      "webpages": [
+        {
+          "MenuTitle": "Main",
+          "Header": "Style Rule to Live By: Don’t settle if it’s not *quite* right\n",
+          "ImageUrl": "https://www.mademois-elle.com/img24/khaitesandals_1.jpg",
+          "Body": "I recently spent months coveting a pair of shoes, only to finally bite the bullet and find that they were too narrow for me. The shoes were expensive, so naturally I had been keeping an eagle eye out for a flash sale or discount (I use Carted to track price drops BTW – game changing!). Being from Khaite, the brand is largely inaccessible here in Australia, so often you’re relying on reviews and imagery you’ve found online to fill in the whole picture. Trying these beautiful Khaite sandals on in my home, I immediately found myself coming up with justifications…",
+          "Footer" : "Fashion"
+        },
+        {
+          "MenuTitle": "Beauty",
+          "Header": "MERIT Beauty is now shipping to Australia!\n",
+          "ImageUrl": "https://www.mademois-elle.com/img24/meritaushipping_1.jpg",
+          "Body": "You can only imagine the squeal I made when I found out one of my most beloved beauty brands of the last two years is now shipping to Australia. That’s right, it’s official, as of today, you can shop MERIT Beauty if you’re living down under. So I thought it would be fun to revisit some of my most loved products, and share mini reviews of an (almost) full face of MERIT Beauty. If you’re wanting more in-depth reviews, you can read this one on the Solo Shadows (with swatches), this post here on MERIT’s matte lipsticks (again, with swatches),…\n\n",
+          "Footer" : "Fashion"
+        }
+      ,
+        {
+          "MenuTitle": "Winter",
+          "Header": "This is what I wore on repeat in Winter",
+          "ImageUrl": "https://www.mademois-elle.com/img24/wintermostworn24_01.jpg",
+          "Body": "The tail end of winter always hits me by surprise. A 31 deg C day will pop up out of nowhere, cascading into the start of spring even though technically – technically – winter isn’t over yet. And it’s worth noting that Sydney winters as they are translate to “winter lite”.\n\nOne thing I finally switched up this season, was sorting myself out with a digital wardrobe cataloguing app so that I had a real visual representation of my outfits. Numbers are one thing, but they only tell you half of the story.",
+          "Footer" : "Fashion"
+        }
+      ]
+    },
+    {
+      "Title": "8sidor",
+      "ImageUrl": "https://8sidor.se/wp-content/uploads/2024/01/8sidor-40-years3.png",
+      "Description": "News blog",
+      "webpages": [
+        {
+          "MenuTitle": "Start",
+          "Header": "Man död efter olycka på Forsmark",
+          "ImageUrl": "https://8sidor.se/wp-content/uploads/2024/09/Forsmark.jpg",
+          "Body": "En ung man som arbetade\npå Forsmarks kärnkraftverk\nblev skadad på jobbet.\nOlyckan hände i fredags.\n\nNu har mannen dött\nav sina skador.\n\nOlyckan hände\nnär något skulle svetsas.\nFlera av mannens\nkollegor såg olyckan.\nDe försökte hjälpa mannen.\n\nKollegorna får nu hjälp\natt prata om olyckan.\n\nMannen som var ungefär 25 år\nfick åka helikopter till sjukhus.\nMen läkarna kunde inte\nrädda hans liv.\n\nJohanna Blavier\njobbar på Forsmark.\nHon säger att de nu\nundersöker vad som hände.\nDet gör också poliserna\noch myndigheten Arbetsmiljöverket.\n\n– Det som har hänt\när mycket hemskt och sorgligt.\nJag är så ledsen\noch tänker på mannens\nfamilj och kollegor,\nsäger Johanna Blavier.\n\nForsmarks kärnkraftverk\nligger i Östhammars kommun\nutanför Uppsala.",
+          "Footer" : "8 SIDOR/TT"
+        },
+        {
+          "MenuTitle": "Världen",
+          "Header": "Människor flyr i Libanon",
+          "ImageUrl": "https://8sidor.se/wp-content/uploads/2024/09/240924_libanon.jpg",
+          "Body": "Det har länge varit bråk\nmellan landet Israel\noch gruppen Hizbollah i Libanon.\nDe senaste dagarna\nhar bråket blivit värre.\n\nHizbollah skjuter raketer\noch robotar mot Israel.\n\nIsrael attackerar med flygplan\nmot flera tusen platser i Libanon.\nIsrael säger att de attackerar\nplatser där Hizbollah finns.\n\nI måndags dödades nästan\n500 människor i Libanon.\nFlera av dem var barn.\nDet säger Libanons regering.\n\nMånga tusen människor\ni Libanon flyr\nför att komma undan\nIsraels attacker.\n\n– Först flydde vi till min bror.\nMen sedan flydde vi igen\nnär de bombade tre platser\nnära min brors hus.\n\nDet säger kvinnan Fatima Chehab\ntill nyhetsbyrån AP.\nHon fick fly\nmed sina tre döttrar.\n\nHizbollah är en grupp\nsom har mycket\nmakt i Libanon.\n\nUSA, länderna i EU\noch flera andra länder\nsäger att Hizbollah\när terrorister.",
+          "Footer" : "8 SIDOR/TT"
+        },
+        {
+          "MenuTitle": "Sport",
+          "Header": "Han vill bli bättre än någonsin",
+          "ImageUrl": "https://www.mademois-elle.com/img24/wintermostworn24_01.jpg",
+          "Body": "Många som tittar\npå svensk fotboll\nminns kanske vad\nsom hände i slutet\nav februari i år.\n\nDå fick vi fick veta\natt fotbollsspelaren\nKristoffer Olsson, Koffe,\nvar svårt sjuk.\n\nDen 20 februari föll\nKoffe ihop i sitt hem.\nHan hade fått\nen ovanlig och allvarlig\ninflammation i hjärnan.\n\nHan fick åka ambulans till\nsjukhuset i Århus i Danmark.\nDå var han medvetslös.\n\nEn vecka senare berättade\nhans danska klubb Midtjylland\natt Koffe låg nedsövd.\nFlera läkare jobbade med\natt rädda hans liv.\n\nDe lyckades.\n\nI slutet av augusti fick\nKristoffer Olsson komma hem.\n\nNu har han börjat\natt träna fotboll igen.\n\n– Det kommer att ta tid\natt komma tillbaka.\nMen jag är säker på\natt jag kommer vara bättre\nän någonsin när jag gör det.\n\nDet säger Kristoffer Olsson\ni en intervju med SVT.\n\nKoffe berättar också om\nett annat mål han har.\n\n– Jag skulle verkligen vilja\nskriva en bok om det\njag har varit med om,\nsäger han till SVT.\n\n",
+          "Footer" : "8 SIDOR"
+        },   
+        {
+          "MenuTitle": "Kultur",
+          "Header": "Katten Luffar-Lasse på tv",
+          "ImageUrl": "https://8sidor.se/wp-content/uploads/2024/09/lasse.jpg",
+          "Body": "Vad gör en katt hela dagarna?\nDet kan du få veta\npå lördag och söndag\nden 21 och 22 september.\nDå visar SVT Play\nett program om katten\nLuffar-Lasse från Trollhättan.\n\nKatten är lite känd.\nHan har tidigare varit\nmed \u2028i programmet Musikhjälpen.\n\nDen här gången har flera filmare\nföljt efter Luffar-Lasse\nnågra helt vanliga dagar.\nOch filmat allt han gör.\n\nProgrammet heter\nEn helg med Luffar-Lasse\noch håller på i sju timmar per dag.\n\n– Det blir riktigt spännande\nnär han ska gå över gator \u2028med bilar.\nVi kommer också \u2028få se\nkatter som pussas.\n\nDet säger Stephan Wilson\nsom har gjort filmen\nom Luffar-Lasse.\n\nProgrammet om Luffar-Lasse\nbörjar klockan 9 på\nlördag den 21 september.\n\n",
+          "Footer" : "8 SIDOR/TT"
+        }
+      ]
+    }
+  ]
