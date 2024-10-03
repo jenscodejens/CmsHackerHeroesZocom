@@ -1,6 +1,10 @@
 ﻿@page "/webpages/createmulti"
+@attribute [Authorize]
+
+@using BlazorComponents.HtmlTemplates
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
+@using CMS.Components.BlazorComponents.HtmlTemplates
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
@@ -18,8 +22,8 @@ else
 {
     <!-- Header Section -->
     <header class="header-section">
-        <p>RUBRIK</p>
-        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+        <p>SidHuvud</p>
+        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
     </header>
 
     <!-- Main Body Sections -->
@@ -28,17 +32,28 @@ else
         {
             <div class="main-body-section">
                 <p>KROPP</p>
-                <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+                <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
             </div>
         }
         <button @onclick="AddNewContent" class="add-button">Lägg till nytt innehåll</button>
     </main>
-
     <!-- Footer Section -->
     <footer class="footer-section">
         <p>Sidfoten</p>
-        <htmltemplates.templates.CreateContent WebPageId="@webpage.WebPageId"></htmltemplates.templates.CreateContent>
+        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
     </footer>
+
+    <!-- Save Button -->
+    <button @onclick="SaveAllContents" class="save-button">Save All Contents</button>
+
+    <!-- Success Message -->
+    @if (saveSuccessful)
+    {
+        <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+            All contents have been saved successfully!
+            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view the contents</a> | <a href="/webpages/previewpage/@WebPageId" class="alert-link">Click here to preview the webpage</a>
+        </div>
+    }
 }
 
 @code {
@@ -46,6 +61,9 @@ else
     WebPage? webpage;
 
     private List<int> contentIndexes = new List<int>();
+    private bool saveBtnClicked = false; // Track if save button has been clicked
+    private bool multipagemode = true;
+    private bool saveSuccessful = false; // New flag to show success message
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }
@@ -63,10 +81,21 @@ else
 
     private void AddNewContent()
     {
-        // Add a new index to the list to render an additional CreateContent component
         contentIndexes.Add(contentIndexes.Count);
     }
+
+    private void SaveAllContents()
+    {
+        saveBtnClicked = true; // Set to true when save button is clicked
+
+        // Simulate saving all contents to the database
+        // Add your actual save logic here, for now we assume the save is successful.
+
+        // After save is done, set saveSuccessful to true to display the message
+        saveSuccessful = true;
+    }
 }
+
 
 <!-- Add your CSS here or in a separate stylesheet -->
 <style>
@@ -98,5 +127,18 @@ else
 
     .footer-section {
         background-color: #f4f4f4;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+        padding: 10px;
+        border-radius: 5px;
+    }
+
+    .alert-link {
+        color: #155724;
+        font-weight: bold;
     }
 </style>

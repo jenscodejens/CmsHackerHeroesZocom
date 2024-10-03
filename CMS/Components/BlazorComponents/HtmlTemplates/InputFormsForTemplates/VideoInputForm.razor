@@ -1,11 +1,12 @@
-﻿@using CMS.Components.Pages.HtmlTemplates.templates
+﻿@using CMS.Components.BlazorComponents.HtmlTemplates
 @using CMS.Data
 @using CMS.Entities
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
 
-@namespace Templates.InputForm
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
+@inject IGetCurrentUserService GetCurrentUserService
 
 <h3>Single Video Input Form</h3>
 
@@ -39,9 +40,21 @@
 
         <div style="margin-top: 10px;">
             <button type="button" @onclick="PreviewImage">PreviewImage</button>
-            <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+            @if (!MultiPageMode) // Show button only if not in multi-page mode
+            {
+                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+            }
         </div>
     </form>
+
+    <!-- Success message -->
+    @if (saveSuccessful)
+    {
+        <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+            Content saved successfully!
+            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+        </div>
+    }
 </div>
 
 @code {
@@ -56,9 +69,24 @@
 
     // Video Properties
     [Parameter] public string VideoUrl { get; set; } = string.Empty;
-    [Parameter] public string VideoWidth { get; set; } = "100%";
-    [Parameter] public string VideoHeight { get; set; } = "auto";
-    [Parameter] public string VideoAlignment { get; set; } = "left";
+    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
+    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
+    [Parameter] public string VideoAlignment { get; set; } = "center";
+
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+
+    private bool saveSuccessful = false;  // New flag to show the success message
+
+    protected override void OnParametersSet()
+    {
+        if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+        {
+            SaveToDatabase(); // Call the save method
+            hasSaved = true; // Set the flag to prevent further saves
+        }
+    }
 
 
     // Save all inputs to the database when the "Save" button is clicked
@@ -84,6 +112,7 @@
     private async Task SaveToDatabase()
     {
         await using var context = DbFactory.CreateDbContext();
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
 
         // Ensure WebPageId exists in the WebPages table
         var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
@@ -94,9 +123,12 @@
 
         var content = new Content
             {
+                UserId = user.Id,
                 ContentName = ContentName,
                 WebPageId = WebPageId,
-                TextInputsJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     VideoUrl = VideoUrl,
                     VideoWidth = VideoWidth,
@@ -118,17 +150,7 @@
             throw;
         }
 
-        // Mapping section to pass form values to a parent component or handler
-        // var formValues = new Dictionary<string, object>
-        // {
-        //     { "ContentName", ContentName },
-        //     { "ImageInput1", ImageInput1 },
-        // };
-
-        // await OnSubmit.InvokeAsync(formValues);
-
-        // Navigate to the contents page
-        //Done();
+        saveSuccessful = true;
     }
 
     // Navigate to the contents page after saving

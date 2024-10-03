@@ -41,58 +41,60 @@ namespace CMS.Seed
             {
                 new Template
                 {
-                    TemplateType = "Footer2",
-                    TemplatePath = "Templates.SingleInput.Template2",
-                    InputFormPath = "Templates.InputForm.SingleInputForm"
-                },
-                new Template
-                {
-                    TemplateType = "Footer3",
-                    TemplatePath = "Templates.SingleInput.Template3",
-                    InputFormPath = "Templates.InputForm.SingleInputForm"
-                },
-                new Template
-                {
-                    TemplateType = "Footer",
-                    TemplatePath = "Templates.SingleInput.Template1",
-                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                    TemplateType = "Bild Kort",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.ImageCardTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.ImageCardInputForm"
                 },
                  new Template
                 {
-                    TemplateType = "Header",
-                    TemplatePath = "Templates.SingleInput.Template1Header",
-                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                    TemplateType = "Bild",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.ImageTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.ImageInputForm"
                 },
                   new Template
                 {
-                    TemplateType = "Link",
-                    TemplatePath = "Templates.SingleInput.Template1Link",
-                    InputFormPath = "Templates.InputForm.DoubleInputForm"
+                    TemplateType = "Text(MarkDown)",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.TextMarkDownTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.TextMarkdownInputForm"
                 },
-                   new Template
+                    new Template
                 {
-                    TemplateType = "NavBar",
-                    TemplatePath = "Templates.SingleInput.Template1NavBar",
-                    InputFormPath = "Templates.InputForm.NavBarInputForm"
+                    TemplateType = "Text(Quill)",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.TextQuillTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.TextQuillInputForm"
                 },
-                   new Template
+               
+                  new Template
                 {
-                    TemplateType = "BodyImageCard",
-                    TemplatePath = "Templates.Body.Body1",
-                    InputFormPath = "Templates.InputForm.Body1InputForm"
+                    TemplateType = "Video",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.VideoTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.VideoInputForm"
                 },
-                   new Template
+                    new Template
                 {
-                    TemplateType = "BodySingleImage",
-                    TemplatePath = "Templates.Body.SingleImage",
-                    InputFormPath = "Templates.InputForm.SingleImageInputForm"
+                    TemplateType = "SidFot",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.FooterTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.DoubleInputForm"
                 },
-                   new Template
+                    new Template
                 {
-                    TemplateType = "BodySingleVideo",
-                    TemplatePath = "Templates.Body.SingleVideoInput",
-                    InputFormPath = "Templates.InputForm.SingleVideoInputForm"
-                }
+                    TemplateType = "SidHuvud",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.HeaderTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.DoubleInputForm"
+                },
+                    new Template
+                {
+                    TemplateType = "Länk",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.LinkTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.DoubleInputForm"
+                },
+                    new Template
+                {
+                    TemplateType = "Navigation Bar",
+                    TemplatePath = "BlazorComponents.HtmlTemplates.TemplatesForComponents.NavBarTemplate",
+                    InputFormPath = "BlazorComponents.HtmlTemplates.InputFormsForTemplates.NavBarInputForm"
+                },
+
             };
             return list;
         }
