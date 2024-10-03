@@ -37,7 +37,6 @@
                 <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
                 <ValidationMessage For="() => WebPage.CreationDate" class="text-danger" />
             </div>
-            
             <button type="submit" class="btn btn-primary">Skapa</button>
         </EditForm>
     </div>
@@ -74,8 +73,8 @@
         WebPage.UserId = user.Id;
         context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");
-        
+        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");        
         //NavigationManager.NavigateTo($"webpages/details?WebPageId={WebPage.WebPageId}");
     }   
+
 }

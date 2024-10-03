@@ -12,9 +12,9 @@ else
         <p>Startsida: </p>
         <select id="landingpage" @bind="selectedWebPageId" @bind:after="SaveLandingPage">
             <option value="">Välj startsida</option>
-            @foreach (var webpagetitle in WebPages)
+            @foreach (var webpage in WebPages)
             {
-                <option value="@webpagetitle.WebPageId">@webpagetitle.Title</option>
+                <option value="@webpage.WebPageId">@webpage.Title</option>
             }
         </select>
     </div>
