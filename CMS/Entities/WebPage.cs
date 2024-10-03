@@ -2,22 +2,17 @@
 
 namespace CMS.Entities
 {
-  
     public class WebPage
     {
         public int WebPageId { get; set; }
         public int WebSiteId { get; set; }
+        public string UserId { get; set; } = string.Empty;
+        public string Title { get; set; }
+        public string Description { get; set; } = string.Empty;
+        public DateOnly CreationDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly? LastUpdated { get; set; }
+        public string VisitorUrl { get; set; } = string.Empty;
         public WebSite WebSite { get; set; }
-        [Required]
-        public string Header { get; set; } 
-        
-        [Url]
-        public string? ImageUrl { get; set; } 
-
-        [Required]
-        public string Body { get; set; } 
-        [Required]
-        public string Footer { get; set; } 
         public ICollection<Content> Contents { get; set; }
     }
 }

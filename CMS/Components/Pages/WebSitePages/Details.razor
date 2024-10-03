@@ -1,4 +1,6 @@
 ﻿@page "/websites/details"
+@attribute [Authorize]
+
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager

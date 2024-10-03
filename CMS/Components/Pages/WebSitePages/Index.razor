@@ -12,7 +12,7 @@
 
 <PageTitle>Mina webbsites</PageTitle>
 
-<h3>Mina websites</h3>
+<h3>Mina webbsites</h3>
 
 <p>
     <a href="websites/create">Skapa ny webbsite</a>
@@ -20,56 +20,11 @@
 @if (UserId != null)
 {
     <div class="grid-container" style="display: grid;"> 
-    @foreach (var website in context.WebSites.Where(w => w.UserId == UserId))
+    @foreach (var website in context.WebSites.Include(w=> w.WebPages).Where(w => w.UserId == UserId))
     {
-        <div class="grid-item" >
-    
-            @if (website.ImageUrl != null)
-            {
-                <img src="@website.ImageUrl" alt=""
-                     style="object-fit:contain;width: 100%;height: 50%;"/>
-               
-            }
-            else
-            {
-                <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
-                     style="object-fit:contain;width: 100%;height: 50%;"/>
-           
-            }
-             <h3> @website.Title</h3>
-             <p style="font-size: small"> Beskrivning: @website.Description</p>
-            <p style="font-size: small"> Skapad: @website.CreationDate</p>
-
-@*             <button @onclick="@(() => NavigationManager.NavigateTo($"websites/edit?websiteid={website.WebSiteId}"))">Editera</button>
-            <button @onclick="@(() => NavigationManager.NavigateTo($"websites/details?websiteid={website.WebSiteId}"))">Detaljer</button>
-            <button @onclick="@(() => NavigationManager.NavigateTo($"/webpages/create?websiteid={website.WebSiteId}"))">Lägg till websida</button>
-            <button @onclick="@(() => NavigationManager.NavigateTo($"websites/delete?websiteid={website.WebSiteId}"))">Radera</button>
-            <br /> *@
-
-            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
-            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Detaljer</a> |
-            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Lägg till websida</a> |
-            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Radera</a> 
-        </div>
+        <WebSiteCard WebSite="@website"/>
     }
     </div>
-
-    <!--
-<QuickGrid Class="table" Items="context.WebSites.Where(w => w.UserId == UserId)">
-        <PropertyColumn Property="website => website.Title"/>
-        <PropertyColumn Property="website => website.Description"/>
-        <PropertyColumn Property="website => website.CreationDate"/>
-        <PropertyColumn Property="website => website.LastUpdated"/>
-
-
-        <TemplateColumn Context="website">
-            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
-            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
-            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a> |
-            <a href="@($"/webpages?websiteid={website.WebSiteId}")">Show Web Pages</a> |
-            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Add Page</a>
-        </TemplateColumn>
-    </QuickGrid> -->
 }
 
     

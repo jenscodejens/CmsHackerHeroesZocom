@@ -1,12 +1,14 @@
 ﻿@page "/content/createcontent"
-@namespace BlazorComponents.HtmlTemplates
+@attribute [Authorize]
+
 @using CMS.Data
 @using CMS.Models
 @using Microsoft.EntityFrameworkCore
+@inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
-@attribute [Authorize]
+@namespace BlazorComponents.HtmlTemplates
 
 <h3>Skapa ett innehåll</h3>
 
@@ -46,6 +48,7 @@
 }
 
 @code {
+
     [Parameter]
     [SupplyParameterFromQuery]
     public int? WebPageId { get; set; }
@@ -55,6 +58,7 @@
 
     [Parameter] public bool MultiPageMode { get; set; } = false; // Default to false
 
+    public string UserId { get; set; }
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;
     private string selectedInputFormPath;
@@ -119,12 +123,30 @@
         return builder => builder.AddContent(0, "No component selected.");
     }
 
+    // private async Task OnInputFormSubmit(Dictionary<string, object> formValues)
+    // {
+    //     using var dbContext = DbContextFactory.CreateDbContext();
+
+    //     var content = new Content();
+
+    //     foreach (var kvp in formValues)
+    //     {
+    //         templateParameters[kvp.Key] = kvp.Value;
+    //     }
+
+    //     var user = await GetCurrentUserService.GetCurrentUserAsync();
+    //     content.UserId = user.Id;
+
+    //     dbContext.Contents.Add(content);
+    //     await dbContext.SaveChangesAsync();
+    // }
     private void OnInputFormSubmit(Dictionary<string, object> formValues)
     {
         // Update the parameters for the selected template based on form values
         foreach (var kvp in formValues)
         {
             templateParameters[kvp.Key] = kvp.Value;
-        }
+            }
     }
 }
+

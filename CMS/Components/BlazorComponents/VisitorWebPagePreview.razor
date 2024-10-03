@@ -1,0 +1,39 @@
+@using CMS.Components.Pages.ContentPages
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+
+@if (contentList == null)
+{
+    <p>Laddar...</p>
+}
+else if (contentList.Count == 0)
+{
+    <p>Inget innehåll tillgängligt för denna webbsida.</p>
+}
+else
+{
+    @foreach (var content in contentList)
+    {
+        <div class="content-preview">
+            <ContentPreview ContentId="@content.ContentId" />
+        </div>
+    }
+}
+
+
+@code {
+    [Parameter] public int WebPageId { get; set; }
+
+    private List<Content> contentList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Create a new DbContext instance using the factory
+        using var dbContext = DbContextFactory.CreateDbContext();
+
+        // Load all content items associated with the specified WebPageId
+        contentList = await dbContext.Contents
+            .Where(c => c.WebPageId == WebPageId)
+            .ToListAsync();
+    }
+}

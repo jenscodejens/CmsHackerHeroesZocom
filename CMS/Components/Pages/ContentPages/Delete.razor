@@ -1,23 +1,22 @@
 ﻿@page "/content/delete"
+@attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize]
+<PageTitle>Radera innehåll</PageTitle>
 
-<PageTitle>Delete</PageTitle>
+<h1>Radera</h1>
 
-<h1>Delete</h1>
-
-<h3>Are you sure you want to delete this?</h3>
+<h3>Är du säker på att du vill radera innehållet?</h3>
 <div>
     <h4>Content</h4>
     <hr />
     @if (content is null)
     {
-        <p><em>Loading...</em></p>
+        <p><em>Laddar...</em></p>
     }
     else
     {
@@ -30,12 +29,16 @@
             <dd class="col-sm-10">@content.WebPageId</dd>
         </dl>
         <dl class="row">
-            <dt class="col-sm-2">Content Name</dt>
+            <dt class="col-sm-2">Innehållsnamn</dt>
             <dd class="col-sm-10">@content.ContentName</dd>
         </dl>
+@*         <dl class="row">
+            <dt class="col-sm-2">Innehållsmall</dt>
+            <dd class="col-sm-10">@content.Template.TemplateType</dd>
+        </dl> *@
         <EditForm method="post" Model="content" OnValidSubmit="DeleteContent" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(content is null)">Delete</button> |
-            <a href="/content">Back to List</a>
+            <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button> |
+            <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a>
         </EditForm>
     }
 </div>

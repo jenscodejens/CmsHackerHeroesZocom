@@ -1,5 +1,6 @@
 ﻿@page "/websites/delete"
 @attribute [Authorize]
+
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
@@ -32,10 +33,6 @@
         <dl class="row">
             <dt class="col-sm-2">Senast uppdaterad</dt>
             <dd class="col-sm-10">@website.LastUpdated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Användar Id</dt>
-            <dd class="col-sm-10">@website.UserId</dd>
         </dl>
         <EditForm method="post" Model="website" OnValidSubmit="DeleteWebSite" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(website is null)">Radera</button> |

@@ -12,9 +12,9 @@ else
         <p>Startsida: </p>
         <select id="landingpage" @bind="selectedWebPageId" @bind:after="SaveLandingPage">
             <option value="">Välj startsida</option>
-            @foreach (var webpageheader in WebPages)
+            @foreach (var webpage in WebPages)
             {
-                <option value="@webpageheader.WebPageId">@webpageheader.Header</option>
+                <option value="@webpage.WebPageId">@webpage.Title</option>
             }
         </select>
     </div>
@@ -45,11 +45,11 @@ else
         {
             selectedWebPageId = website.LandingPage;
 
-            // Hämta Header(rubrik, vi får byta namn senare) för den valda startsidan
+            // Hämta Header(Titel, vi får byta namn senare) för den valda startsidan
             var landingPage = await context.WebPages
                 .FirstOrDefaultAsync(wp => wp.WebPageId == website.LandingPage);
 
-            landingPageHeader = landingPage?.Header;
+            landingPageHeader = landingPage?.Title;
         }
     }
 
