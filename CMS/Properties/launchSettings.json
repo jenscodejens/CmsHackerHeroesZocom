@@ -36,6 +36,7 @@
         "ASPNETCORE_ENVIRONMENT": "windows"
       }
     },
+    // todo: add profil mac
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
