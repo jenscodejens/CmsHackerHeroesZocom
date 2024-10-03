@@ -15,7 +15,7 @@
         <h5 class="card-title">@WebSite.Title</h5>
         <p class="card-text">@WebSite.Description</p>
         <div>     
-             @if(WebSite.WebPages != null) {
+             @if(WebSite.WebPages.Count > 0) {
              <a href="@($"visit?websiteid={WebSite.WebSiteId}")">Besöka</a> <span>|</span>
 
              } 
