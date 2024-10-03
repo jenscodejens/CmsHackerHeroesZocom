@@ -10,3 +10,16 @@ a {
     font-size: small;
     text-decoration: none;
 }
+
+.card-body {
+    text-align: center;
+}
+
+.creation-info {
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
+    font-size: 12px;
+    padding-bottom: 1px;
+}
