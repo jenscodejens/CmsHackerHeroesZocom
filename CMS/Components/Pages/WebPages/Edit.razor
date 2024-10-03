@@ -22,7 +22,7 @@ else
             <EditForm method="post" Model="WebPage" OnValidSubmit="UpdateWebPage" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />
+                <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />    
                 <div class="mb-3">
                     <label for="websiteid" class="form-label">WebSiteId:</label>
                     <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" />

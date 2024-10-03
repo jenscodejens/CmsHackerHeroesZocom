@@ -1,0 +1,49 @@
+﻿@using CMS.Services
+@inject NavigationManager NavigationManager
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+
+@if (WebPages?.Any() == true)
+{
+    <div class="webpageinfo">
+        <p align="center">Tillhörande webbsidor</p>
+        <div class="grid">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Rubrik</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var webpage in WebPages)
+                    {
+                        <tr>
+                            <td>@webpage.WebPageId</td>
+                            <td>
+                                <a href="/webpages/details?webpageid=@webpage.WebPageId">
+                                    @webpage.Title
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public int WebSiteId { get; set; }
+
+    List<WebPage>? WebPages = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var context = await DbFactory.CreateDbContextAsync();
+
+        WebPages = await context.WebPages
+            .Where(wp => wp.WebSiteId == WebSiteId)
+            .ToListAsync();
+    }
+}
