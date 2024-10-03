@@ -14,5 +14,6 @@ namespace CMS.Entities
         public string VisitorUrl { get; set; } = string.Empty;
         public WebSite WebSite { get; set; }
         public ICollection<Content> Contents { get; set; }
+     
     }
 }

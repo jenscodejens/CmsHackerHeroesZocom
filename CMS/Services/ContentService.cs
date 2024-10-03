@@ -27,7 +27,7 @@
 //                WebPageId = webPageId,
 //                ContentJson = JsonSerializer.Serialize(textInputs), // or use Newtonsoft.Json
 //                Backgroundcolor = backgroundColor,
-//                Textcolor = textColor,
+//                TextColor = textColor,
 //                TemplateId = templateId
 //            };
 
