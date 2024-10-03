@@ -2,10 +2,9 @@
 @attribute [Authorize]
 
 @using CMS.Entities
-@using CMS.Services
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-@inject VisitorCounterService VisitorCounterService
+
 
 <PageTitle>Detaljer</PageTitle>
 
@@ -88,41 +87,7 @@
         {
             NavigationManager.NavigateTo("notfound");
         }
-        else
-        {
-            // Increment the visit count for this specific page
-            await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
-
-            // Get the updated visit count for this page
-            VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
-        }
     }
 }
-@* @code {
-    WebSite? website;
-    private int VisitCount { get; set; }
-    private string CurrentPageUrl => NavigationManager.Uri;
 
-    [SupplyParameterFromQuery]
-    public int WebSiteId { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        using var context = DbFactory.CreateDbContext();
-        website = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
-
-        if (website is null)
-        {
-            NavigationManager.NavigateTo("notfound");
-        }
-        else
-        {
-            // Increment the visit count for this specific page
-            await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
-
-            // Get the updated visit count for this page
-            VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
-        }
-    }
-} *@
 
