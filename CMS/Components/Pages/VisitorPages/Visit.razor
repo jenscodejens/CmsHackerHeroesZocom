@@ -1,0 +1,86 @@
+@page "/Visit"
+@layout Layout.EmptyLayout
+@attribute [AllowAnonymous]
+
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject VisitorCounterService VisitorCounterService
+@rendermode InteractiveServer
+
+<div>
+    @if (website is null)
+    {
+    <p><em>Loading...</em></p>
+    }
+    else
+    {
+    
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
+            <a class="navbar-brand" style="font-size:24px; padding-top:10px; padding-bot:10px;" href=@($"visit?WebSiteId={@website.WebSiteId}")>@website.Title</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    @foreach (var webpage in website.WebPages)
+                    {
+                        <li class="nav-item active">
+                            <NavLink class="nav-link" href=@($"visit?WebSiteId={@website.WebSiteId}&WebPageId={@webpage.WebPageId}") Match="NavLinkMatch.All">
+                                @webpage.Title
+                            </NavLink>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    
+        <AuthorizeView>
+            <Authorized>
+                <a href="websites/edit?websiteid=@WebSiteId">Edit Website</a>
+            </Authorized>
+        </AuthorizeView>
+        <p style="font-size: small;">This page has been visited @VisitCount times.</p>
+      
+        <VisitorWebPagePreview WebPageId="@WebPageId"/>
+        <br/>
+        <br/>
+    }
+</div>
+
+@code {
+   
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
+
+    [SupplyParameterFromQuery] public int WebPageId { get; set; }
+   
+    private WebSite website;
+    private int VisitCount { get; set; }
+    private string CurrentPageUrl => NavigationManager.Uri;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        website = await context.WebSites
+            .Include(w => w.WebPages)
+            .FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
+
+        if (WebPageId == 0 && website != null)
+        {
+            WebPageId= website.WebPages.FirstOrDefault().WebPageId;
+        }
+
+        if (website is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+        else
+        {
+            // Increment the visit count for this specific page
+            await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
+            // Get the updated visit count for this page
+            VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
+        }
+    }
+}
+

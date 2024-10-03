@@ -1,19 +1,21 @@
 ﻿@page "/content/createcontent"
-@namespace htmltemplates.templates
+@attribute [Authorize]
+
 @using CMS.Data
 @using CMS.Models
 @using Microsoft.EntityFrameworkCore
+@inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
-@attribute [Authorize]
+@namespace BlazorComponents.HtmlTemplates
 
-<h3>Create a Content</h3>
+<h3>Skapa ett innehåll</h3>
 
 <div>
-    <label for="templateDropdown">Choose a Template:</label>
+    <label for="templateDropdown">Välj en mall:</label>
     <select id="templateDropdown" @onchange="OnTemplateChanged">
-        <option value="">-- Select Template --</option>
+        <option value="">-- Välj mall --</option>
         @if (templates != null)
         {
             @foreach (var template in templates)
@@ -35,23 +37,28 @@
 {
     <div>
         @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
-        {
-            { "TemplateId", templateParameters["TemplateId"] },
-            { "WebPageId", templateParameters["WebPageId"] },
-            { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) }
-        })
+    {
+    { "TemplateId", templateParameters["TemplateId"] },
+    { "WebPageId", templateParameters["WebPageId"] },
+    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
+    { "SaveBtnClicked", SaveBtnClicked }, // Pass the save button state
+    { "MultiPageMode", MultiPageMode } // Pass the MultiPageMode parameter
+    })
     </div>
 }
 
 @code {
 
-    // [SupplyParameterFromQuery]
-    // public int? WebPageId { get; set; } // Accept WebPageId from query parameters
-
-    [Parameter] 
+    [Parameter]
     [SupplyParameterFromQuery]
-    public int? WebPageId { get; set; } // Accept WebPageId as a parameter
+    public int? WebPageId { get; set; }
 
+    [Parameter]
+    public bool SaveBtnClicked { get; set; } // New parameter to handle save button click
+
+    [Parameter] public bool MultiPageMode { get; set; } = false; // Default to false
+
+    public string UserId { get; set; }
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
     private string selectedTemplatePath;
     private string selectedInputFormPath;
@@ -67,7 +74,6 @@
         {
             templateParameters["WebPageId"] = WebPageId.Value;
         }
-
     }
 
     private void OnTemplateChanged(ChangeEventArgs e)
@@ -76,22 +82,19 @@
         var selectedTemplate = templates.FirstOrDefault(t => t.TemplatePath == selectedTemplatePath);
         if (selectedTemplate != null)
         {
-            selectedInputFormPath = selectedTemplate.InputFormPath; // Get the input form path
-                                                                    
+            selectedInputFormPath = selectedTemplate.InputFormPath;
+
             // Initialize parameters for the selected template
             templateParameters.Clear();
             templateParameters["TemplateId"] = selectedTemplate.TemplateId; // Pass the TemplateId
-
-            // Add WebPageId to parameters if available
             if (WebPageId.HasValue)
             {
                 templateParameters["WebPageId"] = WebPageId.Value;
             }
-
         }
         else
         {
-            selectedInputFormPath = null; // Clear input form if no template selected
+            selectedInputFormPath = null;
         }
     }
 
@@ -120,12 +123,30 @@
         return builder => builder.AddContent(0, "No component selected.");
     }
 
+    // private async Task OnInputFormSubmit(Dictionary<string, object> formValues)
+    // {
+    //     using var dbContext = DbContextFactory.CreateDbContext();
+
+    //     var content = new Content();
+
+    //     foreach (var kvp in formValues)
+    //     {
+    //         templateParameters[kvp.Key] = kvp.Value;
+    //     }
+
+    //     var user = await GetCurrentUserService.GetCurrentUserAsync();
+    //     content.UserId = user.Id;
+
+    //     dbContext.Contents.Add(content);
+    //     await dbContext.SaveChangesAsync();
+    // }
     private void OnInputFormSubmit(Dictionary<string, object> formValues)
     {
         // Update the parameters for the selected template based on form values
         foreach (var kvp in formValues)
         {
             templateParameters[kvp.Key] = kvp.Value;
-        }
+            }
     }
 }
+

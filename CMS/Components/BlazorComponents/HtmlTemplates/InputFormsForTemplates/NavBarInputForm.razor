@@ -1,0 +1,110 @@
+﻿@using CMS.Components.BlazorComponents.HtmlTemplates;
+@using CMS.Data;
+@using CMS.Entities;
+@using Microsoft.AspNetCore.Components;
+@using Microsoft.EntityFrameworkCore;
+@using System.Threading.Tasks;
+@rendermode InteractiveServer
+
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
+@inject IGetCurrentUserService GetCurrentUserService
+
+<div>
+    <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {TextColor}; font-size: 20px;")">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbaris">
+            <ul class="navbar-nav mr-auto">
+
+                @foreach (var item in MenuItems)
+                {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
+                            @item.Key
+                        </NavLink>
+                    </li>
+                }
+              
+            </ul>
+        </div>
+    </nav>
+    <a>Tryck på en titel i menyn för att editera valet.</a>
+
+    <div>
+        @{if (currentStep == InputStep.ContentNameInput)
+        {
+            <form>
+            
+                        <label for="meny">Menys namn:</label>
+                        <input type="text" @bind="inputValue" placeholder="" />
+                        <button type="button" @onclick="AddMenuName">Lägg till</button>
+           
+            </form>
+        }
+            else if ((currentStep == InputStep.AddItem))
+        {
+            
+
+        
+                    <label for="title">Menyval namn:</label>
+
+                    <input type="text" @bind="inputValue" placeholder="Menyval namn" />
+
+                        <select id="templateDropdown" @bind="templateDropdown">
+                        <option value="">-- Välj Sida --</option>
+                        @if (webpages != null)
+                        {
+                            @foreach (var item in Pages)
+                            {
+                                <option value="@item.Value">@item.Key</option>
+                            }
+                        }
+                    </select>
+                    <button type="button" @onclick="AddItem">Lägg till</button>
+                    <button type="button" @onclick="AbortItem">Avbryt</button>
+
+            
+            }
+            else if ((currentStep == InputStep.Wait))
+            {
+                    <button type="button" @onclick="NewItem">Lägg till menyval</button>
+                    <button type="button" @onclick="Save">Spara meny</button>
+            }
+            else if ((currentStep == InputStep.Edit))
+            {
+                    <label for="title">Menyval nam:</label>
+
+                    <input type="text" @bind="inputValue" placeholder="inputValue" />
+
+                    <select id="templateDropdown" @bind="templateDropdown">
+                        <option value="">-- Välj Sida --</option>
+                        @if (webpages != null)
+                        {
+                            @foreach (var item in Pages)
+                            {
+                                <option value="@item.Value">@item.Key</option>
+                            }
+                        }
+                    </select>
+                    <button type="button" @onclick="AbortItem">Avbryt</button>
+                    <button type="button" @onclick="UpdateItem">Spara</button>
+                    <button type="button" @onclick="DeleteItem">Ta bort</button>
+            }
+
+        }
+
+        <div>
+            <!--Color Controls -->
+            <label>Background Color:</label>
+            <input type="color" @bind="BackgroundColor" />
+            <br>
+            <label>Text Color:</label>
+            <input type="color" @bind="TextColor" />
+        </div>
+    </div>
+
+</div>
+
+

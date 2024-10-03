@@ -1,41 +1,32 @@
 ﻿@page "/webpages/details"
 @attribute [Authorize]
-@rendermode InteractiveServer
 
+@using Markdig
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-@using Markdig
+@rendermode InteractiveServer
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Detaljer</PageTitle>
 
-<h1>Details</h1>
+<h1>Detaljer</h1>
 
 <div>
-    <h4>WebPage</h4>
+    <h4>Webbsida</h4>
     <hr />
     @if (webpage is null)
     {
-        <p><em>Loading...</em></p>
+        <p><em>Laddar...</em></p>
     }
     else {
         <div style="width:100%;justify-content: center;align-content: center; text-align: center">
           
-            <CustomHeader text="@webpage.Header"></CustomHeader>
-            
-            @if (webpage.ImageUrl != null)
-            {
-                <img src="@webpage.ImageUrl" style="object-fit:scale-down;margin:auto; max-width:min(80%,900px)" alt="image"/>
-            }
-            <div style="margin-top: 20px; margin-bottom: 20px;">
-                <p style="margin:auto;max-width:900px"> @((MarkupString)Markdown.ToHtml(webpage.Body)) </p>              
-            </div>
-            @webpage.Footer
+            <CustomHeader text="@webpage.Title"></CustomHeader>
         </div>
         
         <div>
-            <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
-            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Content</a> | <!-- Add link to Content -->
-            <a href="@($"/webpages")">Back to List</a>
+            <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Innehåll</a> | <!-- Add link to Content -->
+            <a href="@($"/webpages")">Tillbaka</a>
         </div>
     }
 </div>

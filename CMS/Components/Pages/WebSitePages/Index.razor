@@ -6,34 +6,28 @@
 
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
 @implements IAsyncDisposable
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Mina webbsites</PageTitle>
 
-<h1>Index</h1>
+<h3>Mina webbsites</h3>
 
 <p>
-    <a href="websites/create">Create New</a>
+    <a href="websites/create">Skapa ny webbsite</a>
 </p>
 @if (UserId != null)
 {
-    <QuickGrid Class="table" Items="context.WebSites.Where(w => w.UserId == UserId)">
-        <PropertyColumn Property="website => website.Title"/>
-        <PropertyColumn Property="website => website.Description"/>
-        <PropertyColumn Property="website => website.CreationDate"/>
-        <PropertyColumn Property="website => website.LastUpdated"/>
-
-
-        <TemplateColumn Context="website">
-            <a href="@($"websites/edit?websiteid={website.WebSiteId}")">Edit</a> |
-            <a href="@($"websites/details?websiteid={website.WebSiteId}")">Details</a> |
-            <a href="@($"websites/delete?websiteid={website.WebSiteId}")">Delete</a> |
-            <a href="@($"/webpages?websiteid={website.WebSiteId}")">Show Web Pages</a> |
-            <a href="@($"/webpages/create?websiteid={website.WebSiteId}")">Add Page</a>
-        </TemplateColumn>
-    </QuickGrid>
+    <div class="grid-container" style="display: grid;"> 
+    @foreach (var website in context.WebSites.Include(w=> w.WebPages).Where(w => w.UserId == UserId))
+    {
+        <WebSiteCard WebSite="@website"/>
+    }
+    </div>
 }
 
+    
 @code {
 
     public string UserId { get; set; }

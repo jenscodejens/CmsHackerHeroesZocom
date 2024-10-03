@@ -1,26 +1,28 @@
 ﻿@page "/contents"
+@attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using CMS.Entities
 @using CMS.Data
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
 @attribute [Authorize]
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Index innehåll</PageTitle>
 
-<h1>Index Content</h1>
+<h1>Index Innehåll</h1>
 
 <p>
-    <a href="content/create">(Scaffolded)Create New</a> |
-    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Create New</a>
+    <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a>
 </p>
 
 @if (contents == null || !contents.Any())
 {
-    <p>No content available for this webpage.</p>
+    <p>Denna webbsidan har inget innehåll.</p>
 }
 else
 {
@@ -28,16 +30,16 @@ else
         <PropertyColumn Property="content => content.ContentId" />
         <PropertyColumn Property="content => content.WebPageId" />
         <PropertyColumn Property="content => content.ContentName" />
-        <PropertyColumn Property="content => content.TextInputsJson" />
-        @* <PropertyColumn Property="content => content.Backgroundcolor" />
-        <PropertyColumn Property="content => content.Textcolor" /> *@
+        <PropertyColumn Property="content => content.CreationDate" />
+        <PropertyColumn Property="content => content.LastUpdated" />
+        <PropertyColumn Property="content => content.ContentJson" />
         <PropertyColumn Property="content => content.TemplateId" />
 
         <TemplateColumn Context="content">
-            <a href="@($"/preview/{content.ContentId}")">Preview</a> |
-            <a href="@($"content/edit?contentid={content.ContentId}")">Edit</a> |
-            <a href="@($"content/details?contentid={content.ContentId}")">Details</a> |
-            <a href="@($"content/delete?contentid={content.ContentId}")">Delete</a>
+            <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
+            <a href="@($"content/edit?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |
+            <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a>
         </TemplateColumn>
     </QuickGrid>
 }
@@ -45,7 +47,6 @@ else
 
 @code {
     IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
-
     [SupplyParameterFromQuery]
     public int? WebPageId { get; set; }
 

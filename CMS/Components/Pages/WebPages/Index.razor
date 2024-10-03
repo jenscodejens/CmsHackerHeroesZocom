@@ -6,18 +6,18 @@
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Index webbsidor</PageTitle>
 
-<h1>Index Web Pages</h1>
+<h1>Index webbsidor</h1>
 @if (WebSiteId != null)
 {
     <p>
-        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Create New</a>
+        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa ny webbsida</a>
     </p>
 }
 @if (webpages == null || !webpages.Any())
 {
-    <p>No webpages available.</p>
+    <p>Inga webbsidor tillgängliga.</p>
 }
 else
 {
@@ -25,25 +25,29 @@ else
         <!-- Changed from context.WebPages to webpages -->
         <PropertyColumn Property="webpage => webpage.WebPageId"/>
         <PropertyColumn Property="webpage => webpage.WebSiteId"/>
-        <PropertyColumn Property="webpage => webpage.Header"/>
-        <PropertyColumn Property="webpage => webpage.Body"/>
-        <PropertyColumn Property="webpage => webpage.Footer"/>
+        <PropertyColumn Property="webpage => webpage.Title"/>
+        <PropertyColumn Property="webpage => webpage.Description"/>
+        <PropertyColumn Property="webpage => webpage.CreationDate"/>
+        <PropertyColumn Property="webpage => webpage.LastUpdated" />
+        <PropertyColumn Property="webpage => webpage.VisitorUrl" />
 
         <TemplateColumn Context="webpage">
             @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
-            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Preview WebPage</a> |
-            <a href="@($"/contents?webpageid={webpage.WebPageId}")"> See all Contents</a> |
+            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Förhandsgranska</a> |
+            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Innehållslista</a> |
             @* <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
-            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Edit</a> |
-            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Details</a> |
-            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Delete</a>
+            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
+            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Detaljer</a> |
+            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Radera</a>
         </TemplateColumn>
     </QuickGrid>
 }
 
 @code {
     IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-    [SupplyParameterFromQuery] public int? WebSiteId { get; set; }
+    [SupplyParameterFromQuery] 
+    public int? WebSiteId { get; set; }
+
     ApplicationDbContext context = default!;
 
     protected override async Task OnInitializedAsync()

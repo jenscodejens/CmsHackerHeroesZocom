@@ -1,59 +1,49 @@
 ﻿@page "/webpages/create"
 @attribute [Authorize]
-@rendermode InteractiveServer
 
+@inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Skapa webbsida</PageTitle>
 
-<h1>Create</h1>
+<h1>Skapa</h1>
 
-<h4>WebPage</h4>
+<h4>Webbsida</h4>
 <hr />
-<div class="row">
+<div class="row"> 
     <div class="col-md-10">
         <EditForm method="post" Model="WebPage" OnValidSubmit="AddWebPage" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="header" class="form-label">Header:</label> 
-                <InputText id="header" @bind-Value="WebPage.Header" class="form-control" /> 
-                <ValidationMessage For="() => WebPage.Header" class="text-danger" /> 
+                <label for="title" class="form-label">Titel:</label> 
+                <InputText id="title" @bind-Value="WebPage.Title" class="form-control" /> 
+                <ValidationMessage For="() => WebPage.Title" class="text-danger" /> 
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">Image:</label>
-                <InputText id="image" @bind-Value="WebPage.ImageUrl" class="form-control" />
-                <ValidationMessage For="() => WebPage.ImageUrl" class="text-danger" />
+                <label for="description" class="form-label">Beskrivning:</label>
+                <InputText id="description" @bind-Value="WebPage.Description" class="form-control" />
+                <ValidationMessage For="() => WebPage.Description" class="text-danger" />
             </div>
             <div class="mb-3">
-
-                <MarkdownEditor @bind-Value="@WebPage.Body"
-                                SpellChecker="false">
-                    <Toolbar>
-                        <MarkdownToolbarButton Action="MarkdownAction.Bold" Icon="fa fa-bold" Title="Bold" />
-                        <MarkdownToolbarButton Action="MarkdownAction.Italic" Icon="fa fa-italic" Title="Italic" />
-                        <MarkdownToolbarButton Action="MarkdownAction.Code" Icon="fa fa-code" Title="Code" />
-                        <MarkdownToolbarButton Action="MarkdownAction.Heading" Icon="fa fa-header" Title="Heading" />
-                        <MarkdownToolbarButton Action="MarkdownAction.UnorderedList" Icon="fa fa-list-ul" Title="Generic List" />
-                        <MarkdownToolbarButton Action="MarkdownAction.OrderedList" Icon="fa fa-list-ol" Title="Numbered List" />
-                    </Toolbar>
-                </MarkdownEditor>
-                <ValidationMessage For="() => WebPage.Body" class="text-danger" />
+                <label for="visitor-url" class="form-label">Besöks Url:</label>
+                <InputText id="visitor-url" @bind-Value="WebPage.VisitorUrl" class="form-control" />
+                <ValidationMessage For="() => WebPage.VisitorUrl" class="text-danger" />
             </div>
-
             <div class="mb-3">
-                <label for="footer" class="form-label">Footer:</label> 
-                <InputText id="footer" @bind-Value="WebPage.Footer" class="form-control" /> 
-                <ValidationMessage For="() => WebPage.Footer" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="creationdate" class="form-label">Skapad:</label>
+                <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
+                <ValidationMessage For="() => WebPage.CreationDate" class="text-danger" />
+            </div>
+            <button type="submit" class="btn btn-primary">Skapa</button>
         </EditForm>
     </div>
 </div>
 
 <div>
-    <a href="/webpages">Back to List</a>
+    <a href="/webpages">Tillbaka</a>
 </div>
 
 @code {
@@ -61,31 +51,30 @@
     [SupplyParameterFromForm]
     public WebPage WebPage { get; set; } = new();
 
-    //[SupplyParameterFromQuery]
-    //public int WebsiteId { get; set; }
-
-    //protected override void OnInitialized()
-    //{
-        // Set the WebPage's WebsiteId to the passed-in parameter
-        //WebPage.WebSiteId = WebsiteId;
-    //}
-
-
     [SupplyParameterFromQuery]
     public int WebSiteId { get; set; }
-    
+
+    public string UserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        this.UserId = user.Id;
+    } 
 
     // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
     public async Task AddWebPage()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+
         WebPage.WebSiteId = WebSiteId;
         
         using var context = DbFactory.CreateDbContext();
+        WebPage.UserId = user.Id;
         context.WebPages.Add(WebPage);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");
-        
+        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");        
         //NavigationManager.NavigateTo($"webpages/details?WebPageId={WebPage.WebPageId}");
-    }
-    
+    }   
+
 }

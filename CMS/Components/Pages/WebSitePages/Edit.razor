@@ -1,17 +1,18 @@
 ﻿@page "/WebSites/edit"
 @attribute [Authorize]
+
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Redigera</PageTitle>
 
-<h1>Edit</h1>
+<h1>Redigera</h1>
 
-<h4>WebSite</h4>
+<h4>Hemsida</h4>
 <hr />
 @if (WebSite is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Laddar...</em></p>
 }
 else
 {
@@ -22,17 +23,22 @@ else
                 <ValidationSummary />
                 <input type="hidden" name="WebSite.WebSiteId" value="@WebSite.WebSiteId" />
                 <div class="mb-3">
-                    <label for="title" class="form-label">Title:</label>
+                    <label for="title" class="form-label">Titel:</label>
                     <InputText id="title" @bind-Value="WebSite.Title" class="form-control" />
                     <ValidationMessage For="() => WebSite.Title" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="description" class="form-label">Description:</label>
+                    <label for="description" class="form-label">Beskrivning:</label>
                     <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
                     <ValidationMessage For="() => WebSite.Description" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="creationdate" class="form-label">CreationDate:</label>
+                    <label for="image" class="form-label">Bild:</label>
+                    <InputText id="description" @bind-Value="WebSite.ImageUrl" class="form-control" />
+                    <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="creationdate" class="form-label">Skapad:</label>
                     <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
                     <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
                 </div>
@@ -40,25 +46,29 @@ else
                 @if (LastUpdatedDateTime.HasValue)
                 {
                     <div class="mb-3">
-                        <label for="lastupdated" class="form-label">LastUpdated:</label>
+                        <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
                         <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
                         <ValidationMessage For="() => WebSite.LastUpdated" class="text-danger" />
                     </div>
                 }
                 @* Had to keep this in order for DOM to work but made it invisible to user *@
                 <div class="mb-3" style="display: none;">
-                    <label for="userid" class="form-label">UserId:</label>
+                    <label for="userid" class="form-label">Användar Id:</label>
                     <InputText id="userid" @bind-Value="WebSite.UserId" class="form-control" />
                     <ValidationMessage For="() => WebSite.UserId" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                <SetLandingPage WebSiteId="@WebSiteId"/>
+
+                <br />
+                <button type="submit" class="btn btn-primary">Spara</button>
             </EditForm>
         </div>
     </div>
 }
 
 <div>
-    <a href="/websites">Back to List</a>
+    <a href="/websites">Tillbaka</a>
 </div>
 
 @code {
@@ -88,13 +98,23 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateWebSite()
     {
         using var context = DbFactory.CreateDbContext();
-        WebSite!.LastUpdated = DateOnly.FromDateTime(DateTime.Today);
-        context.Attach(WebSite!).State = EntityState.Modified;
+
+        var existingWebSite = await context.WebSites.FindAsync(WebSite!.WebSiteId);
+
+        if (existingWebSite == null)
+        {
+            NavigationManager.NavigateTo("notfound");
+            return;
+        }
+
+        // Endast följande fält skall sparas när UpdateWebSite() körs, detta är en fulfix för UpdateWebSite() alltid sätter LandingPage till null.
+        existingWebSite.Title = WebSite.Title;
+        existingWebSite.ImageUrl = WebSite.ImageUrl;
+        existingWebSite.Description = WebSite.Description;
+        existingWebSite.LastUpdated = DateOnly.FromDateTime(DateTime.Today);
 
         try
         {
@@ -102,7 +122,7 @@ else
         }
         catch (DbUpdateConcurrencyException)
         {
-            if (!WebSiteExists(WebSite!.WebSiteId))
+            if (!WebSiteExists(WebSite.WebSiteId))
             {
                 NavigationManager.NavigateTo("notfound");
             }
@@ -111,9 +131,9 @@ else
                 throw;
             }
         }
-
         NavigationManager.NavigateTo("/websites");
     }
+
 
     bool WebSiteExists(int websiteid)
     {

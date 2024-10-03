@@ -18,6 +18,13 @@ namespace CMS
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Configuration setup (default)
+            builder.Configuration
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true) // Base appsettings
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true) // Environment-specific settings
+                .AddEnvironmentVariables(); // Environment variables
+
             // Add services to the container.
             builder.Services.AddHttpClient("API", client =>
             {

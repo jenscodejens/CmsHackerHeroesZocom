@@ -1,0 +1,54 @@
+﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
+<!-- Video Preview Section -->
+<div class="video-container" style="margin-top: 20px;">
+    @if (IsYouTubeUrl(VideoUrl))
+    {
+        <iframe style="width: @VideoWidth; height: @VideoHeight; display: block; margin: 0 auto;"
+                src="@GetYouTubeEmbedUrl(VideoUrl)"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+    }
+    else
+    {
+        <video src="@VideoUrl" style="width: @VideoWidth; height: @VideoHeight; display: block; margin: 0 auto;" controls>
+            Your browser does not support the video tag.
+        </video>
+    }
+</div>
+
+@code {
+    [Parameter] public int TemplateId { get; set; }
+    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+
+    // all parameters the user must fill in
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+
+    // Video Properties
+    [Parameter] public string VideoUrl { get; set; } = string.Empty;
+    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
+    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
+    [Parameter] public string VideoAlignment { get; set; } = "center";
+
+    // Method to check if the video URL is from YouTube
+    private bool IsYouTubeUrl(string url)
+    {
+        return url.Contains("youtube.com/watch") || url.Contains("youtu.be/");
+    }
+
+    // Method to get YouTube embed URL
+    private string GetYouTubeEmbedUrl(string url)
+    {
+        var videoId = ExtractYouTubeVideoId(url);
+        return $"https://www.youtube.com/embed/{videoId}";
+    }
+
+    // Method to extract YouTube video ID from URL
+    private string ExtractYouTubeVideoId(string url)
+    {
+        var uri = new Uri(url);
+        var queryParams = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        return queryParams["v"] ?? url.Split('/').Last();
+    }
+}

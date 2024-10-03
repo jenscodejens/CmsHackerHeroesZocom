@@ -1,81 +1,131 @@
 ﻿@page "/content/edit"
+@attribute [Authorize]
 
+@using System.Text.Json
+@using BlazorComponents.HtmlTemplates
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+@inject IGetCurrentUserService GetCurrentUserService
 
 @attribute [Authorize]
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Redigera</PageTitle>
 
-<h1>Edit</h1>
+<h1>Redigera</h1>
 
-<h4>Content</h4>
+<h4>Innehåll</h4>
 <hr />
 @if (Content is null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Laddar...</em></p>
 }
 else
 {
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Content" OnValidSubmit="UpdateContent" FormName="create" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary class="text-danger" />
-                <div class="mb-3">
-                    <label for="contentid" class="form-label">ContentId:</label>
-                    <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly/>
-                    <ValidationMessage For="() => Content.ContentId" class="text-danger" />
+    switch (contentType)
+    {
+        case ContentType.Menu:
+            {
+                <CascadingValue Value="@Content.ContentId">
+                    <BlazorComponents.HtmlTemplates.InputFormsForTemplates.NavBarInputForm/>
+                </CascadingValue>
+                break;
+            }
+        default:
+            {
+
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <EditForm method="post" Model="Content" OnValidSubmit="UpdateContent" FormName="create" Enhance>
+                         <DataAnnotationsValidator />
+                         <ValidationSummary class="text-danger" />
+                         <div class="mb-3">
+                             <label for="contentid" class="form-label">Innehålls Id:</label>
+                             <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly />
+                             <ValidationMessage For="() => Content.ContentId" class="text-danger" />
+                         </div>
+                         <div class="mb-3">
+                             <label for="webpageid" class="form-label">Webbsida Id:</label>
+                             <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
+                             <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
+                         </div>
+                         <div class="mb-3">
+                             <label for="contentname" class="form-label">Innehållsnamn:</label>
+                             <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
+                             <ValidationMessage For="() => Content" class="text-danger" />
+                         </div>
+                         <div class="mb-3">
+                             <label for="creationdate" class="form-label">Skapad:</label>
+                             <InputDate id="creationdate" @bind-Value="Content.CreationDate" class="form-control" readonly />
+                             <ValidationMessage For="() => Content.CreationDate" class="text-danger" />
+                         </div>
+                         @* If the Content has had no update yet then the form wont show *@
+                         @if (LastUpdatedDateTime.HasValue)
+                            {
+                                <div class="mb-3">
+                                    <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
+                                    <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                                    <ValidationMessage For="() => Content.LastUpdated" class="text-danger" />
+                                </div>
+                            }
+                            <div class="mb-3">
+                                <label for="textJsonInput" class="form-label">Innehåll:</label>
+                                <InputText id="textJsonInput" @bind-Value="Content.ContentJson" class="form-control" />
+                                <ValidationMessage For="() => Content" class="text-danger" />
+                            </div>
+                            @* <div class="mb-3">
+                            <label for="contentbackground" class="form-label">Background Input:</label>
+                            <InputText id="contentbackground" @bind-Value="Content.Backgroundcolor" class="form-control" />
+                            <ValidationMessage For="() => Content" class="text-danger" />
+                            </div>
+                            <div class="mb-3">
+                            <label for="contentTextColor" class="form-label">contentTextColor Input:</label>
+                            <InputText id="contentTextColor" @bind-Value="Content.Textcolor" class="form-control" />
+                            <ValidationMessage For="() => Content" class="text-danger" />
+                            </div> *@
+                            <div class="mb-3">
+                                <label for="contentTemplateID" class="form-label">Innehållsmall Id:</label>
+                                <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
+                                <ValidationMessage For="() => Content" class="text-danger" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Spara</button>
+                        </EditForm>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="webpageid" class="form-label">WebPageId:</label>
-                    <InputNumber id="webpageid" @bind-Value="Content.WebPageId" class="form-control" />
-                    <ValidationMessage For="() => Content.WebPageId" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="contentname" class="form-label">Content Input:</label>
-                    <InputText id="footer" @bind-Value="Content.ContentName" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="textJsonInput" class="form-label">textJson Input:</label>
-                    <InputText id="textJsonInput" @bind-Value="Content.TextInputsJson" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                @* <div class="mb-3">
-                    <label for="contentbackground" class="form-label">Background Input:</label>
-                    <InputText id="contentbackground" @bind-Value="Content.Backgroundcolor" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                <div class="mb-3">
-                    <label for="contentTextColor" class="form-label">contentTextColor Input:</label>
-                    <InputText id="contentTextColor" @bind-Value="Content.Textcolor" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div> *@
-                <div class="mb-3">
-                    <label for="contentTemplateID" class="form-label">contentTemplateID Input:</label>
-                    <InputNumber id="contentTemplateID" @bind-Value="Content.TemplateId" class="form-control" />
-                    <ValidationMessage For="() => Content" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Create</button>
-            </EditForm>
-        </div>
-    </div>
+                break;
+            }
+    }
 }
 
 <div>
-    <a href="/content">Back to List</a>
+    Död länk
+    <a href="/content">Tillbaka</a>
 </div>
 
 @code {
     [SupplyParameterFromQuery]
     public int ContentId { get; set; }
 
-
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
+
+
+
+    private enum ContentType
+    {
+        Menu,
+        Others
+    }
+
+    private ContentType contentType = ContentType.Others;
+
+    public string UserId { get; set; }
+    ApplicationDbContext context = default!;
+
+    private DateTime? LastUpdatedDateTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,12 +136,44 @@ else
         {
             NavigationManager.NavigateTo("notfound");
         }
-    }
+        else
+        {
+            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
+            LastUpdatedDateTime = Content.LastUpdated.HasValue
+                ? Content.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
+                : null;
+        }
+    
 
+        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.ContentJson);
+        if (textInputs == null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+
+        foreach (var input in textInputs)
+        {
+            var test = input.Key;
+            if (test != null)
+            {
+                //Todo: Change the use of the string "MenuItems" if variable name changed, this can be missed and lead to error.
+                string menuItemName = "MenuItems";
+                if (menuItemName == test.ToString())
+                {
+                    contentType = ContentType.Menu;
+                    break;
+                }
+            }
+        }
+    }
     // To protect from overposting attacks, enable the specific properties you want to bind to.
     // For more details, see https://aka.ms/RazorPagesCRUD.
     public async Task UpdateContent()
     {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        UserId = user.Id;
+        Content!.UserId = UserId;
+
         using var context = DbFactory.CreateDbContext();
         context.Attach(Content!).State = EntityState.Modified;
 
@@ -113,6 +195,8 @@ else
 
         NavigationManager.NavigateTo($"/contents?webpageid={Content.WebPageId}");
     }
+
+
 
     bool ContentExists(int contentid)
     {

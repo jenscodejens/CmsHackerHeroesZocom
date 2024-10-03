@@ -1,13 +1,13 @@
 ﻿@page "/websites/create"
 @attribute [Authorize]
+
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Skapa Webbsite</PageTitle>
 
-<h1>Create</h1>
-<h4>WebSite</h4>
+<h1>Skapa webbsite</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,27 +15,32 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
             <div class="mb-3">
-                <label for="title" class="form-label">Title:</label>
+                <label for="title" class="form-label">Titel:</label>
                 <InputText id="title" @bind-Value="WebSite.Title" class="form-control" />
                 <ValidationMessage For="() => WebSite.Title" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="description" class="form-label">Description:</label>
+                <label for="description" class="form-label">Beskrivning:</label>
                 <InputText id="description" @bind-Value="WebSite.Description" class="form-control" />
                 <ValidationMessage For="() => WebSite.Description" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="creationdate" class="form-label">CreationDate:</label>
+                <label for="image" class="form-label">Bild:</label>
+                <InputText id="image" @bind-Value="WebSite.ImageUrl" class="form-control" />
+                <ValidationMessage For="() => WebSite.ImageUrl" class="text-danger" />
+            </div>
+            <div class="mb-3">
+                <label for="creationdate" class="form-label">Skapad:</label>
                 <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
                 <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
             </div>
-            <button type="submit" class="btn btn-primary">Create</button>
+            <button type="submit" class="btn btn-primary">Skapa</button>
         </EditForm>
     </div>
 </div>
 
 <div>
-    <a href="/websites">Back to List</a>
+    <a href="/websites">Tillbaka</a>
 </div>
 
 @code {
@@ -45,7 +50,7 @@
 
     public string UserId { get; set; }
 
-     protected override async Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
         var user = await GetCurrentUserService.GetCurrentUserAsync();
         this.UserId = user.Id;

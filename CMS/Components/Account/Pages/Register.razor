@@ -87,12 +87,7 @@
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
-
-        // Assign the user to either the "Admin" or "User" role based on their selection during registration
-        var roleType = Input.IsAdmin ? "Admin" : "User";
-        // Assign user to the specified role and check if the operation was successful
-        var roleResult = await UserManager.AddToRoleAsync(user, roleType);
-
+        
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
@@ -102,6 +97,12 @@
         Logger.LogInformation("User created a new account with password.");
 
         var userId = await UserManager.GetUserIdAsync(user);
+        
+        // Assign the user to either the "Admin" or "User" role based on their selection during registration
+        var roleType = Input.IsAdmin ? "Admin" : "User";
+        // Assign user to the specified role and check if the operation was successful
+        var roleResult = await UserManager.AddToRoleAsync(user, roleType);
+
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(

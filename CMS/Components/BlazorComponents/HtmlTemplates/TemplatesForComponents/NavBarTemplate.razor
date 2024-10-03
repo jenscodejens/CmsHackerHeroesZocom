@@ -1,0 +1,72 @@
+﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
+@rendermode InteractiveServer
+
+<nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {Backgroundcolor}; color: {Textcolor}; font-size: 20px;")">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbaris">
+        <ul class="navbar-nav mr-auto">
+
+            @foreach (var item in MenuItems)
+            {
+
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="@($"/webpages/previewpage/{item.Value}")" style="@($"color: {Textcolor};")">
+                        @item.Key
+                </NavLink>
+                </li>
+            }
+         </ul>
+    </div>
+</nav> 
+
+
+@code {
+@using CMS.Shared;
+@using CMS.Data;
+@using Microsoft.EntityFrameworkCore;
+
+    [Parameter] public int TemplateId { get; set; }
+    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+    [Parameter] public Dictionary<string, string> MenuItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };
+    [Parameter] public string Backgroundcolor { get; set; } = "grey";
+    [Parameter] public string Textcolor { get; set; } = "black";
+
+    // [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     if (ContentName !=string.Empty)
+    //     {
+    //     await using var context = DbFactory.CreateDbContext();
+
+    //     // Ensure WebPageId exists in WebPages table
+    //     var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
+    //     if (!webPageExists)
+    //     {
+    //         throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+    //     }
+
+    //     var content = await context.Contents.FindAsync(ContentName);
+
+    //     if (content != null)
+    //     {
+
+    //         var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(content.TextInputsJson);
+
+    //         if ( menuItemsWrapper.Items != null)
+    //         {
+    //             Dictionary<string, string> AddMenyItems = menuItemsWrapper.Items;
+    //         }
+    //         else
+    //         {
+    //             throw new InvalidOperationException($"menuItemsWrapper.Items ;{ menuItemsWrapper.Items }; is invalid.");
+    //         }
+    //     }
+
+    //     }
+    // }
+}
