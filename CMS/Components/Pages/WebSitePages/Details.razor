@@ -4,7 +4,6 @@
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer 
 
 <PageTitle>Detaljer</PageTitle>
 
@@ -26,8 +25,11 @@
         <dd class="col-sm-10">@website.Description</dd>
         <dt class="col-sm-2">Skapad</dt>
         <dd class="col-sm-10">@website.CreationDate</dd>
-        <dt class="col-sm-2">Senast uppdaterad</dt>
-        <dd class="col-sm-10">@website.LastUpdated</dd>
+        @if (website.LastUpdated.HasValue)
+        {
+            <dt class="col-sm-2">Senast uppdaterad</dt>
+            <dd class="col-sm-10">@website.LastUpdated.Value</dd>
+        }
         <dt class="col-sm-2">Startsida</dt>
         <dd class="col-sm-10">@landingPageTitle</dd>
         <AuthorizeView Roles="Admin">

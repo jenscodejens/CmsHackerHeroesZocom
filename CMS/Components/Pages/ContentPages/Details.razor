@@ -33,8 +33,11 @@
             <dd class="col-sm-10">@content.Template.TemplateType</dd> *@
             <dt class="col-sm-2">Skapad</dt>
             <dd class="col-sm-10">@content.CreationDate</dd>
-            <dt class="col-sm-2">Senast uppdaterad</dt>
-            <dd class="col-sm-10">@content.LastUpdated</dd>
+            @if (content.LastUpdated.HasValue)
+            {
+                <dt class="col-sm-2">Senast uppdaterad</dt>
+                <dd class="col-sm-10">@content.LastUpdated.Value</dd>
+            }
         </dl>
         <div>
             <a href="@($"/content/edit?contentid={content.ContentId}")">Redigera</a> |

@@ -1,0 +1,18 @@
+﻿@page "/test"
+
+<button class="btn" @onclick="OnButtonClick">
+    <span class="material-icons">image</span>
+</button>
+
+@code {
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
+
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
+    private void OnButtonClick()
+    {
+        Navigation.NavigateTo($"/webpages/details?webpageid=1");
+    }
+}

@@ -3,6 +3,7 @@
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Redigera</PageTitle>
 
@@ -43,7 +44,7 @@ else
                     <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
                 </div>
                 @* If the website has had no update yet then the form wont show *@
-                @if (LastUpdatedDateTime.HasValue)
+                @if (WebSite.LastUpdated.HasValue)
                 {
                     <div class="mb-3">
                         <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
