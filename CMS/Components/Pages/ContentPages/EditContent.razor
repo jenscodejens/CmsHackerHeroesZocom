@@ -27,29 +27,30 @@ else
     {
         <div>
             @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
-            {
-                { "TemplateId", templateParameters["TemplateId"] },
-                { "WebPageId", templateParameters["WebPageId"] },
-                { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
-                { "SaveBtnClicked", SaveBtnClicked }, // Pass the save button state
-                { "MultiPageMode", MultiPageMode } // Pass the MultiPageMode parameter
-            })
+    {
+    { "TemplateId", templateParameters["TemplateId"] },
+    { "WebPageId", templateParameters["WebPageId"] },
+    //{ "ContentId", ContentId }, // Pass the ContentId to the input form
+    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
+    { "SaveBtnClicked", SaveBtnClicked },
+    { "MultiPageMode", MultiPageMode }
+    })
         </div>
     }
 }
 
 @code {
-    [SupplyParameterFromQuery] // Change to SupplyParameterFromQuery
-    public int ContentId { get; set; }
+    [SupplyParameterFromQuery]
+    public int ContentId { get; set; } // Fetch ContentId from the query
 
     [SupplyParameterFromForm]
     public Content? Content { get; set; }
 
     [Parameter]
-    public bool SaveBtnClicked { get; set; } // New parameter to handle save button click
+    public bool SaveBtnClicked { get; set; }
 
     [Parameter]
-    public bool MultiPageMode { get; set; } = false; // Default to false
+    public bool MultiPageMode { get; set; } = false;
 
     private string selectedTemplatePath;
     private string selectedInputFormPath;
@@ -59,7 +60,7 @@ else
     {
         using var dbContext = DbContextFactory.CreateDbContext();
 
-        // Fetch the Content based on ContentId if it is not null
+        // Fetch the Content based on ContentId
         Content ??= await dbContext.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
 
         if (Content != null)
@@ -68,6 +69,7 @@ else
                 .Where(p => p.TemplateId == Content.TemplateId)
                 .Select(p => p.TemplatePath)
                 .FirstOrDefaultAsync();
+
             selectedInputFormPath = await dbContext.Templates
                 .Where(p => p.TemplateId == Content.TemplateId)
                 .Select(p => p.InputFormPath)
@@ -75,6 +77,7 @@ else
 
             templateParameters["WebPageId"] = Content.WebPageId;
             templateParameters["TemplateId"] = Content.TemplateId;
+           // templateParameters["ContentId"] = Content.ContentId; // Pass the ContentId to the template parameters
         }
         else
         {
