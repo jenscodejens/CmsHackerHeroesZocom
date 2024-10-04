@@ -136,7 +136,7 @@
   bottom: 0.5rem;
   right: 0.5rem;
   border-radius: .4rem;
-  background-color: rgb(91, 29, 214);
+  background-color: white;
   /*display: none;*/
   z-index: 999999999;
 }
