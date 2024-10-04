@@ -19,7 +19,7 @@
 </p>
 @if (UserId != null)
 {
-    <div class="grid-container" style="display: grid;"> 
+    <div class="flex-container" style="display:flex; flex-wrap: wrap; "> 
     @foreach (var website in context.WebSites.Include(w=> w.WebPages).Where(w => w.UserId == UserId))
     {
         <WebSiteCard WebSite="@website"/>
