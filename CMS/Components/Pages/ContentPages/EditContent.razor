@@ -30,7 +30,7 @@ else
     {
     { "TemplateId", templateParameters["TemplateId"] },
     { "WebPageId", templateParameters["WebPageId"] },
-    //{ "ContentId", ContentId }, // Pass the ContentId to the input form
+    { "ContentId", ContentId }, // Pass the ContentId to the input form
     { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
     { "SaveBtnClicked", SaveBtnClicked },
     { "MultiPageMode", MultiPageMode }
@@ -77,7 +77,7 @@ else
 
             templateParameters["WebPageId"] = Content.WebPageId;
             templateParameters["TemplateId"] = Content.TemplateId;
-           // templateParameters["ContentId"] = Content.ContentId; // Pass the ContentId to the template parameters
+            templateParameters["ContentId"] = Content.ContentId; // Pass the ContentId to the template parameters
         }
         else
         {

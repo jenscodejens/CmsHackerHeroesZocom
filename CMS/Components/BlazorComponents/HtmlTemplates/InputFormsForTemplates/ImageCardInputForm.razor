@@ -213,10 +213,10 @@
                     };
 
                 content.ContentJson = JsonConvert.SerializeObject(contentData);
+                context.Contents.Update(content);
             }
         }
-       
-        context.Contents.Add(content);
+
         try
         {
             await context.SaveChangesAsync();

@@ -12,6 +12,7 @@
 @code {
     [Parameter] public int TemplateId { get; set; }
     [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+    [Parameter] public int? ContentId { get; set; }
 
     // all parameters the user must fill in
     [Parameter] public string ContentName { get; set; } = string.Empty;
