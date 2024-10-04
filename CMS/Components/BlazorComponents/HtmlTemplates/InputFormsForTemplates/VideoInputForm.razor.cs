@@ -46,37 +46,41 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
     }
 
             protected override async Task OnInitializedAsync()
-            {
+        {
             await using var context = DbFactory.CreateDbContext();
+            LoadVideoContent(context);
             await GetUserID();
 
+        }
+
+        private async void LoadVideoContent(ApplicationDbContext context)
+        {
             if (ContentId != null)
             {
                 var Currentcontent = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
 
                 if (Currentcontent != null)
                 {
-                    
+
                     ContentName = Currentcontent.ContentName;
-                    
+
                     if (!string.IsNullOrEmpty(Currentcontent.ContentJson))
                     {
                         var contentData = JsonConvert.DeserializeObject<videoInputs>(Currentcontent.ContentJson);
-
+                        //Todo verfication and alertmessage if conted not loaded.
                         VideoUrl = contentData.VideoUrl;
                         VideoWidth = contentData.VideoWidth;
                         VideoHeight = contentData.VideoHeight;
                         VideoAlignment = contentData.VideoAlignment;
+                        await PreviewImage();
                     }
                 }
                 else
                 {
                     Console.WriteLine($"Content data error (null or empty).");
                 }
-                
 
             }
-
         }
 
         protected override void OnParametersSet()
