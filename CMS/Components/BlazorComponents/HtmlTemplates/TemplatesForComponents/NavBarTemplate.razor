@@ -28,6 +28,7 @@
 @using CMS.Data;
 @using Microsoft.EntityFrameworkCore;
 
+    [Parameter] public int ContentId { get; set; }
     [Parameter] public int TemplateId { get; set; }
     [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
     [Parameter] public string ContentName { get; set; } = string.Empty;

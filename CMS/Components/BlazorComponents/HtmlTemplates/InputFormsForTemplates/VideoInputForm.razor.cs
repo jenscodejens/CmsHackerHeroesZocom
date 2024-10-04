@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Text.Json;
+using static System.Net.Mime.MediaTypeNames;
+using System.Reflection.Metadata;
+using Newtonsoft.Json;
 
 namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 {
@@ -16,7 +19,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         [Parameter] public int TemplateId { get; set; }
         [Parameter] public int WebPageId { get; set; }
-        [SupplyParameterFromQuery] public int? ContentId { get; set; }
+        [Parameter] public int? ContentId { get; set; }
         [Parameter] public string ContentName { get; set; } = string.Empty;
         [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
@@ -33,69 +36,51 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private bool saveSuccessful = false;  // New flag to show the success message
         public string UserId { get; set; }
 
-        protected override void OnParametersSet()
+        private class videoInputs
         {
-            await using var context = DbFactory.CreateDbContext();
+            public string VideoUrl { get; set; } = string.Empty;
+            public string VideoWidth { get; set; } = string.Empty;
+            public string VideoHeight { get; set; } = string.Empty;
+            public string VideoAlignment { get; set; } = string.Empty;
 
-            var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+    }
+
+            protected override async Task OnInitializedAsync()
+            {
+            await using var context = DbFactory.CreateDbContext();
             await GetUserID();
 
-            if (content != null)
+            if (ContentId != null)
             {
-                var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
-                if (textInputs != null)
+                var Currentcontent = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+
+                if (Currentcontent != null)
                 {
-                    foreach (var input in textInputs)
+                    
+                    ContentName = Currentcontent.ContentName;
+                    
+                    if (!string.IsNullOrEmpty(Currentcontent.ContentJson))
                     {
-                        var test = input.Key;
-                        if (test != null)
-                        {
-                            //Todo: used in multiple files make into a shared function.
-                            string ContentParameterName = "VideoInput";
-                            if (ContentParameterName == test.ToString())
-                            {
-                                string jsonString = input.Value.GetRawText();
-                                var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
-                                if (menuItemsWrapper != null)
-                                {
-                                    MenuItems = menuItemsWrapper.ToDictionary();
-                                    currentStep = InputStep.Wait;
-                                    TemplateId = content.TemplateId;
-                                    inputValueContentName = content.ContentName;
-                                    ContentId = content.ContentId;
-                                    WebPageId = content.WebPageId;
-                                    Update = true;
-                                }
-                            }
-                            else
-                            {
+                        var contentData = JsonConvert.DeserializeObject<videoInputs>(Currentcontent.ContentJson);
 
-                                if (test.ToString() == "Backgroundcolor")
-                                {
-                                    BackgroundColor = ConvertJsonElement(input.Value).ToString();
-                                }
-                                else if (test.ToString() == "Textcolor")
-                                {
-                                    TextColor = ConvertJsonElement(input.Value).ToString();
-                                }
-                                else
-                                {
-                                    var error = ConvertJsonElement(input.Value).ToString();
-                                    Console.WriteLine($"NavbarInputForm can not match value : {error}.");
-                                }
-
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Data for contents name is invalid.");
-                        }
+                        VideoUrl = contentData.VideoUrl;
+                        VideoWidth = contentData.VideoWidth;
+                        VideoHeight = contentData.VideoHeight;
+                        VideoAlignment = contentData.VideoAlignment;
                     }
                 }
+                else
+                {
+                    Console.WriteLine($"Content data error (null or empty).");
+                }
+                
+
             }
 
+        }
 
-        
+        protected override void OnParametersSet()
+        {
             if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
             {
                 SaveToDatabase(); // Call the save method
@@ -114,7 +99,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             UserId = user.Id;
         }
 
-        // Save all inputs to the database when the "Save" button is clicked
         private async Task PreviewImage()
         {
 

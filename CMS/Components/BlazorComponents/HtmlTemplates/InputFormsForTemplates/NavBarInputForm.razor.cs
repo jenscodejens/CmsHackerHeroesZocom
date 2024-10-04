@@ -29,7 +29,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         //[CascadingParameter] public int? ContentId { get; set; }
-        [SupplyParameterFromQuery] public int? ContentId { get; set; }
+        //[SupplyParameterFromQuery] public int? ContentId { get; set; }
+        [Parameter] public int? ContentId { get; set; }
         [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
         [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 

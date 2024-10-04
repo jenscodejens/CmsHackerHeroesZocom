@@ -145,7 +145,6 @@ else
                 : null;
         }
 
-        var template = context.Templates.FirstOrDeafult(template).Where(t => t.TemplateID == Content.TemplateId); 
         var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.ContentJson);
         if (textInputs == null)
         {
