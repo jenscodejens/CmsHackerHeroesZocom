@@ -128,7 +128,7 @@
   padding: 10px;
 }
 
-/*Back to top button */
+/* Back to top button */
 .btt-button {
   position: fixed;
   height: 2.6rem;
@@ -137,16 +137,19 @@
   right: 0.5rem;
   border-radius: .4rem;
   background-color: white;
-  /*display: none;*/
+  display: none;
   z-index: 999999999;
 }
 
 .btt-button:hover {
-  background-color:  #b703f3;
+  background-color:  #808080;
 }
 
 .btt-link{
   cursor: pointer;
+}
+.material-symbols-outlined {
+    font-size: 40px; /* Adjust size as needed */
 }
 
 /* Responsiv layout vid 768px */
