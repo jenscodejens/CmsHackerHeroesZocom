@@ -26,8 +26,8 @@
             <div class="creation-info">&nbsp;</div>
         }
             <hr />
-        <div>     
-             @if(WebSite.WebPages != null) {
+        <div>
+            @if (WebSite.WebPages.Count > 0) {
              <a href="@($"visit?websiteid={WebSite.WebSiteId}")">Besök</a> <span>|</span>
 
              } 
