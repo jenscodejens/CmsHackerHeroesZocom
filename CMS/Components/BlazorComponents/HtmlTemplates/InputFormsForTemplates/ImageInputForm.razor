@@ -4,6 +4,7 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
+@using Newtonsoft.Json
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
@@ -52,12 +53,6 @@
                 <option value="right">Right</option>
             </select>
         </div>
-@* 
-        <div>
-            <BackgroundColorSelector @bind-SelectedColor="Backgroundcolor" />
-            <br>
-            <TextColorSelector @bind-SelectedTextColor="Textcolor" />
-        </div> *@
 
         <div style="margin-top: 10px;">
             <button type="button" @onclick="PreviewImage">PreviewImage</button>
@@ -83,14 +78,22 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
+
+    //Probably repeat parameters, can probably add these to a class to increase readability?
     [Parameter] public int TemplateId { get; set; }
     [Parameter] public int WebPageId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-
-    [Parameter] public string ImageInput1 { get; set; } = string.Empty;
+    [Parameter] public int? ContentId { get; set; }
     [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
+    private bool hasSaved = false; // Flag to track if save has been executed
+    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
+    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+    private bool saveSuccessful = false;  // New flag to show the success message
+
+
+    //is inputparameters, every template has a
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+    [Parameter] public string ImageInput1 { get; set; } = string.Empty;
     [Parameter] public string ImageWidth { get; set; } 
     [Parameter] public string ImageHeight { get; set; }
     [Parameter] public decimal BorderWidth { get; set; }
@@ -98,14 +101,8 @@
     [Parameter] public decimal BorderRadius { get; set; }
     [Parameter] public string BoxShadow { get; set; }
     [Parameter] public string BackgroundColor { get; set; }
-    //[Parameter] public string TextColor { get; set; }
     [Parameter] public string ImageAlignment { get; set; }
 
-    private bool hasSaved = false; // Flag to track if save has been executed
-    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
-    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
-
-    private bool saveSuccessful = false;  // New flag to show the success message
 
     protected override void OnParametersSet()
     {
@@ -113,6 +110,60 @@
         {
             SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load content only if ContentId exists (edit mode)
+        if (ContentId.HasValue)
+        {
+            await LoadExistingContent(ContentId.Value);
+            PreviewImage();
+        }
+    }
+
+    // A class representing the structure of the JSON data stored in the database
+    private class ContentData
+    {
+        public string imageInput1 = string.Empty;
+        public string ImageWidth = string.Empty;
+        public string ImageHeight = string.Empty;
+        public decimal BorderWidth  = 0;
+        public string BorderColor  = string.Empty;
+        public decimal BorderRadius  = 0;
+        public string BoxShadow = string.Empty;
+        public string BackgroundColor = string.Empty;
+        public string TextColor = string.Empty;
+        public string ImageAlignment = string.Empty;
+    }
+
+
+    private async Task LoadExistingContent(int contentId)
+    {
+        await using var context = DbFactory.CreateDbContext();
+        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+
+        if (existingContent != null)
+        {
+            // Pre-fill form fields with existing content data
+            ContentName = existingContent.ContentName;
+
+            // Deserialize the ContentJson field to extract additional form data
+            if (!string.IsNullOrEmpty(existingContent.ContentJson))
+            {
+                var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
+
+                ImageInput1 = contentData.imageInput1;
+                ImageWidth = contentData.ImageWidth;
+                ImageHeight = contentData.ImageHeight;
+                BorderWidth = contentData.BorderWidth;
+                BorderColor = contentData.BorderColor;
+                BorderRadius = contentData.BorderRadius;
+                BoxShadow = contentData.BoxShadow;
+                BackgroundColor = contentData.BackgroundColor;
+                ImageAlignment = contentData.ImageAlignment;
+            }
         }
     }
 
@@ -132,7 +183,6 @@
             { "BorderRadius", BorderRadius },
             { "BoxShadow", BoxShadow },
             { "BackgroundColor", BackgroundColor },
-            //{ "TextColor", TextColor },
             { "ImageAlignment", ImageAlignment }
         };
 
@@ -154,14 +204,42 @@
             throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
         }
 
-        var content = new Content
+        Content content = new();
+        if (ContentId == null)
+        {
+            content = new Content
+                {
+                    UserId = user.Id,
+                    ContentName = ContentName,
+                    WebPageId = WebPageId,
+                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        ImageInput1 = ImageInput1,
+                        ImageWidth = ImageWidth,
+                        ImageHeight = ImageHeight,
+                        BorderWidth = BorderWidth,
+                        BorderColor = BorderColor,
+                        BorderRadius = BorderRadius,
+                        BoxShadow = BoxShadow,
+                        Backgroundcolor = BackgroundColor,
+                        ImageAlignment = ImageAlignment
+                    }),
+                    TemplateId = TemplateId
+                };
+
+            context.Contents.Add(content);
+        }
+        else
+        {
+            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+            if (content != null)
             {
-                UserId = user.Id,
-                ContentName = ContentName,
-                WebPageId = WebPageId,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                // Update existing content
+                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+                content.ContentName = ContentName;
+                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     ImageInput1 = ImageInput1,
                     ImageWidth = ImageWidth,
@@ -172,11 +250,12 @@
                     BoxShadow = BoxShadow,
                     Backgroundcolor = BackgroundColor,
                     ImageAlignment = ImageAlignment
-                }),
-                TemplateId = TemplateId
-            };
+                });
 
-        context.Contents.Add(content);
+                context.Contents.Update(content);
+            }
+        }
+
         try
         {
             await context.SaveChangesAsync();

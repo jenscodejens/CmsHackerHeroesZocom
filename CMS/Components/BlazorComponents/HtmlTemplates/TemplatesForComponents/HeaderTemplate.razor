@@ -11,12 +11,14 @@
 </footer>
 
 @code {
+    //Probably repeat parameters, can probably add these to a class to increase readability?
     [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+    [Parameter] public int WebPageId { get; set; }
+    [Parameter] public int? ContentId { get; set; }
 
-    [Parameter] public string ContentName { get; set; } /* = string.Empty; */
-    [Parameter] public string TextInput1 { get; set; } /* = "Default HeaderText 1 for Template 1"; */
-    [Parameter] public string TextInput2 { get; set; } /* = "Default HeaderText 2 for Template 1"; */
-    [Parameter] public string BackgroundColor { get; set; } /* = "grey"; */
-    [Parameter] public string Textcolor { get; set; } /* = "black";  */
+    [Parameter] public string ContentName { get; set; } = string.Empty;
+    [Parameter] public string TextInput1 { get; set; } = "Default HeaderText 1 for Template 1";
+    [Parameter] public string TextInput2 { get; set; } = "Default HeaderText 2 for Template 1";
+    [Parameter] public string BackgroundColor { get; set; } = "grey";
+    [Parameter] public string Textcolor { get; set; } = "black"; 
 }

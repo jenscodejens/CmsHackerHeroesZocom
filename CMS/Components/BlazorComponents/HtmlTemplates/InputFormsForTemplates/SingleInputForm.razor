@@ -22,8 +22,10 @@
 </div>
 
 @code {
-    [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
-    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+    //Probably repeat parameters, can probably add these to a class to increase readability?
+    [Parameter] public int TemplateId { get; set; }
+    [Parameter] public int WebPageId { get; set; }
+    [Parameter] public int? ContentId { get; set; }
 
     [Parameter] public string LabelText1 { get; set; } = "Enter First Text:";
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
