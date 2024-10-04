@@ -134,7 +134,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
                 }
             }
+            
             // Ensure WebPageId exists in WebPages table
+            //ToDo: Move to separate class used in several files.
             var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
             if (!webPageExists)
             {
@@ -156,7 +158,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 
         }
-
+        //ToDo: Move to separate class used in several files.
         private async Task GetUserID()
         {
             var user = await GetCurrentUserService.GetCurrentUserAsync();
