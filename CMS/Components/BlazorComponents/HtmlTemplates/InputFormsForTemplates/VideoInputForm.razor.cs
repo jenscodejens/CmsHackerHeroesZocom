@@ -134,24 +134,47 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
 
-            var content = new Content
+            var content = new Content();
+            if (ContentId == null)
             {
-                UserId = user.Id,
-                ContentName = ContentName,
-                WebPageId = WebPageId,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                content = new Content
                 {
-                    VideoUrl = VideoUrl,
-                    VideoWidth = VideoWidth,
-                    VideoHeight = VideoHeight,
-                    VideoAlignment = VideoAlignment
-                }),
-                TemplateId = TemplateId
-            };
+                    UserId = user.Id,
+                    ContentName = ContentName,
+                    WebPageId = WebPageId,
+                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        VideoUrl = VideoUrl,
+                        VideoWidth = VideoWidth,
+                        VideoHeight = VideoHeight,
+                        VideoAlignment = VideoAlignment
+                    }),
+                    TemplateId = TemplateId
+                };
+                context.Contents.Add(content);
+            }
+            else
+            {
+                content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+                if (content != null)
+                {
+                    // Update existing content
+                    content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+                    content.ContentName = ContentName;
+                    content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        VideoUrl = VideoUrl,
+                        VideoWidth = VideoWidth,
+                        VideoHeight = VideoHeight,
+                        VideoAlignment = VideoAlignment
+                    });
 
-            context.Contents.Add(content);
+                    context.Contents.Update(content);
+                }
+            }
+
             try
             {
                 await context.SaveChangesAsync();

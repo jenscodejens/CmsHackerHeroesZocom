@@ -101,37 +101,40 @@
             SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
         }
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Load content only if ContentId exists (edit mode)
         if (ContentId.HasValue)
         {
-            await using var context = DbFactory.CreateDbContext();
-            var ExistingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+            await LoadExistingContent(ContentId.Value);
+        }
+    }
 
-            if (ContentId.HasValue) // Load content only if ContentId exists (edit mode)
+
+    private async Task LoadExistingContent(int contentId)
+    {
+        await using var context = DbFactory.CreateDbContext();
+        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+
+        if (existingContent != null)
+        {
+            // Pre-fill form fields with existing content data
+            ContentName = existingContent.ContentName;
+
+            // Deserialize the ContentJson field to extract additional form data
+            if (!string.IsNullOrEmpty(existingContent.ContentJson))
             {
-                await using var contextFill = DbFactory.CreateDbContext();
-                var existingContent = await contextFill.Contents
-                    .FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+                var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
 
-                if (existingContent != null)
-                {
-                    // Pre-fill form fields with existing content data
-                    ContentName = existingContent.ContentName;
-
-                    // Deserialize the ContentJson field to extract additional form data
-                    if (!string.IsNullOrEmpty(existingContent.ContentJson))
-                    {
-                        var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
-
-                        // Set form fields with the deserialized data
-                        ImageInput1 = contentData.ImageInput1;
-                        CardTitle = contentData.CardTitle;
-                        CardText1 = contentData.CardText1;
-                        CardText2 = contentData.CardText2;
-                        BackgroundColor = contentData.BackgroundColor;
-                        TextColor = contentData.TextColor;
-                    }
-                }
+                // Set form fields with the deserialized data
+                ImageInput1 = contentData.ImageInput1;
+                CardTitle = contentData.CardTitle;
+                CardText1 = contentData.CardText1;
+                CardText2 = contentData.CardText2;
+                BackgroundColor = contentData.BackgroundColor;
+                TextColor = contentData.TextColor;
             }
         }
     }
@@ -200,19 +203,16 @@
                 // Update existing content
                 content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
                 content.ContentName = ContentName;
+                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    ImageInput1 = ImageInput1,
+                    CardTitle = CardTitle,
+                    CardText1 = CardText1,
+                    CardText2 = CardText2,
+                    Backgroundcolor = BackgroundColor,
+                    Textcolor = TextColor,
+                });
 
-                // Serialize the updated form data and update the ContentJson field
-                var contentData = new ContentData
-                    {
-                        ImageInput1 = ImageInput1,
-                        CardTitle = CardTitle,
-                        CardText1 = CardText1,
-                        CardText2 = CardText2,
-                        BackgroundColor = BackgroundColor,
-                        TextColor = TextColor
-                    };
-
-                content.ContentJson = JsonConvert.SerializeObject(contentData);
                 context.Contents.Update(content);
             }
         }
