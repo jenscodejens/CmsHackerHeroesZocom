@@ -10,6 +10,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseTextTemplateMarkdown //gets the base parameters we have in every template/inputform
 
 <h3>Markdown Input Form</h3>
 
@@ -57,16 +58,6 @@
 @code {
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-    //Probably repeat parameters, can probably add these to a class to increase readability?
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string MarkdownContent { get; set; } = string.Empty;
-
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
     private string PreviewContent { get; set; } = string.Empty;
 

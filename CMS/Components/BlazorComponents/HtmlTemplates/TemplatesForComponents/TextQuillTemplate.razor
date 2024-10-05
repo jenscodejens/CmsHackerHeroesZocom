@@ -1,21 +1,12 @@
 ﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
-
+@using CMS.Components.BlazorComponents.HtmlTemplates
+@inherits BaseTextTemplateQuill //gets the base parameters we have in every template/inputform
 <div>
     <!-- Quill Content Preview -->
     <div class="quill-preview">
         @((MarkupString)QuillContent)
     </div>
 </div>
-
-@code {
-    //Probably repeat parameters, can probably add these to a class to increase readability?
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string QuillContent { get; set; } = string.Empty;
-}
 
 @* Centering doesn't seem to work so this is included here for now*@
 <style>

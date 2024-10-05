@@ -8,6 +8,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseImageTemplate //gets the base parameters we have in every template/inputform
 
 <h3>Single Image Input Form</h3>
 
@@ -18,7 +19,7 @@
             <input type="text" @bind="ContentName" placeholder="Enter name for content" />
 
             <label>Image URL</label>
-            <input type="text" @bind="ImageInput1" placeholder="Enter Image URL" />
+            <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
 
             <!-- Image Size Controls -->
             <label>Image Width (px or %):</label>
@@ -78,31 +79,10 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-
-    //Probably repeat parameters, can probably add these to a class to increase readability?
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
     [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
     private bool saveSuccessful = false;  // New flag to show the success message
-
-
-    //is inputparameters, every template has a
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string ImageInput1 { get; set; } = string.Empty;
-    [Parameter] public string ImageWidth { get; set; } 
-    [Parameter] public string ImageHeight { get; set; }
-    [Parameter] public decimal BorderWidth { get; set; }
-    [Parameter] public string BorderColor { get; set; }
-    [Parameter] public decimal BorderRadius { get; set; }
-    [Parameter] public string BoxShadow { get; set; }
-    [Parameter] public string BackgroundColor { get; set; }
-    [Parameter] public string ImageAlignment { get; set; }
-
 
     protected override void OnParametersSet()
     {
@@ -126,7 +106,7 @@
     // A class representing the structure of the JSON data stored in the database
     private class ContentData
     {
-        public string imageInput1 = string.Empty;
+        public string imageInput = string.Empty;
         public string ImageWidth = string.Empty;
         public string ImageHeight = string.Empty;
         public decimal BorderWidth  = 0;
@@ -154,7 +134,7 @@
             {
                 var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
 
-                ImageInput1 = contentData.imageInput1;
+                ImageInput = contentData.imageInput;
                 ImageWidth = contentData.ImageWidth;
                 ImageHeight = contentData.ImageHeight;
                 BorderWidth = contentData.BorderWidth;
@@ -175,7 +155,7 @@
         var formValues = new Dictionary<string, object>
         {
             { "ContentName", ContentName },
-            { "ImageInput1", ImageInput1 },
+            { "ImageInput", ImageInput },
             { "ImageWidth", ImageWidth },
             { "ImageHeight", ImageHeight },
             { "BorderWidth", BorderWidth },
@@ -216,7 +196,7 @@
                     LastUpdated = DateOnly.FromDateTime(DateTime.Now),
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
-                        ImageInput1 = ImageInput1,
+                        ImageInput = ImageInput,
                         ImageWidth = ImageWidth,
                         ImageHeight = ImageHeight,
                         BorderWidth = BorderWidth,
@@ -241,7 +221,7 @@
                 content.ContentName = ContentName;
                 content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
-                    ImageInput1 = ImageInput1,
+                    ImageInput = ImageInput,
                     ImageWidth = ImageWidth,
                     ImageHeight = ImageHeight,
                     BorderWidth = BorderWidth,

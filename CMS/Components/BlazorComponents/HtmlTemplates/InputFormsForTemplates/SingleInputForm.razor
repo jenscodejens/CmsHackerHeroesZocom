@@ -2,6 +2,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseTemplateComponent //gets the base parameters we have in every template/inputform
 
 <h3>Input Form</h3>
 
@@ -22,15 +23,10 @@
 </div>
 
 @code {
-    //Probably repeat parameters, can probably add these to a class to increase readability?
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
 
     [Parameter] public string LabelText1 { get; set; } = "Enter First Text:";
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; // Add TextColor parameter
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state

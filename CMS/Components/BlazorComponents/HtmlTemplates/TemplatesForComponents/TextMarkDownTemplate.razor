@@ -1,4 +1,7 @@
 ﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
+@using CMS.Components.BlazorComponents.HtmlTemplates
+@inherits BaseTextTemplateMarkdown //gets the base parameters we have in every template/inputform
+
 <div>
     <!-- Markdown Preview -->
     <div class="markdown-preview">
@@ -7,13 +10,6 @@
 </div>
 
 @code {
-    //Probably repeat parameters, can probably add these to a class to increase readability?
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string MarkdownContent { get; set; } = string.Empty;
 
     // Convert Markdown to HTML
     private string ConvertMarkdownToHtml(string markdown)

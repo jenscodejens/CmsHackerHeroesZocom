@@ -1,4 +1,6 @@
 ﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
+@using CMS.Components.BlazorComponents.HtmlTemplates
+@inherits BaseVideoTemplate //gets the base parameters we have in every template/inputform
 <!-- Video Preview Section -->
 <div class="video-container" style="margin-top: 20px;">
     @if (IsYouTubeUrl(VideoUrl))
@@ -19,18 +21,6 @@
 </div>
 
 @code {
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
-
-    // all parameters the user must fill in
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-
-    // Video Properties
-    [Parameter] public string VideoUrl { get; set; } = string.Empty;
-    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
-    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
-    [Parameter] public string VideoAlignment { get; set; } = "center";
-
     // Method to check if the video URL is from YouTube
     private bool IsYouTubeUrl(string url)
     {

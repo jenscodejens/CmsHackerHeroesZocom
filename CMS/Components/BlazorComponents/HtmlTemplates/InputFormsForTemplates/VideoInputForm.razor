@@ -7,6 +7,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseVideoTemplate //gets the base parameters we have in every template/inputform
 
 <h3>Single Video Input Form</h3>
 
@@ -60,18 +61,6 @@
 @code {
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
-    // Video Properties
-    [Parameter] public string VideoUrl { get; set; } = string.Empty;
-    [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
-    [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
-    [Parameter] public string VideoAlignment { get; set; } = "center";
 
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state

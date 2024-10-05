@@ -8,7 +8,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
-
+@inherits BaseTemplateComponent //gets the base parameters we have in every template/inputform
 <h3>Input Form</h3>
 
 <div>
@@ -66,18 +66,11 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-    //Probably repeat parameters, can probably add these to a class to increase readability?
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
-
     [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
     [Parameter] public string LabelText2 { get; set; } = "Enter First Text:";
     [Parameter] public string LabelText3 { get; set; } = "Enter Second Text:";
     [Parameter] public string BackgroundColor { get; set; } = "grey";
     [Parameter] public string TextColor { get; set; } = "black";
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
 
     private string inputValue = string.Empty;
     private string inputValueContentName = string.Empty;
