@@ -59,7 +59,7 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
         [Parameter] public string TextInput1 { get; set; } = "Text";
         [Parameter] public string TextInput2 { get; set; } = "URL";
         [Parameter] public string Backgroundcolor { get; set; } = "white";
-        [Parameter] public string Textcolor { get; set; } = "blue";
+        [Parameter] public string TextColor { get; set; } = "blue";
     }
 
     public class BaseFooterTemplate : BaseTemplateComponent
@@ -68,7 +68,7 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
         [Parameter] public string TextInput1 { get; set; } = "Default FooterText 1 for Template 1";
         [Parameter] public string TextInput2 { get; set; } = "Default FooterText 2 for Template 1";
         [Parameter] public string BackgroundColor { get; set; } = "grey";
-        [Parameter] public string Textcolor { get; set; } = "black";
+        [Parameter] public string TextColor { get; set; } = "black";
     }
     public class BaseHeaderTemplate : BaseTemplateComponent
     {
@@ -76,7 +76,7 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
         [Parameter] public string TextInput1 { get; set; } = "Default HeaderText 1 for Template 1";
         [Parameter] public string TextInput2 { get; set; } = "Default HeaderText 2 for Template 1";
         [Parameter] public string BackgroundColor { get; set; } = "grey";
-        [Parameter] public string Textcolor { get; set; } = "black";
+        [Parameter] public string TextColor { get; set; } = "black";
     }
 
 }

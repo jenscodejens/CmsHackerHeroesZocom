@@ -10,6 +10,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inject IContentService ContentService
 @inherits BaseTextTemplateQuill //gets the base parameters we have in every template/inputform
 
 @inject IJSRuntime JSRuntime
@@ -85,7 +86,6 @@
 </div>
 
 @code {
-    [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
     private bool hasSaved = false; // Flag to track if save has been executed
@@ -137,8 +137,7 @@
 
     private async Task LoadExistingContent(int contentId)
     {
-        await using var context = DbFactory.CreateDbContext();
-        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+        var existingContent = await ContentService.GetContentAsync(contentId);
 
         if (existingContent != null)
         {
@@ -159,57 +158,32 @@
         // Get Quill content via JSInterop before saving
         QuillContent = await JSRuntime.InvokeAsync<string>("getQuillContent");
 
-        await using var context = DbFactory.CreateDbContext();
-        var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
         var user = await GetCurrentUserService.GetCurrentUserAsync();
-        if (!webPageExists)
-        {
-            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-        }
+        var contentData = new ContentData
+            {
+                QuillContent = QuillContent
+            };
 
-        Content content = new();
-        if (ContentId == null)
-        {
-            content = new Content
-                {
-                    UserId = user.Id,
-                    ContentName = ContentName,
-                    WebPageId = WebPageId,
-                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                    {
-                        QuillContent = QuillContent
-                    }),
-                    TemplateId = TemplateId
-                };
+        var content = new Content
+            {
+                UserId = user.Id,
+                ContentName = ContentName,
+                WebPageId = WebPageId,
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                ContentJson = JsonConvert.SerializeObject(contentData),
+                TemplateId = TemplateId
+            };
 
-            context.Contents.Add(content);
+        // Save or update content based on ContentId presence
+        if (ContentId.HasValue)
+        {
+            content.ContentId = ContentId.Value;
+            await ContentService.UpdateContentAsync(content);
         }
         else
         {
-            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
-            if (content != null)
-            {
-                // Update existing content
-                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
-                content.ContentName = ContentName;
-                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    QuillContent = QuillContent,
-                });
-
-                context.Contents.Update(content);
-            }
-        }
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            Console.WriteLine($"Error: {ex.InnerException?.Message}");
-            throw;
+            await ContentService.SaveContentAsync(content);
         }
 
         saveSuccessful = true;

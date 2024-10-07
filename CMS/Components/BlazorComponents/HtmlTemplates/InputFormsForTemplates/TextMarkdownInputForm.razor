@@ -10,6 +10,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inject IContentService ContentService
 @inherits BaseTextTemplateMarkdown //gets the base parameters we have in every template/inputform
 
 <h3>Markdown Input Form</h3>
@@ -30,8 +31,6 @@
                     <MarkdownToolbarButton Action="MarkdownAction.Heading" Icon="fa fa-header" Title="Heading" />
                     <MarkdownToolbarButton Action="MarkdownAction.UnorderedList" Icon="fa fa-list-ul" Title="Unordered List" />
                     <MarkdownToolbarButton Action="MarkdownAction.OrderedList" Icon="fa fa-list-ol" Title="Ordered List" />
-                    <MarkdownToolbarButton Action="MarkdownAction.Table" Icon="fa fa-list-ol" Title="Ordered List" />
-
                 </Toolbar>
             </MarkdownEditor>
         </div>
@@ -56,7 +55,6 @@
 </div>
 
 @code {
-    [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
     private string PreviewContent { get; set; } = string.Empty;
@@ -93,8 +91,7 @@
 
     private async Task LoadExistingContent(int contentId)
     {
-        await using var context = DbFactory.CreateDbContext();
-        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+        var existingContent = await ContentService.GetContentAsync(contentId);
 
         if (existingContent != null)
         {
@@ -114,65 +111,37 @@
     // Save all inputs to the database when the "Save" button is clicked
     private async Task SaveToDatabase()
     {
-        await using var context = DbFactory.CreateDbContext();
         var user = await GetCurrentUserService.GetCurrentUserAsync();
 
-        // Ensure WebPageId exists in the WebPages table
-        var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
-        if (!webPageExists)
-        {
-            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-        }
+        var contentData = new ContentData
+            {
+                MarkdownContent = MarkdownContent
+            };
 
-        Content content = new();
-        if (ContentId == null)
-        {
-            // Save the markdown content as JSON
-            content = new Content
-                {
-                    UserId = user.Id,
-                    ContentName = ContentName,
-                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                    WebPageId = WebPageId,
-                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                    {
-                        MarkdownContent = MarkdownContent
-                    }),
-                    TemplateId = TemplateId
-                };
+        var content = new Content
+            {
+                UserId = user.Id,
+                ContentName = ContentName,
+                WebPageId = WebPageId,
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                ContentJson = JsonConvert.SerializeObject(contentData),
+                TemplateId = TemplateId
+            };
 
-            context.Contents.Add(content);
+       
+        // Save or update content based on ContentId presence
+        if (ContentId.HasValue)
+        {
+            content.ContentId = ContentId.Value;
+            await ContentService.UpdateContentAsync(content);
         }
         else
         {
-            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
-            if (content != null)
-            {
-
-                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
-                content.ContentName = ContentName;
-                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    MarkdownContent = MarkdownContent
-                });
-                context.Contents.Update(content);
-            }
+            await ContentService.SaveContentAsync(content);
         }
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            // Log detailed information for debugging
-            Console.WriteLine($"Error: {ex.InnerException?.Message}");
-            throw;
-        }
-
         saveSuccessful = true;
-        // // Navigate to the contents page after saving
-        // Done();
+
     }
 
     // Convert Markdown to HTML (for preview)
