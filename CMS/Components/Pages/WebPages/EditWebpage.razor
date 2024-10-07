@@ -1,5 +1,27 @@
-﻿<h3>Component</h3>
+﻿@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@rendermode InteractiveServer
+@inject VisitorCounterService VisitorCounterService
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-@code {
-
+@if (contentList == null)
+{
+    <p>Laddar...</p>
 }
+else if (contentList.Count == 0)
+{
+    <p>Inget innehåll tillgängligt för denna webbsida.</p>
+}
+else
+{
+    @foreach (var content in contentList)
+    {
+        <div class="content-preview">
+            <CMS.Components.Pages.ContentPages.ContentPreview ContentId="@content.ContentId" />
+        </div>
+    }
+}
+
+<p>Denna sida har besökts @VisitCount gånger.</p>
+
+   
