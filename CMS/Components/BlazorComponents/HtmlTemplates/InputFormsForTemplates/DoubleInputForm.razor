@@ -8,80 +8,55 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
-@inherits BaseTemplateComponent //gets the base parameters we have in every template/inputform
+@inject IContentService ContentService
+@inherits BaseHeaderTemplate //gets the base parameters we have in every template/inputform
 <h3>Input Form</h3>
 
 <div>
-@*  Patrik, för att förklara lite hur jag gick tillväga för att ha ett input field för samtliga: inputValue, inputValue1 och inputValue2.
-    Gjorde en loop (kan vara switch case med) som håller reda på vilken av de tre ovan som är den aktuella för inputen vid ett givet tillfälle.
-    Anledningen var att det är ser mer cleant ut att ha endast ett fält med tillhörande knapp än att alltid visa flera fält varav ett alltid är tomt.
-    GetPlaceholderText() lade jag till så det inte gav intrycket att man måste ha två olika textinputs, ingen aning om det är något du vill behålla.
-    Done() är en knapp med tillhörade funtion som tar användare till "/content". Mer info längre ned i texten.
-    Jag tror inte jag ändrade så mycket mer, eventuellt till async Task i någon fil men nu börjar jag snart blanda ihop allt själv (din kod).
-    Så det är endast denna filen som är totalt ändrad. Men nu sparar den korrekt i Db, och preview fungerar.
-    /Jens
-*@
-
-    @if (currentStep != InputStep.Done)
-    {
-        <form>
+    <form>
             <div>
-                <label>@currentLabelText</label>
-                <input type="text" @bind="inputValue" placeholder="@GetPlaceholderText()" />
-                <button type="button" @onclick="HandleSubmit">Add</button>
+                <label>Content Name:</label>
+                <input type="text" @bind="ContentName" />
+                <br>
+                <label>Input Value 1:</label>
+                <input type="text" @bind="TextInput1" />
+                <br>
+                <label>Input value 2:</label>
+                <input type="text" @bind="TextInput2" />
+                <br>
+                <!--Color Controls -->
+                <label>Background Color:</label>
+                <input type="color" @bind="BackgroundColor" />
+                <br>
+                <label>Text Color:</label>
+                <input type="color" @bind="TextColor"/>
             </div>
-        </form>
+            <div style="margin-top: 10px;">
+                <button type="button" @onclick="PreviewImage">PreviewImage</button>
+                @if (!MultiPageMode) // Show button only if not in multi-page mode
+                {
+                    <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                }
+            </div>
+    </form>
+    <!-- Success message -->
+    @if (saveSuccessful)
+    {
+        <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+            Content saved successfully!
+            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+
+        </div>
     }
-
-    <div>
-        <!--Color Controls -->
-        <label>Background Color:</label>
-        <input type="color" @bind="BackgroundColor" />
-        <br>
-        <label>Text Color:</label>
-        <input type="color" @bind="TextColor" />
-    </div>
-
-    <div style="margin-top: 10px;">
-        <button type="button" @onclick="Done">Done</button>
-@*  Eftersom vi nu (enligt Mikael borde) sparar direkt i Db när ett textfält läggs till så tog jag bort min Cancel kod nedan.
-    Det vi kan göra är att ladda templaten och sparar över det man redan tryck igenom om man trycker på cancel, eftersom koden blir nu automatiskt sparad direkt man trycker på Add (vilket sker efter varje textinput).
-    Jag påbörjade men slutade och rullade tillbaka försök att få rullningsmenyn över färger att automatiskt uppdateras dynamiskt så som input av texter fungerar.
-    Det blev för bökigt och det är redan rörigt i mitt huvud eftersom det är kod jag inte skapat från början :)
-    
-    <span style="margin-left: 10px;"></span>
-    <button type="button" @onclick="CancelTemplate">Cancel</button> *@
-    </div>
 </div>
 
 @code {
-    private enum InputStep
-    {
-        ContentNameInput,
-        FirstInput,
-        SecondInput,
-        Done
-    }
-
-    [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-    [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
-    [Parameter] public string LabelText2 { get; set; } = "Enter First Text:";
-    [Parameter] public string LabelText3 { get; set; } = "Enter Second Text:";
-    [Parameter] public string BackgroundColor { get; set; } = "grey";
-    [Parameter] public string TextColor { get; set; } = "black";
-
-    private string inputValue = string.Empty;
-    private string inputValueContentName = string.Empty;
-    private string inputValue1 = string.Empty;
-    private string inputValue2 = string.Empty;
-    private InputStep currentStep = InputStep.ContentNameInput;
-    private string currentLabelText = string.Empty;
 
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
     [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
+    private bool saveSuccessful = false;  // New flag to show the success message
 
     protected override void OnParametersSet()
     {
@@ -94,7 +69,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        currentLabelText = LabelText1;
+        // currentLabelText = LabelText1;
         // Load content only if ContentId exists (edit mode)
         if (ContentId.HasValue)
         {
@@ -106,129 +81,71 @@
     // A class representing the structure of the JSON data stored in the database
     private class ContentData
     {
-        public string inputValue = string.Empty;
-        public string inputValueContentName = string.Empty;
-        public string inputValue1 = string.Empty;
-        public string inputValue2 = string.Empty;
+        public string ContentName = string.Empty;
+        public string TextInput1 = string.Empty;
+        public string TextInput2 = string.Empty;
         public string BackgroundColor = string.Empty;
         public string TextColor = string.Empty;
     }
 
     private async Task LoadExistingContent(int contentId)
     {
-        await using var context = DbFactory.CreateDbContext();
-        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+        var existingContent = await ContentService.GetContentAsync(contentId); ;
 
         if (existingContent != null)
         {
             // Pre-fill form fields with existing content data
-            inputValueContentName = existingContent.ContentName;
+            ContentName = existingContent.ContentName;
 
             // Deserialize the ContentJson field to extract additional form data
             if (!string.IsNullOrEmpty(existingContent.ContentJson))
             {
                 var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
 
-                inputValue = contentData.inputValue;
-                inputValueContentName = contentData.inputValueContentName;
-                inputValue1 = contentData.inputValue1;
-                inputValue2 = contentData.inputValue2;
+                TextInput1 = contentData.TextInput1;
+                TextInput2 = contentData.TextInput2;
                 BackgroundColor = contentData.BackgroundColor;
                 TextColor = contentData.TextColor;
             }
         }
     }
 
-    // Är här man loopas igenom så rätt label visas och det sparas ned under rätt del av json objektet.
-    private async Task HandleSubmit()
-    {
-        if (currentStep == InputStep.ContentNameInput)
-        {
-            inputValueContentName = inputValue; // spara first input
-            inputValue = string.Empty; 
-            currentStep = InputStep.FirstInput; // Hoppa till second input
-            currentLabelText = LabelText2; // Ändra label till den för second input
-        }
-        else if (currentStep == InputStep.FirstInput)
-        {
-            inputValue1 = inputValue;
-            inputValue = string.Empty;
-            currentStep = InputStep.SecondInput;
-            currentLabelText = LabelText3;
-        }
-        else if (currentStep == InputStep.SecondInput)
-        {
-            inputValue2 = inputValue;
-            inputValue = string.Empty;
-            currentStep = InputStep.Done;
-
-            await SaveToDatabase();
-        }
-    }
-
-    // Hårdkodat WebPageId, den icke-hårdkodade koden får du fixa
     private async Task SaveToDatabase()
     {
-        await using var context = DbFactory.CreateDbContext();
         var user = await GetCurrentUserService.GetCurrentUserAsync();
 
-        // Ensure WebPageId exists in WebPages table
-        var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
-        if (!webPageExists)
-        {
-            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-        }
-        Content content = new();
-        if (ContentId == null)
-        {
-            content = new Content
+        var contentData = new ContentData
+            {
+                TextInput1 = TextInput1,
+                TextInput2 = TextInput2,
+                BackgroundColor = BackgroundColor,
+                TextColor = TextColor,
+            };
+
+        var content = new Content
             {
                 UserId = user.Id,
-                ContentName = inputValueContentName,
+                ContentName = ContentName,
                 WebPageId = WebPageId,
                 CreationDate = DateOnly.FromDateTime(DateTime.Now),
                 LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    TextInput1 = inputValue1,
-                    TextInput2 = inputValue2,
-                    BackgroundColor = BackgroundColor,
-                    TextColor = TextColor
-                }),
+                ContentJson = JsonConvert.SerializeObject(contentData),
                 TemplateId = TemplateId
             };
-            context.Contents.Add(content);
+
+
+        // Save or update content based on ContentId presence
+        if (ContentId.HasValue)
+        {
+            content.ContentId = ContentId.Value;
+            await ContentService.UpdateContentAsync(content);
         }
         else
         {
-            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
-            if (content != null)
-            {
-                // Update existing content
-                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
-                content.ContentName = inputValueContentName;
-                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    TextInput1 = inputValue1,
-                    TextInput2 = inputValue2,
-                    BackgroundColor = BackgroundColor,
-                    TextColor = TextColor
-                });
+            await ContentService.SaveContentAsync(content);
+        }
 
-                context.Contents.Update(content);
-            }
-        }
-        
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            // Log detailed information for debugging
-            Console.WriteLine($"Error: {ex.InnerException?.Message}");
-            throw;
-        }
+        saveSuccessful = true;
 
     }
 
@@ -239,9 +156,9 @@
         // mapping del så inputs hamnar där de ska
         var formValues = new Dictionary<string, object>
         {
-            { "ContentName", inputValueContentName },
-            { "TextInput1", inputValue1 },
-            { "TextInput2", inputValue2 },
+            { "ContentName", ContentName },
+            { "TextInput1", TextInput1 },
+            { "TextInput2", TextInput2 },
             { "BackgroundColor", BackgroundColor },
             { "TextColor", TextColor }
 
@@ -251,24 +168,8 @@
 
     }
 
-
-    // Borttaget se ovan om varför.
-    // private void CancelTemplate()
-    // {
-    //     inputValue = string.Empty;
-    //     inputValue1 = string.Empty;
-    //     inputValue2 = string.Empty;
-    //     currentStep = InputStep.FirstInput;
-    //     currentLabelText = LabelText1;
-    // }
-
     private void Done()
     {
         NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
-    }
-
-    private string GetPlaceholderText()
-    {
-        return currentStep == InputStep.SecondInput ? "optional" : string.Empty;
     }
 }
