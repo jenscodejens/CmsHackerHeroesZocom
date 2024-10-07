@@ -4,9 +4,9 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
-
-@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inject IContentService ContentService
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inherits BaseVideoTemplate //gets the base parameters we have in every template/inputform
 
 <h3>Single Video Input Form</h3>
@@ -56,17 +56,6 @@
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
         </div>
     }
+
 </div>
-
-            throw;
-        }
-
-        saveSuccessful = true;
-    }
-
-    // Navigate to the contents page after saving
-    private void Done()
-    {
-        NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
-    }
-}
+     

@@ -78,5 +78,12 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
         [Parameter] public string BackgroundColor { get; set; } = "grey";
         [Parameter] public string Textcolor { get; set; } = "black";
     }
+    public class BaseNavBarTemplate : BaseTemplateComponent
+    {
+        [Parameter] public string ContentName { get; set; } = string.Empty;
+        [Parameter] public Dictionary<string, string> MenuItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };
+        [Parameter] public string BackgroundColor { get; set; } = "grey";
+        [Parameter] public string TextColor { get; set; } = "black";
+    }
 
 }

@@ -30,14 +30,14 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         //[CascadingParameter] public int? ContentId { get; set; }
         //[SupplyParameterFromQuery] public int? ContentId { get; set; }
-        [Parameter] public int? ContentId { get; set; }
-        [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
-        [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
+        //[Parameter] public int? ContentId { get; set; }
+        //[Parameter] public int TemplateId { get; set; } // Receive the TemplateId
+        //[Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 
-        [Parameter] public string BackgroundColor { get; set; } = "grey";
+        //[Parameter] public string BackgroundColor { get; set; } = "grey";
         [Parameter] public string WebPageName { get; set; } = string.Empty;
-        [Parameter] public string TextColor { get; set; } = "black";
-        [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
+        //[Parameter] public string TextColor { get; set; } = "black";
+        //[Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
         [Parameter] public string templateDropdown { get; set; } = string.Empty;
         [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
@@ -57,7 +57,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 
         public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
-        public Dictionary<string, string> MenuItems = new Dictionary<string, string>();
+        //public Dictionary<string, string> MenuItems = new Dictionary<string, string>();
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
 
         public string UserId { get; set; }

@@ -8,6 +8,9 @@ using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
 using System.Reflection.Metadata;
 using Newtonsoft.Json;
+using CMS.Services;
+
+
 
 namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 {
@@ -17,17 +20,17 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-        [Parameter] public int TemplateId { get; set; }
-        [Parameter] public int WebPageId { get; set; }
-        [Parameter] public int? ContentId { get; set; }
-        [Parameter] public string ContentName { get; set; } = string.Empty;
-        [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
+        //[Parameter] public int TemplateId { get; set; }
+        //[Parameter] public int WebPageId { get; set; }
+        //[Parameter] public int? ContentId { get; set; }
+        //[Parameter] public string ContentName { get; set; } = string.Empty;
+        //[Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
         // Video Properties
-        [Parameter] public string VideoUrl { get; set; } = string.Empty;
-        [Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
-        [Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
-        [Parameter] public string VideoAlignment { get; set; } = "center";
+        //[Parameter] public string VideoUrl { get; set; } = string.Empty;
+        //[Parameter] public string VideoWidth { get; set; } = "100%";  // Use meaningful default values
+        //[Parameter] public string VideoHeight { get; set; } = "315px"; // You can adjust height accordingly
+        //[Parameter] public string VideoAlignment { get; set; } = "center";
 
         private bool hasSaved = false; // Flag to track if save has been executed
         [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
@@ -57,7 +60,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         {
             if (ContentId != null)
             {
-                var Currentcontent = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                var Currentcontent = await ContentService.GetContentAsync((int)ContentId);
 
                 if (Currentcontent != null)
                 {
@@ -124,15 +127,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         // Save all inputs to the database when the "Save" button is clicked
         private async Task SaveToDatabase()
         {
-            await using var context = DbFactory.CreateDbContext();
-            var user = await GetCurrentUserService.GetCurrentUserAsync();
 
-            // Ensure WebPageId exists in the WebPages table
-            var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
-            if (!webPageExists)
-            {
-                throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-            }
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
 
             var content = new Content();
             if (ContentId == null)
@@ -153,11 +149,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     }),
                     TemplateId = TemplateId
                 };
-                context.Contents.Add(content);
             }
             else
             {
-                content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
                 if (content != null)
                 {
                     // Update existing content
@@ -171,22 +165,22 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                         VideoAlignment = VideoAlignment
                     });
 
-                    context.Contents.Update(content);
                 }
             }
 
-            try
+            // Save or update content based on ContentId presence
+            if (ContentId.HasValue)
             {
-                await context.SaveChangesAsync();
+                content.ContentId = ContentId.Value;
+                await ContentService.UpdateContentAsync(content);
             }
-            catch (DbUpdateException ex)
+            else
             {
-                // Log detailed information for debugging
-                Console.WriteLine($"Error: {ex.InnerException?.Message}");
-                throw;
+                await ContentService.SaveContentAsync(content);
             }
 
             saveSuccessful = true;
+
         }
 
         // Navigate to the contents page after saving

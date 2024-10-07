@@ -1,7 +1,9 @@
 ﻿@namespace BlazorComponents.HtmlTemplates.TemplatesForComponents
 @rendermode InteractiveServer
+@using CMS.Components.BlazorComponents.HtmlTemplates
+@inherits BaseNavBarTemplate
 
-<nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {Backgroundcolor}; color: {Textcolor}; font-size: 20px;")">
+<nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {TextColor}; font-size: 20px;")">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -13,7 +15,7 @@
             {
 
                 <li class="nav-item">
-                    <NavLink class="nav-link" href="@($"/webpages/previewpage/{item.Value}")" style="@($"color: {Textcolor};")">
+                    <NavLink class="nav-link" href="@($"/webpages/previewpage/{item.Value}")" style="@($"color: {TextColor};")">
                         @item.Key
                 </NavLink>
                 </li>
@@ -28,15 +30,15 @@
 @using CMS.Data;
 @using Microsoft.EntityFrameworkCore;
 
-    [Parameter] public int ContentId { get; set; }
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
+    // [Parameter] public int ContentId { get; set; }
+    // [Parameter] public int TemplateId { get; set; }
+    // [Parameter] public int WebPageId { get; set; }
+  
 
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public Dictionary<string, string> MenuItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };
-    [Parameter] public string Backgroundcolor { get; set; } = "grey";
-    [Parameter] public string Textcolor { get; set; } = "black";
+    // [Parameter] public string ContentName { get; set; } = string.Empty;
+    // [Parameter] public Dictionary<string, string> MenuItems { get; set; } = new Dictionary<string, string>() { { "Inget", "Inget" } };
+    // [Parameter] public string Backgroundcolor { get; set; } = "grey";
+    // [Parameter] public string Textcolor { get; set; } = "black";
 
     // [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
 
