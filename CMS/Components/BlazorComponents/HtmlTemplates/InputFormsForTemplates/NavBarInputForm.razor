@@ -4,12 +4,13 @@
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.EntityFrameworkCore;
 @using System.Threading.Tasks;
-@rendermode InteractiveServer
 @using CMS.Components.BlazorComponents.HtmlTemplates
 @inherits BaseNavBarTemplate
-
-@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
+@inject IContentService ContentService
+@inject IWebPageService WebPageService
 @inject IGetCurrentUserService GetCurrentUserService
+@rendermode InteractiveServer
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 <div>
     <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {TextColor}; font-size: 20px;")">
@@ -105,6 +106,17 @@
             <label>Text Color:</label>
             <input type="color" @bind="TextColor" />
         </div>
+
+        <!-- Success message -->
+        @if (saveSuccessful)
+        {
+            <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+                Content saved successfully!
+                <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+
+            </div>
+        }
+
     </div>
 
 </div>

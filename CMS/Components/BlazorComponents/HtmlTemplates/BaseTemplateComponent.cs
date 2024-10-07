@@ -83,7 +83,7 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
         [Parameter] public string ContentName { get; set; } = string.Empty;
         [Parameter] public Dictionary<string, string> MenuItems { get; set; } = new Dictionary<string, string>() { { "Innehåll saknas", "Länk Saknas" } };
         [Parameter] public string BackgroundColor { get; set; } = "grey";
-        [Parameter] public string Textolor { get; set; } = "black";
+        [Parameter] public string TextColor { get; set; } = "black";
     }
 
 }

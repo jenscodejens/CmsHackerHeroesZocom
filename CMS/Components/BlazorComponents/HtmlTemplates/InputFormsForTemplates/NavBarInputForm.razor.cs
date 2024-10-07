@@ -24,26 +24,17 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             Done
         }
 
-        private bool Update = false;
 
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         //[CascadingParameter] public int? ContentId { get; set; }
-        //[SupplyParameterFromQuery] public int? ContentId { get; set; }
-        //[Parameter] public int? ContentId { get; set; }
-        //[Parameter] public int TemplateId { get; set; } // Receive the TemplateId
-        //[Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
-
-        //[Parameter] public string BackgroundColor { get; set; } = "grey";
         [Parameter] public string WebPageName { get; set; } = string.Empty;
-        //[Parameter] public string TextColor { get; set; } = "black";
-        //[Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
         [Parameter] public string templateDropdown { get; set; } = string.Empty;
         [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
         [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
 
-
+        private bool saveSuccessful = false;
+        private bool Update = false;
         private bool hasSaved = false; // Flag to track if save has been executed
         private string inputValue = string.Empty;
         private string inputKey = string.Empty;
@@ -54,10 +45,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
-
-
         public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
-        //public Dictionary<string, string> MenuItems = new Dictionary<string, string>();
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
 
         public string UserId { get; set; }
@@ -65,7 +53,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         protected override async Task OnInitializedAsync()
         {
 
-            await using var context = DbFactory.CreateDbContext();
 
             await GetUserID();
             //ToDo: Add user verification, altternatives: check if user are assigned to a website(multiple users assigned to a website, or multiple users per website+webpage+content,
@@ -76,18 +63,19 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             //}
             if (ContentId != null)
             {
-                LoadNavBarContent(context);
+                await LoadNavBarContent();
             }
 
-            await RetrieveWebPages(context);
+           
+            await RetrieveWebPages();
 
         }
 
-        private void LoadNavBarContent(ApplicationDbContext context)
+        private async Task LoadNavBarContent()
         {
             if (ContentExists((int)ContentId))
             {
-                var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                var content = await ContentService.GetContentAsync((int)ContentId);
                 if (content != null)
                 {
                     GetNavbarContent(content);
@@ -165,26 +153,31 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
         }
 
-        private async Task RetrieveWebPages(ApplicationDbContext context)
+        private async Task RetrieveWebPages()
         {
-            // Ensure WebPageId exists in WebPages table
-            //ToDo: Move to separate class used in several files.
-            var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
-            if (!webPageExists)
-            {
-                //Todo: Add alertmessage
-                throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-            }
+            //Todo: Add alertmessage
 
-            var pages = await context.WebPages.ToListAsync();
-            var page = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
-            var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
+           
 
-            foreach (var site in webpages1)
+            //await using var context = DbFactory.CreateDbContext();
+            //// Ensure WebPageId exists in WebPages table
+            //var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
+            //if (!webPageExists)
+            //{
+            //    throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+            //}
+
+            //var pages = await context.WebPages.ToListAsync();
+            //var page = pages.FirstOrDefault(wp => wp.WebPageId == WebPageId);
+            //var webpages1 = pages.Where(wp => wp.WebSiteId == page.WebSiteId);
+
+            var websitesWebPages = await WebPageService.GetWebPagesFromSameWebSiteAsync(WebPageId);
+
+            foreach (var page in websitesWebPages)
             {
-                if (site.Title != null && !Pages.ContainsKey(site.Title))
+                if (page.Title != null && !Pages.ContainsKey(page.Title))
                 {
-                    Pages.Add(site.Title, site.WebPageId.ToString());
+                    Pages.Add(page.Title, page.WebPageId.ToString());
                 }
             }
         }
@@ -289,14 +282,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             // Check if the new key already exists
             if (MenuItems.ContainsKey(inputValue) && oldKey != inputValue)
             {
-
-
                     //ToDo: Alert message: You cannot use the same name for two items.
-
-                   return; // Exit the method to prevent adding the same key
-                
+                   return; // Exit the method to prevent adding the same key   
             }
-
 
             if (MenuItems.ContainsKey(oldKey))
             {             
@@ -337,9 +325,10 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         //Todo: Divide code into functions.
         private async Task SaveToDatabase()
         {
-            if (!MenuItems.Any()|| inputValueContentName == string.Empty)
+
+            if (!MenuItems.Any() || inputValueContentName == string.Empty)
             {
-                if(inputValueContentName == string.Empty)
+                if (inputValueContentName == string.Empty)
                 {
                     //Todo: Add alertmessage: Menu name is mandatory.
                     currentStep = InputStep.ContentNameInput;
@@ -352,6 +341,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     return;
                 }
             }
+
             await using var context = DbFactory.CreateDbContext();
 
             // Ensure WebPageId exists in WebPages table
@@ -361,6 +351,55 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
 
+            NavBarTextInputJson textInputJson = ConvertMenuItemsToJson();
+
+            var content = new Content();
+
+            if (Update)
+            {
+                var updatetime = DateOnly.FromDateTime(DateTime.Now);
+                content = new Content
+                {
+                    ContentName = inputValueContentName,
+                    WebPageId = WebPageId,
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                    TemplateId = TemplateId,
+                    ContentId = (int)ContentId,
+                    UserId = UserId,
+                    LastUpdated = updatetime
+                };
+                //context.Contents.Update(content);
+            }
+            else
+            {
+                content = new Content
+                {
+                    ContentName = inputValueContentName,
+                    WebPageId = WebPageId,
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
+                    TemplateId = TemplateId,
+                    UserId = UserId,
+                    CreationDate = DateOnly.FromDateTime(DateTime.Now)
+                };
+                // context.Contents.Add(content);
+            }
+
+            if (ContentId.HasValue)
+            {
+                //ToDo: Secure handling of Id needs to be evaluated avoiding change of id through unallowed methods. 
+                content.ContentId = ContentId.Value;
+                await ContentService.UpdateContentAsync(content);
+                saveSuccessful = true;
+            }
+            else
+            {
+                await ContentService.SaveContentAsync(content);
+                saveSuccessful = true;
+            }
+        }
+
+        private NavBarTextInputJson ConvertMenuItemsToJson()
+        {
             var menuItemsWrapper = new MenuItemsWrapper("MenuItems", "Dictionary<string, string>", MenuItems);
 
             var textInputJson = new NavBarTextInputJson
@@ -369,58 +408,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 Textcolor = TextColor,
                 Backgroundcolor = BackgroundColor
             };
-
-
-            if (Update)
-            {
-                var updatetime = DateOnly.FromDateTime(DateTime.Now);
-                var content = new Content
-                {
-                    ContentName = inputValueContentName,
-                    WebPageId = WebPageId,
-                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
-                    TemplateId = TemplateId,
-                    ContentId = (int)ContentId,
-                    LastUpdated = updatetime
-                };
-                //ToDo: Secure handling of Id needs to be evaluated avoiding change of id through unallowed methods. 
-                context.Contents.Update(content);
-            }
-            else
-            {
-                var content = new Content
-                {
-                    ContentName = inputValueContentName,
-                    WebPageId = WebPageId,
-                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
-                    TemplateId = TemplateId,
-                };
-                context.Contents.Add(content);
-            }
-
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateException ex)
-            {
-                // Log detailed information for debugging
-                Console.WriteLine($"Error: {ex.InnerException?.Message}");
-                throw;
-            }
-
-            // Mapping to ensure inputs are stored properly
-            var formValues = new Dictionary<string, object>
-            {
-                { "MenuItems", MenuItems},
-                { "ContentName", inputValueContentName },
-                { "BackgroundColor", BackgroundColor },
-                { "TextColor", TextColor }
-            };
-
-            await OnSubmit.InvokeAsync(formValues);
+            return textInputJson;
         }
-
 
         private void Done()
         {
