@@ -7,6 +7,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseVideoTemplate //gets the base parameters we have in every template/inputform
 
 <h3>Single Video Input Form</h3>
 
@@ -57,3 +58,15 @@
     }
 </div>
 
+            throw;
+        }
+
+        saveSuccessful = true;
+    }
+
+    // Navigate to the contents page after saving
+    private void Done()
+    {
+        NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");
+    }
+}

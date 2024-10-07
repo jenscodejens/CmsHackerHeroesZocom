@@ -4,11 +4,13 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
+@using Newtonsoft.Json
 
 @rendermode InteractiveServer
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseTextTemplateMarkdown //gets the base parameters we have in every template/inputform
 
 <h3>Markdown Input Form</h3>
 
@@ -57,14 +59,6 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string MarkdownContent { get; set; } = string.Empty;
-
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
     private string PreviewContent { get; set; } = string.Empty;
 
     private bool hasSaved = false; // Flag to track if save has been executed
@@ -82,6 +76,41 @@
         }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Load content only if ContentId exists (edit mode)
+        if (ContentId.HasValue)
+        {
+            await LoadExistingContent(ContentId.Value);
+        }
+    }
+
+    // A class representing the structure of the JSON data stored in the database
+    private class ContentData
+    {
+        public string MarkdownContent = string.Empty;
+    }
+
+    private async Task LoadExistingContent(int contentId)
+    {
+        await using var context = DbFactory.CreateDbContext();
+        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+
+        if (existingContent != null)
+        {
+            // Pre-fill form fields with existing content data
+            ContentName = existingContent.ContentName;
+
+            // Deserialize the ContentJson field to extract additional form data
+            if (!string.IsNullOrEmpty(existingContent.ContentJson))
+            {
+                var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
+                MarkdownContent = contentData.MarkdownContent;
+            }
+        }
+    }
+
+
     // Save all inputs to the database when the "Save" button is clicked
     private async Task SaveToDatabase()
     {
@@ -95,22 +124,41 @@
             throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
         }
 
-        // Save the markdown content as JSON
-        var content = new Content
+        Content content = new();
+        if (ContentId == null)
+        {
+            // Save the markdown content as JSON
+            content = new Content
+                {
+                    UserId = user.Id,
+                    ContentName = ContentName,
+                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                    WebPageId = WebPageId,
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        MarkdownContent = MarkdownContent
+                    }),
+                    TemplateId = TemplateId
+                };
+
+            context.Contents.Add(content);
+        }
+        else
+        {
+            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+            if (content != null)
             {
-                UserId = user.Id,
-                ContentName = ContentName,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                WebPageId = WebPageId,
-                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+
+                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+                content.ContentName = ContentName;
+                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
                     MarkdownContent = MarkdownContent
-                }),
-                TemplateId = TemplateId
-            };
-
-        context.Contents.Add(content);
+                });
+                context.Contents.Update(content);
+            }
+        }
         try
         {
             await context.SaveChangesAsync();

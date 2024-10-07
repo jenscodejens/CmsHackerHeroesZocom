@@ -4,10 +4,11 @@
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.EntityFrameworkCore;
 @using System.Threading.Tasks;
+@using Newtonsoft.Json
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
-
+@inherits BaseTemplateComponent //gets the base parameters we have in every template/inputform
 <h3>Input Form</h3>
 
 <div>
@@ -64,17 +65,12 @@
 
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-    [Parameter] public int? ContentId { get; set; }
-    [Parameter] public int TemplateId { get; set; } // Receive the TemplateId
-    [Parameter] public int WebPageId { get; set; } // Receive WebPageId from parameters
 
     [Parameter] public string LabelText1 { get; set; } = "Enter name for content";
     [Parameter] public string LabelText2 { get; set; } = "Enter First Text:";
     [Parameter] public string LabelText3 { get; set; } = "Enter Second Text:";
     [Parameter] public string BackgroundColor { get; set; } = "grey";
     [Parameter] public string TextColor { get; set; } = "black";
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
 
     private string inputValue = string.Empty;
     private string inputValueContentName = string.Empty;
@@ -96,9 +92,51 @@
         }
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         currentLabelText = LabelText1;
+        // Load content only if ContentId exists (edit mode)
+        if (ContentId.HasValue)
+        {
+            await LoadExistingContent(ContentId.Value);
+            PreviewImage();
+        }
+    }
+
+    // A class representing the structure of the JSON data stored in the database
+    private class ContentData
+    {
+        public string inputValue = string.Empty;
+        public string inputValueContentName = string.Empty;
+        public string inputValue1 = string.Empty;
+        public string inputValue2 = string.Empty;
+        public string BackgroundColor = string.Empty;
+        public string TextColor = string.Empty;
+    }
+
+    private async Task LoadExistingContent(int contentId)
+    {
+        await using var context = DbFactory.CreateDbContext();
+        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+
+        if (existingContent != null)
+        {
+            // Pre-fill form fields with existing content data
+            inputValueContentName = existingContent.ContentName;
+
+            // Deserialize the ContentJson field to extract additional form data
+            if (!string.IsNullOrEmpty(existingContent.ContentJson))
+            {
+                var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
+
+                inputValue = contentData.inputValue;
+                inputValueContentName = contentData.inputValueContentName;
+                inputValue1 = contentData.inputValue1;
+                inputValue2 = contentData.inputValue2;
+                BackgroundColor = contentData.BackgroundColor;
+                TextColor = contentData.TextColor;
+            }
+        }
     }
 
     // Är här man loopas igenom så rätt label visas och det sparas ned under rätt del av json objektet.
@@ -140,8 +178,10 @@
         {
             throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
         }
-
-        var content = new Content
+        Content content = new();
+        if (ContentId == null)
+        {
+            content = new Content
             {
                 UserId = user.Id,
                 ContentName = inputValueContentName,
@@ -150,7 +190,6 @@
                 LastUpdated = DateOnly.FromDateTime(DateTime.Now),
                 ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
-
                     TextInput1 = inputValue1,
                     TextInput2 = inputValue2,
                     BackgroundColor = BackgroundColor,
@@ -158,8 +197,28 @@
                 }),
                 TemplateId = TemplateId
             };
+            context.Contents.Add(content);
+        }
+        else
+        {
+            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+            if (content != null)
+            {
+                // Update existing content
+                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+                content.ContentName = inputValueContentName;
+                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    TextInput1 = inputValue1,
+                    TextInput2 = inputValue2,
+                    BackgroundColor = BackgroundColor,
+                    TextColor = TextColor
+                });
 
-        context.Contents.Add(content);
+                context.Contents.Update(content);
+            }
+        }
+        
         try
         {
             await context.SaveChangesAsync();
@@ -171,6 +230,12 @@
             throw;
         }
 
+    }
+
+    private async Task PreviewImage()
+    {
+
+        // Mapping section to pass form values to a parent component or handler
         // mapping del så inputs hamnar där de ska
         var formValues = new Dictionary<string, object>
         {
@@ -183,6 +248,7 @@
         };
 
         await OnSubmit.InvokeAsync(formValues);
+
     }
 
 

@@ -8,7 +8,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
-
+@inherits BaseImageCardTemplate //gets the base parameters we have in every template/inputform
 
 <h3>Single Input Form</h3>
 
@@ -19,7 +19,7 @@
             <input type="text" @bind="ContentName" placeholder="Enter name for content" />
 
             <label>Image URL</label>
-            <input type="text" @bind="ImageInput1" placeholder="Enter Image URL" />
+            <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
 
             <label>Card Title</label>
             <input type="text" @bind="CardTitle" placeholder="Enter Card Title" />
@@ -64,19 +64,6 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-    [Parameter] public int? ContentId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string ImageInput1 { get; set; } = string.Empty;
-    [Parameter] public string CardTitle { get; set; } = "CardTitle";
-    [Parameter] public string CardText1 { get; set; } = "CardText1";
-    [Parameter] public string CardText2 { get; set; } = "CardText2";
-    [Parameter] public string BackgroundColor { get; set; } = "grey";
-    [Parameter] public string TextColor { get; set; } = "black";
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
     [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
@@ -86,7 +73,7 @@
     // A class representing the structure of the JSON data stored in the database
     private class ContentData
     {
-        public string ImageInput1 { get; set; } = string.Empty;
+        public string ImageInput { get; set; } = string.Empty;
         public string CardTitle { get; set; } = string.Empty;
         public string CardText1 { get; set; } = string.Empty;
         public string CardText2 { get; set; } = string.Empty;
@@ -109,6 +96,7 @@
         if (ContentId.HasValue)
         {
             await LoadExistingContent(ContentId.Value);
+            PreviewImage();
         }
     }
 
@@ -129,7 +117,7 @@
                 var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
 
                 // Set form fields with the deserialized data
-                ImageInput1 = contentData.ImageInput1;
+                ImageInput = contentData.ImageInput;
                 CardTitle = contentData.CardTitle;
                 CardText1 = contentData.CardText1;
                 CardText2 = contentData.CardText2;
@@ -146,7 +134,7 @@
         var formValues = new Dictionary<string, object>
         {
             { "ContentName", ContentName },
-            { "ImageInput1", ImageInput1 },
+            { "ImageInput", ImageInput },
             { "CardTitle", CardTitle },
             { "CardText1", CardText1 },
             { "CardText2", CardText2 },
@@ -183,7 +171,7 @@
                     LastUpdated = DateOnly.FromDateTime(DateTime.Now),
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                     {
-                        ImageInput1 = ImageInput1,
+                        ImageInput = ImageInput,
                         CardTitle = CardTitle,
                         CardText1 = CardText1,
                         CardText2 = CardText2,
@@ -205,7 +193,7 @@
                 content.ContentName = ContentName;
                 content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
                 {
-                    ImageInput1 = ImageInput1,
+                    ImageInput = ImageInput,
                     CardTitle = CardTitle,
                     CardText1 = CardText1,
                     CardText2 = CardText2,

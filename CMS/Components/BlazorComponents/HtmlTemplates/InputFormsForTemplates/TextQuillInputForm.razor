@@ -4,11 +4,13 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
+@using Newtonsoft.Json
 
 @rendermode InteractiveServer
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inherits BaseTextTemplateQuill //gets the base parameters we have in every template/inputform
 
 @inject IJSRuntime JSRuntime
 
@@ -86,14 +88,6 @@
     [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string QuillContent { get; set; } = string.Empty;
-
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
-
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
     [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
@@ -106,8 +100,16 @@
         {
             // Initialize Quill editor using JavaScript after the page is rendered
             await JSRuntime.InvokeVoidAsync("initializeQuillEditor");
+
+            // Set the existing content in the Quill editor if it exists (edit mode)
+            if (!string.IsNullOrEmpty(QuillContent))
+            {
+                // Use JSInterop to set the Quill content
+                await JSRuntime.InvokeVoidAsync("setQuillContent", QuillContent);
+            }
         }
     }
+
 
     protected override void OnParametersSet()
     {
@@ -115,6 +117,40 @@
         {
             SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Load content only if ContentId exists (edit mode)
+        if (ContentId.HasValue)
+        {
+            await LoadExistingContent(ContentId.Value);
+        }
+    }
+
+    // A class representing the structure of the JSON data stored in the database
+    private class ContentData
+    {
+        public string QuillContent = string.Empty;
+    }
+
+    private async Task LoadExistingContent(int contentId)
+    {
+        await using var context = DbFactory.CreateDbContext();
+        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+
+        if (existingContent != null)
+        {
+            // Pre-fill form fields with existing content data
+            ContentName = existingContent.ContentName;
+
+            // Deserialize the ContentJson field to extract additional form data
+            if (!string.IsNullOrEmpty(existingContent.ContentJson))
+            {
+                var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
+                QuillContent = contentData.QuillContent;
+            }
         }
     }
 
@@ -131,21 +167,41 @@
             throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
         }
 
-        var content = new Content
-            {
-                UserId = user.Id,
-                ContentName = ContentName,
-                WebPageId = WebPageId,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+        Content content = new();
+        if (ContentId == null)
+        {
+            content = new Content
                 {
-                    QuillContent = QuillContent
-                }),
-                TemplateId = TemplateId
-            };
+                    UserId = user.Id,
+                    ContentName = ContentName,
+                    WebPageId = WebPageId,
+                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                    {
+                        QuillContent = QuillContent
+                    }),
+                    TemplateId = TemplateId
+                };
 
-        context.Contents.Add(content);
+            context.Contents.Add(content);
+        }
+        else
+        {
+            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
+            if (content != null)
+            {
+                // Update existing content
+                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+                content.ContentName = ContentName;
+                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
+                {
+                    QuillContent = QuillContent,
+                });
+
+                context.Contents.Update(content);
+            }
+        }
         try
         {
             await context.SaveChangesAsync();
@@ -159,3 +215,28 @@
         saveSuccessful = true;
     }
 }
+
+<script>
+    window.initializeQuillEditor = function () {
+        var quill = new Quill('#quill-editor', {
+            modules: {
+                syntax: true,
+                toolbar: '#toolbar-container',
+            },
+            placeholder: 'Lägg till text här',
+            theme: 'snow',
+        });
+        window.quillEditor = quill;
+    };
+
+    window.getQuillContent = function () {
+        return window.quillEditor.root.innerHTML;
+    };
+
+    window.setQuillContent = function (content) {
+        // Safely set the content in the Quill editor
+        window.quillEditor.root.innerHTML = content;
+    };
+
+</script>
+
