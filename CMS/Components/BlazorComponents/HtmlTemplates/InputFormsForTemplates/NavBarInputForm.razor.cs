@@ -67,80 +67,112 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             await using var context = DbFactory.CreateDbContext();
 
+            await GetUserID();
+            //ToDo: Add user verification, altternatives: check if user are assigned to a website(multiple users assigned to a website, or multiple users per website+webpage+content,
+            //if content can be edited by multiple users this will not be working:
+            //if (content.UserId != UserId) 
+            //{
+            //    throw new InvalidOperationException($"You are not authorized to edit the content.");
+            //}
             if (ContentId != null)
             {
-                if (ContentExists((int)ContentId))
+                LoadNavBarContent(context);
+            }
+
+            await RetrieveWebPages(context);
+
+        }
+
+        private void LoadNavBarContent(ApplicationDbContext context)
+        {
+            if (ContentExists((int)ContentId))
+            {
+                var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
+                if (content != null)
                 {
-                    var content = context.Contents.FirstOrDefault(C => C.ContentId == ContentId);
-                    await GetUserID();
-                    //ToDo: add user verification, if content can be edited by multiple users this will not be working:
-                    //if (content.UserId != UserId) 
-                    //{
-                    //    throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-                    //}
-                    if (content != null)
+                    GetNavbarContent(content);
+                }
+
+
+            }
+        }
+
+        private void GetNavbarContent(Content? content)
+        {
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
+            if (textInputs != null)
+            {
+                foreach (var jsonContent in textInputs)
+                {
+                    var objectName = jsonContent.Key;
+                    if (objectName != null)
                     {
-                        var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
-                        if (textInputs != null)
-                        {
-                            foreach (var input in textInputs)
-                            {
-                                var test = input.Key;
-                                if (test != null)
-                                {
-                                    //Todo: used in multiple files make into a shared function.
-                                    string ContentParameterName = "MenuItems";
-                                    if (ContentParameterName == test.ToString())
-                                    {
-                                        string jsonString = input.Value.GetRawText();
-                                        var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
-                                        if (menuItemsWrapper != null)
-                                        {
-                                            MenuItems = menuItemsWrapper.ToDictionary();
-                                            currentStep = InputStep.Wait;
-                                            TemplateId = content.TemplateId;
-                                            inputValueContentName = content.ContentName;
-                                            ContentId = content.ContentId;
-                                            WebPageId = content.WebPageId;
-                                            Update = true;
-                                        }
-                                    }
-                                    else
-                                    {
-
-                                        if (test.ToString() == "Backgroundcolor")
-                                        {
-                                            BackgroundColor = ConvertJsonElement(input.Value).ToString();
-                                        }
-                                        else if (test.ToString() == "Textcolor")
-                                        {
-                                            TextColor = ConvertJsonElement(input.Value).ToString();
-                                        }
-                                        else
-                                        {
-                                            var error = ConvertJsonElement(input.Value).ToString();
-                                            Console.WriteLine($"NavbarInputForm can not match value : {error}.");
-                                        }
-
-                                    }
-                                }
-                                else
-                                {
-                                    Console.WriteLine($"Data for contents name is invalid.");
-                                }
-                            }
-                        }
+                        GetNavBarParameters(content, jsonContent, objectName);
                     }
-
-
+                    else
+                    {
+                        Console.WriteLine($"Data for contents name is invalid.");
+                    }
                 }
             }
-            
+        }
+
+        private void GetNavBarParameters(Content? content, KeyValuePair<string, JsonElement> jsonContent, string objectName)
+        {
+            //Todo: used in multiple files make into a shared function.
+            string ContentParameterName = "MenuItems";
+            if (ContentParameterName == objectName.ToString())
+            {
+                GetMenyItems(content, jsonContent);
+            }
+            else
+            {
+                GetColorParameters(jsonContent, objectName);
+
+            }
+        }
+
+        private void GetMenyItems(Content? content, KeyValuePair<string, JsonElement> jsonContent)
+        {
+            string jsonString = jsonContent.Value.GetRawText();
+            var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
+            if (menuItemsWrapper != null)
+            {
+                MenuItems = menuItemsWrapper.ToDictionary();
+                currentStep = InputStep.Wait;
+                TemplateId = content.TemplateId;
+                inputValueContentName = content.ContentName;
+                ContentId = content.ContentId;
+                WebPageId = content.WebPageId;
+                Update = true;
+            }
+        }
+
+        private void GetColorParameters(KeyValuePair<string, JsonElement> jsonContent, string objectName)
+        {
+            if (objectName.ToString() == "Backgroundcolor")
+            {
+                BackgroundColor = ConvertJsonElement(jsonContent.Value).ToString();
+            }
+            else if (objectName.ToString() == "Textcolor")
+            {
+                TextColor = ConvertJsonElement(jsonContent.Value).ToString();
+            }
+            else
+            {
+                var error = ConvertJsonElement(jsonContent.Value).ToString();
+                Console.WriteLine($"NavbarInputForm can not match value : {error}.");
+            }
+        }
+
+        private async Task RetrieveWebPages(ApplicationDbContext context)
+        {
             // Ensure WebPageId exists in WebPages table
             //ToDo: Move to separate class used in several files.
             var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
             if (!webPageExists)
             {
+                //Todo: Add alertmessage
                 throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
             }
 
@@ -150,15 +182,13 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             foreach (var site in webpages1)
             {
-                if (site.Title != null&& !Pages.ContainsKey(site.Title))
+                if (site.Title != null && !Pages.ContainsKey(site.Title))
                 {
                     Pages.Add(site.Title, site.WebPageId.ToString());
                 }
             }
-
-
-
         }
+
         //ToDo: Move to separate class used in several files.
         private async Task GetUserID()
         {
