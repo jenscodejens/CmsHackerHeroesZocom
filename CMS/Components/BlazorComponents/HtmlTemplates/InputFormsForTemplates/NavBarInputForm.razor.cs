@@ -68,10 +68,11 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             await using var context = DbFactory.CreateDbContext();
 
             await GetUserID();
-            //ToDo: add user verification, if content can be edited by multiple users this will not be working:
+            //ToDo: Add user verification, altternatives: check if user are assigned to a website(multiple users assigned to a website, or multiple users per website+webpage+content,
+            //if content can be edited by multiple users this will not be working:
             //if (content.UserId != UserId) 
             //{
-            //    throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+            //    throw new InvalidOperationException($"You are not authorized to edit the content.");
             //}
             if (ContentId != null)
             {
@@ -101,12 +102,12 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
             if (textInputs != null)
             {
-                foreach (var input in textInputs)
+                foreach (var jsonContent in textInputs)
                 {
-                    var test = input.Key;
-                    if (test != null)
+                    var objectName = jsonContent.Key;
+                    if (objectName != null)
                     {
-                        GetNavBarParameters(content, input, test);
+                        GetNavBarParameters(content, jsonContent, objectName);
                     }
                     else
                     {
@@ -116,24 +117,24 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
         }
 
-        private void GetNavBarParameters(Content? content, KeyValuePair<string, JsonElement> input, string test)
+        private void GetNavBarParameters(Content? content, KeyValuePair<string, JsonElement> jsonContent, string objectName)
         {
             //Todo: used in multiple files make into a shared function.
             string ContentParameterName = "MenuItems";
-            if (ContentParameterName == test.ToString())
+            if (ContentParameterName == objectName.ToString())
             {
-                GetMenyItems(content, input);
+                GetMenyItems(content, jsonContent);
             }
             else
             {
-                GetColorParameters(input, test);
+                GetColorParameters(jsonContent, objectName);
 
             }
         }
 
-        private void GetMenyItems(Content? content, KeyValuePair<string, JsonElement> input)
+        private void GetMenyItems(Content? content, KeyValuePair<string, JsonElement> jsonContent)
         {
-            string jsonString = input.Value.GetRawText();
+            string jsonString = jsonContent.Value.GetRawText();
             var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
             if (menuItemsWrapper != null)
             {
@@ -147,19 +148,19 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
         }
 
-        private void GetColorParameters(KeyValuePair<string, JsonElement> input, string test)
+        private void GetColorParameters(KeyValuePair<string, JsonElement> jsonContent, string objectName)
         {
-            if (test.ToString() == "Backgroundcolor")
+            if (objectName.ToString() == "Backgroundcolor")
             {
-                BackgroundColor = ConvertJsonElement(input.Value).ToString();
+                BackgroundColor = ConvertJsonElement(jsonContent.Value).ToString();
             }
-            else if (test.ToString() == "Textcolor")
+            else if (objectName.ToString() == "Textcolor")
             {
-                TextColor = ConvertJsonElement(input.Value).ToString();
+                TextColor = ConvertJsonElement(jsonContent.Value).ToString();
             }
             else
             {
-                var error = ConvertJsonElement(input.Value).ToString();
+                var error = ConvertJsonElement(jsonContent.Value).ToString();
                 Console.WriteLine($"NavbarInputForm can not match value : {error}.");
             }
         }
