@@ -8,6 +8,7 @@
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inject IContentService ContentService 
 @inherits BaseImageTemplate //gets the base parameters we have in every template/inputform
 
 <h3>Single Image Input Form</h3>
@@ -76,7 +77,6 @@
 </div>
 
 @code {
-    [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
     private bool hasSaved = false; // Flag to track if save has been executed
@@ -106,7 +106,7 @@
     // A class representing the structure of the JSON data stored in the database
     private class ContentData
     {
-        public string imageInput = string.Empty;
+        public string ImageInput = string.Empty;
         public string ImageWidth = string.Empty;
         public string ImageHeight = string.Empty;
         public decimal BorderWidth  = 0;
@@ -114,15 +114,14 @@
         public decimal BorderRadius  = 0;
         public string BoxShadow = string.Empty;
         public string BackgroundColor = string.Empty;
-        public string TextColor = string.Empty;
+        //public string TextColor = string.Empty;
         public string ImageAlignment = string.Empty;
     }
 
 
     private async Task LoadExistingContent(int contentId)
     {
-        await using var context = DbFactory.CreateDbContext();
-        var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+        var existingContent = await ContentService.GetContentAsync(contentId);
 
         if (existingContent != null)
         {
@@ -134,7 +133,7 @@
             {
                 var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
 
-                ImageInput = contentData.imageInput;
+                ImageInput = contentData.ImageInput;
                 ImageWidth = contentData.ImageWidth;
                 ImageHeight = contentData.ImageHeight;
                 BorderWidth = contentData.BorderWidth;
@@ -173,81 +172,42 @@
     // Save all inputs to the database when the "Save" button is clicked
     private async Task SaveToDatabase()
     {
-        await using var context = DbFactory.CreateDbContext();
         var user = await GetCurrentUserService.GetCurrentUserAsync();
+        var contentData = new ContentData
+            {
+                ImageInput = ImageInput,
+                ImageWidth = ImageWidth,
+                ImageHeight = ImageHeight,
+                BorderWidth = BorderWidth,
+                BorderColor = BorderColor,
+                BorderRadius = BorderRadius,
+                BoxShadow = BoxShadow,
+                BackgroundColor = BackgroundColor,
+                ImageAlignment = ImageAlignment
+            };
 
+        var content = new Content
+            {
+                UserId = user.Id,
+                ContentName = ContentName,
+                WebPageId = WebPageId,
+                CreationDate = DateOnly.FromDateTime(DateTime.Now),
+                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+                ContentJson = JsonConvert.SerializeObject(contentData),
+                TemplateId = TemplateId
+            };
 
-        // Ensure WebPageId exists in the WebPages table
-        var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
-        if (!webPageExists)
+        // Save or update content based on ContentId presence
+        if (ContentId.HasValue)
         {
-            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-        }
-
-        Content content = new();
-        if (ContentId == null)
-        {
-            content = new Content
-                {
-                    UserId = user.Id,
-                    ContentName = ContentName,
-                    WebPageId = WebPageId,
-                    CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                    LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                    ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                    {
-                        ImageInput = ImageInput,
-                        ImageWidth = ImageWidth,
-                        ImageHeight = ImageHeight,
-                        BorderWidth = BorderWidth,
-                        BorderColor = BorderColor,
-                        BorderRadius = BorderRadius,
-                        BoxShadow = BoxShadow,
-                        Backgroundcolor = BackgroundColor,
-                        ImageAlignment = ImageAlignment
-                    }),
-                    TemplateId = TemplateId
-                };
-
-            context.Contents.Add(content);
+            content.ContentId = ContentId.Value;
+            await ContentService.UpdateContentAsync(content);
         }
         else
         {
-            content = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == ContentId.Value);
-            if (content != null)
-            {
-                // Update existing content
-                content.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
-                content.ContentName = ContentName;
-                content.ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    ImageInput = ImageInput,
-                    ImageWidth = ImageWidth,
-                    ImageHeight = ImageHeight,
-                    BorderWidth = BorderWidth,
-                    BorderColor = BorderColor,
-                    BorderRadius = BorderRadius,
-                    BoxShadow = BoxShadow,
-                    Backgroundcolor = BackgroundColor,
-                    ImageAlignment = ImageAlignment
-                });
-
-                context.Contents.Update(content);
-            }
+            await ContentService.SaveContentAsync(content);
         }
 
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateException ex)
-        {
-            // Log detailed information for debugging
-            Console.WriteLine($"Error: {ex.InnerException?.Message}");
-            throw;
-        }
-
-        // Set the flag to true to show the success message
         saveSuccessful = true;
     }
 
