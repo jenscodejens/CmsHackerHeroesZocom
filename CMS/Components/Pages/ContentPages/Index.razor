@@ -37,7 +37,7 @@ else
 
         <TemplateColumn Context="content">
             <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
-            <a href="@($"content/edit?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> |
             <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |
             <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a>
         </TemplateColumn>

@@ -40,8 +40,8 @@ namespace CMS
             // add visitorCounterService 
             builder.Services.AddScoped<VisitorCounterService>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
-            //builder.Services.AddScoped<ContentService>();
-
+            builder.Services.AddScoped<IContentService, ContentService>();
+            builder.Services.AddScoped<IWebPageService, WebPageService>();
             builder.Services.AddAuthentication(options =>
                 {
                     options.DefaultScheme = IdentityConstants.ApplicationScheme;

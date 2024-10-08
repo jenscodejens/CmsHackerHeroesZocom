@@ -4,10 +4,13 @@
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.EntityFrameworkCore;
 @using System.Threading.Tasks;
-@rendermode InteractiveServer
-
-@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
+@using CMS.Components.BlazorComponents.HtmlTemplates
+@inherits BaseNavBarTemplate
+@inject IContentService ContentService
+@inject IWebPageService WebPageService
 @inject IGetCurrentUserService GetCurrentUserService
+@rendermode InteractiveServer
+@namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 <div>
     <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {TextColor}; font-size: 20px;")">
@@ -70,7 +73,10 @@
             else if ((currentStep == InputStep.Wait))
             {
                     <button type="button" @onclick="NewItem">Lägg till menyval</button>
-                    <button type="button" @onclick="Save">Spara meny</button>
+                    @if (!MultiPageMode) // Show button only if not in multi-page mode
+                    {
+                        <button type="button" @onclick="Save">Spara meny</button>
+                    }
             }
             else if ((currentStep == InputStep.Edit))
             {
@@ -89,7 +95,7 @@
                         }
                     </select>
                     <button type="button" @onclick="AbortItem">Avbryt</button>
-                    <button type="button" @onclick="UpdateItem">Spara</button>
+                    <button type="button" @onclick="UpdateItem">Ändra</button>
                     <button type="button" @onclick="DeleteItem">Ta bort</button>
             }
 
@@ -103,6 +109,17 @@
             <label>Text Color:</label>
             <input type="color" @bind="TextColor" />
         </div>
+
+        <!-- Success message -->
+        @if (saveSuccessful)
+        {
+            <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+                Content saved successfully!
+                <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+
+            </div>
+        }
+
     </div>
 
 </div>
