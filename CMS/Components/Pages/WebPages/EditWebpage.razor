@@ -90,8 +90,12 @@ else
     <PropertyColumn Property="content => content.LastUpdated" />
     <PropertyColumn Property="content => content.ContentJson" />
     <PropertyColumn Property="content => content.TemplateId" /> *@
-        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Pausa redigering </button>
+
+            
         <TemplateColumn Context="content">
+            @if (StopEditing == false)
+            {
+        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Pausa redigering </button>
             @if (ContentForEditing != content.ContentId)
             {
 
@@ -121,7 +125,16 @@ else
             @* <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> | *@
             @* <a href="" @onclick="()=> EditContent(content)" @onclick:preventDefault>Redigera</a> *@
             @* <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> | *@
-            @* <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a> *@
+                @* <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a> *@
+            }
+            else
+            {
+                <div class="containerEditWebPage" style="position: relative;">
+                    <div class="content">
+                        <ContentPreview ContentId="@content.ContentId" />
+                    </div>
+                </div>
+            }
         </TemplateColumn>
     </QuickGrid>
 }

@@ -63,6 +63,8 @@ namespace CMS.Components.Pages.WebPages
 
         public int ContentId { get; set; } // Fetch ContentId from the query
 
+        bool StopEditing { get; set; } = false;
+
         public Content? Content { get; set; }
 
         ApplicationDbContext context = default!;
@@ -72,11 +74,13 @@ namespace CMS.Components.Pages.WebPages
             ContentForEditing = content.ContentId;
             ContentId = content.ContentId;
             Content = content;
+            StopEditing = false;
         }
 
         private void PauseEditContent()
         {
             ContentForEditing = null;
+            StopEditing = true;
         }
 
         protected override async Task OnInitializedAsync()
