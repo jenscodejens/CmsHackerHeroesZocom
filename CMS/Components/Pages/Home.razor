@@ -1,4 +1,4 @@
-@page "/"
+﻿@page "/"
 @using CMS.Data
 @using CMS.Services
 @inject IGetCurrentUserService GetCurrentUserService
@@ -30,6 +30,7 @@
         </div>
     </div>
 </section>
+
 <!--HOW IT WORKS / ABOUT SECTION-->
 <section id="about-section-wrapper">
     <div class=" d-flex justify-content-center">
@@ -189,29 +190,25 @@
     <div class="form-container mx-2 mb-5">
         <div class="mt-4 text-center" id="contact-form">
             <h5>
-                Skicka in förfrågan så återkommer vi till dig snart
+                SKICKA IN FÖRFRÅGAN SÅ ÅTERKOMMER VI TILL DIG SNART<br/>
             </h5>
-            <form class="contactform" onsubmit="return sendMail(this);"
-                    method="POST" action="">
+            <form class="contactform pt-2" method="POST" action="">
                 <div class="form-group">
-                    <label for="name">Namn:</label>
-                    <input type="text" class="form-control" id="name"
-                            name="name" required
-                            placeholder="Fill in ditt namn">
+                    <label for="name">NAMN:</label>
+                    <input type="text" class="form-control" id="name" name="name" required placeholder="Fill in ditt namn">
                 </div>
                 <div class="form-group">
-                    <label for="email">E-mail:</label>
+                    <label for="email">E-MAIL:</label>
                     <input type="email" class="form-control" id="email"
                             name="emailaddress" required
                             placeholder="Fill in ditt email">
                 </div>
                 <div class="form-group">
-                    <label for="cmsquery">Din förfrågan:</label>
+                    <label for="cmsquery">DIN FÖRFRÅGAN:</label>
                      <textarea class="form-control" id="bcmsquery" name="cmsquery" rows="5" placeholder="Ange din förfrågan" required></textarea>
                 </div>
                 <div class="text-center">
-                    <button type="submit" id="submitButton"
-                            class="btn-submit button btn-yellow">
+                    <button type="submit" id="submitButton" class="btn-submit button btn-yellow">
                         Skicka
                     </button>
                 </div>
