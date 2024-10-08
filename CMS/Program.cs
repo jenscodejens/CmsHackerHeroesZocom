@@ -31,8 +31,9 @@ namespace CMS
             {
                 client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? builder.Configuration["Kestrel:Endpoints:Http:Url"] ?? "https://localhost:44340/");
             });
-          
-            builder.Services.AddBlazorBootstrap(); // Add BlazorBootstrap services
+
+            builder.Services.AddRazorComponents()
+                .AddInteractiveServerComponents();
             builder.Services.AddScoped<ToastService>(); // Add the ToastService here
 
             builder.Services.AddRazorComponents()

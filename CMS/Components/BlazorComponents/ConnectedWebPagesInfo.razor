@@ -42,8 +42,8 @@
         </div>
     </div>
 }
-@* <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" /> *@
 <ConfirmDialog @ref="dialog" />
+<Toasts class="p-3" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 @code {
     [Parameter]
@@ -51,6 +51,7 @@
 
     List<WebPage>? WebPages = new();
     private ConfirmDialog dialog = default!;
+    List<ToastMessage> messages = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -88,8 +89,8 @@
                 await context.SaveChangesAsync();
 
                 // Show success toast message
-                //ToastService.Notify(ToastType.Success, "Webbsida raderad", $"Webbsidan '{webpage.Title}' har raderats.");
-                ToastMessage toastMessage = new ToastMessage(ToastType.Success, "Webbsida raderad", $"Webbsidan '{webpage.Title}' har raderats.");
+                var toastMessage = new ToastMessage(ToastType.Success, "Webbsida raderad", $"Webbsidan '{webpage.Title}' har raderats.");
+                messages.Add(toastMessage);
                 ToastService.Notify(toastMessage);
             }
 
