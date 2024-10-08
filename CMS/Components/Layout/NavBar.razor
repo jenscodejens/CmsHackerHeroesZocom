@@ -1,46 +1,49 @@
 @implements IDisposable
 
 @inject NavigationManager NavigationManager
+<nav class="navbar navbar-expand-lg bg-dark fixed-top scrolling-navbar" id="navbar">
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
-    <a class="navbar-brand" style="font-size:24px; padding-top:10px; padding-bottom:10px;" href="/">
-        <img src="images/logo3.png" width="30" height="30" class="d-inline-block align-top" alt="logo">
-        <strong>CMS</strong>
+    <a class="navbar-brand" id="logo" href="/">
+        <span class="material-symbols-outlined">
+            emoji_language
+        </span>
+        CMS
     </a>
+
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                    Hem
-                </NavLink>
-            </li>
-
+    <div class="collapse navbar-collapse" id="main-nav">
+        <ul class="navbar-nav text-center ml-auto">
             <AuthorizeView>
                 <NotAuthorized>
-                    <li class="nav-item active">
-                        <NavLink class="nav-link" href="#contact-section" Match="NavLinkMatch.All">
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                        <a class="nav-link" href="#about-section-wrapper" Match="NavLinkMatch.All">
+                            <span class="material-symbols-outlined">
+                                question_mark
+                            </span>
+                            HUR FUNGERAR DET
+                        </a>
+                    </li>
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                        <a class="nav-link" href="#payments-section" Match="NavLinkMatch.All">
+                            <span class="material-symbols-outlined">
+                                payments
+                            </span>
+                            PRISMODELL
+                        </a>
+                    </li>                    
+                    <li class="nav-item" data-toggle="collapse" data-target=".navbar-collapse.show">
+                        <a class="nav-link" href="#contact-section" Match="NavLinkMatch.All">
                             <span class="material-symbols-outlined">
                                 mail
-                            </span>Kontakta oss
-                        </NavLink>
-                    </li>                    
-                    <li class="nav-item active">
-                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                            Vad Du Får
-                        </NavLink>
-                    </li>
-                    <li class="nav-item active">
-                        <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                            Prismodell
-                        </NavLink>
+                            </span>
+                            KONTAKTA OSS
+                        </a>
                     </li>                    
                 </NotAuthorized>
-
-                <Authorized>
+            <Authorized>
                     <li class="nav-item">
                         <NavLink class="nav-link" href="websites">
                             Sparade Webbsidor
@@ -68,11 +71,17 @@
                 <NotAuthorized>
                     <li class="nav-item">
                         <NavLink class="btn btn-outline-success my-2 my-sm-0" style="font-size:20px; margin-right:10px;" href="Account/Login">
+                            <span class="material-symbols-outlined">
+                                login
+                            </span>
                             Logga In
                         </NavLink>
                     </li>
                     <li class="nav-item">
                         <NavLink class="btn btn-outline-success my-2 my-sm-0" style="font-size:20px; margin-right:10px;" href="Account/Register">
+                            <span class="material-symbols-outlined">
+                                how_to_reg
+                            </span>
                             Registera dig nu
                         </NavLink>
                     </li>
