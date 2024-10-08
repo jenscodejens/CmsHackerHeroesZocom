@@ -1,4 +1,5 @@
 ﻿@inherits LayoutComponentBase
+@using BlazorBootstrap
 @using CMS.Components
 @using CMS.Components.BlazorComponents
 
@@ -7,8 +8,8 @@
         <NavBar/>
         <div class="main">
             <article class="content px-4">
-              
 
+                <BlazorBootstrap.Toast />
                 @Body
             </article>
         </div>
@@ -21,7 +22,7 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
-
+<Toasts class="p-3" AutoHide="true" Delay="4000" Placement="ToastsPlacement.TopRight" />
 
 
 

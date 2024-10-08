@@ -1,4 +1,4 @@
-﻿﻿ /*Komponenten är lika bred som dess vidaste komponent*/
+﻿/*﻿*/ /*Komponenten är lika bred som dess vidaste komponent*/
 .webpageinfo {
 	background-color: #f2f2f2;
 	padding: 10px;
@@ -11,6 +11,15 @@
 
 .webpageinfo > * {
 	flex-shrink: 0;
+}
+
+.webpageinfo p {
+	background-color: #007bff;
+	color: white;
+	padding: 5px;
+	align-content: center;
+	margin-bottom: 10px;
+	border-radius: 5px;
 }
 
 .grid {
@@ -36,10 +45,5 @@
 	background-color: white;
 }
 
-.webpageinfo p {
-	background-color: #007bff;
-	color: white;
-	padding: 5px;
-	margin-bottom: 10px;
-	border-radius: 10px;
-}
+
+

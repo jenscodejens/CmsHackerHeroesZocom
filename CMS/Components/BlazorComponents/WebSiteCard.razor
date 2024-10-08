@@ -19,24 +19,31 @@
         </div>
             @if (WebSite.LastUpdated.HasValue)
             {
-            <div class="creation-info">Uppdaterad: @WebSite.LastUpdated </div>
+        <div class="creation-info">Uppdaterad: @WebSite.LastUpdated</div>
         }
         else
         {
             <div class="creation-info">&nbsp;</div>
         }
-            <hr />
-        <div>
+        <hr />
+        <div class="card-icons" style="border: 2px solid black; border-radius: 5px; padding: 3px; align-items: center;">
             @if (WebSite.WebPages.Count > 0) {
-             <a href="@($"visit?websiteid={WebSite.WebSiteId}")">Besök</a> <span>|</span>
-
-             } 
-         
-           <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")">Redigera</a> |
-            <a href="@($"websites/details?websiteid={WebSite.WebSiteId}")">Detaljer</a> 
-            <br>
-            <a href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")">Lägg till websida</a> |
-            <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")">Radera</a> 
+                <a href="@($"visit?websiteid={WebSite.WebSiteId}")" title="Besök webbsida" class="me-2">
+                    <i class="material-icons" style="color: blue; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">language</i>
+                </a>
+             }
+@*             <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
+                <i class="material-icons" style="color: black; font-size: 24px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">edit_document</i>
+            </a> *@
+            <a href="@($"websites/details?websiteid={WebSite.WebSiteId}")" title="Detaljer" class="me-2">
+                <i class="material-icons" style="color: orange; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">remove_red_eye</i>
+            </a>
+            <a href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")" title="Lägg till webbsida" class="me-2">
+                <i class="material-icons" style="color: green; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">note_add</i>
+            </a>
+@*             <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" title="Radera" class="me-2">
+                <i class="material-icons" style="color: red; font-size: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">delete_forever</i>
+            </a> *@
         </div>
     </div>
 </div>

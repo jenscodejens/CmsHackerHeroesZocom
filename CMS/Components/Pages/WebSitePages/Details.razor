@@ -1,9 +1,10 @@
-﻿@page "/websites/details"
+﻿@* @page "/websites/details"
 @attribute [Authorize]
 
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
+@rendermode InteractiveServer
 
 <PageTitle>Detaljer</PageTitle>
 
@@ -12,7 +13,64 @@
 <div>
     <h4>WebbSida</h4>
     <hr />
-    @if (website is null)
+    @if (WebSite is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">Titel</dt>
+            <dd class="col-sm-10">@WebSite.Title</dd>
+            <dt class="col-sm-2">Beskrivning</dt>
+            <dd class="col-sm-10">@WebSite.Description</dd>
+            <dt class="col-sm-2">Skapad</dt>
+            <dd class="col-sm-10">@WebSite.CreationDate</dd>
+            @if (WebSite.LastUpdated.HasValue)
+            {
+                <dt class="col-sm-2">Senast uppdaterad</dt>
+                <dd class="col-sm-10">@WebSite.LastUpdated.Value</dd>
+            }
+            <dt class="col-sm-2">Startsida</dt>
+            <dd class="col-sm-10">@landingPageTitle</dd>
+            <dt class="col-sm-2">Antal besök</dt>
+            <dd class="col-sm-10">@VisitCount</dd>
+
+            <AuthorizeView Roles="Admin">
+                <dt class="col-sm-2">Användar Id</dt>
+                <dd class="col-sm-10">@WebSite.UserId</dd>
+            </AuthorizeView>
+        </dl>
+
+        <!-- Move ConnectedWebPagesInfo outside the <dl> element -->
+        <div class="mt-3">
+            <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
+        </div>
+
+        <div class="d-flex justify-content-between mt-3">
+            <a href="@("/websites")" title="Back" class="me-2">
+                <i class="material-icons" style="color: green; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">arrow_circle_right</i>
+            </a>
+        </div>
+    }
+</div> *@
+
+@page "/websites/details"
+@attribute [Authorize]
+
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Detaljer</PageTitle>
+
+<h1>Detaljer</h1>
+
+<div>
+    <h4>WebbSida</h4>
+    <hr />
+    @if (WebSite is null)
     {
     <p><em>Loading...</em></p>
     }
@@ -20,37 +78,37 @@
     {
     <dl class="row">
         <dt class="col-sm-2">Titel</dt>
-        <dd class="col-sm-10">@website.Title</dd>
+            <dd class="col-sm-10">@WebSite.Title</dd>
         <dt class="col-sm-2">Beskrivning</dt>
-        <dd class="col-sm-10">@website.Description</dd>
+            <dd class="col-sm-10">@WebSite.Description</dd>
         <dt class="col-sm-2">Skapad</dt>
-        <dd class="col-sm-10">@website.CreationDate</dd>
-        @if (website.LastUpdated.HasValue)
+            <dd class="col-sm-10">@WebSite.CreationDate</dd>
+            @if (WebSite.LastUpdated.HasValue)
         {
             <dt class="col-sm-2">Senast uppdaterad</dt>
-            <dd class="col-sm-10">@website.LastUpdated.Value</dd>
+                <dd class="col-sm-10">@WebSite.LastUpdated.Value</dd>
         }
         <dt class="col-sm-2">Startsida</dt>
         <dd class="col-sm-10">@landingPageTitle</dd>
+        <dt class="col-sm-2">Antal besök</dt>
+        <dd class="col-sm-10">@VisitCount</dd>
         <AuthorizeView Roles="Admin">
             <dt class="col-sm-2">Användar Id</dt>
-            <dd class="col-sm-10">@website.UserId</dd>
+                <dd class="col-sm-10">@WebSite.UserId</dd>
         </AuthorizeView>
     </dl>
+
         <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
-    <p>Denna sida har besökts @VisitCount gånger.</p>
-    
-    <div>
-        <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
-        <a href="@($"/webpages?websiteid={website.WebSiteId}")">Webbsidor</a> |
-        <a href="@($"/websites")">Tillbaka</a>
-    </div>
-    
+        <div class="d-flex justify-content-between">
+            <a href="@("/websites")" title="Back" class="me-2">
+                <i class="material-icons" style="color: green; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">arrow_circle_right</i>
+            </a>
+        </div>  
     }
 </div>
 
 @code {
-    WebSite? website;
+    WebSite? WebSite;
     private int VisitCount { get; set; }
     private string CurrentPageUrl => NavigationManager.Uri;
     private string? landingPageTitle;
@@ -61,16 +119,16 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        website = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
+        WebSite = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
 
-        if (website?.LandingPage != null)
+        if (WebSite?.LandingPage != null)
         {
             var landingPage = await context.WebPages
-                .FirstOrDefaultAsync(wp => wp.WebPageId == website.LandingPage);
+                .FirstOrDefaultAsync(wp => wp.WebPageId == WebSite.LandingPage);
 
             landingPageTitle = landingPage?.Title;
         }
-        else if (website?.LandingPage is null)
+        else if (WebSite?.LandingPage is null)
         {
             var hasWebPages = await context.WebPages
                  .AnyAsync(wp => wp.WebSiteId == WebSiteId);
@@ -85,7 +143,7 @@
             }
         }
 
-        if (website is null)
+        if (WebSite is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
@@ -93,3 +151,6 @@
 }
 
 
+@*         <a href="@($"/webpages?websiteid={website.WebSiteId}")">Webbsidor</a> | *@
+@*         <a href="@($"/websites")">Tillbaka</a> *@
+ @* <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> | *@

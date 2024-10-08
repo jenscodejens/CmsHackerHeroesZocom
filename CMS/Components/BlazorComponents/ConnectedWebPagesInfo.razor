@@ -1,24 +1,251 @@
-﻿@using CMS.Services
+﻿@using BlazorBootstrap
+@using CMS.Services
 @inject NavigationManager NavigationManager
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 
 @if (WebPages?.Any() == true)
 {
     <div class="webpageinfo">
-        <p align="center">Tillhörande webbsidor</p>
+        <div class="webpage-header">
+            <p align="center">Webbsidor</p>
+        </div>
+
+        <div class="grid">
+            <table class="table table-striped">
+                <tbody>
+                    @foreach (var webpage in WebPages)
+                    {
+                        <tr>
+                            <td>
+                                <a href="/webpages/details?webpageid=@webpage.WebPageId">
+                                    @webpage.Title
+                                </a>
+                            </td>
+                            <td class="actions">
+                                <div class="d-flex justify-content-between">
+                                    <a href="@($"visit?websiteid={webpage.WebPageId}")" title="Besök webbsida" class="me-2">
+                                        <i class="material-icons" style="color: blue; font-size: 24px;">language</i>
+                                    </a>
+                                    <a href="@($"websites/edit?websiteid={webpage.WebPageId}")" title="Edit" class="me-2">
+                                        <i class="material-icons" style="color: orange; font-size: 24px;">edit_document</i>
+                                    </a>
+                                    <a @onclick="() => DeleteWebpageAsync(webpage)" title="Delete" class="me-auto">
+                                        <i class="material-icons" style="color: red; font-size: 28px;">delete_forever</i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@* <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" /> *@
+<ConfirmDialog @ref="dialog" />
+
+@code {
+    [Parameter]
+    public int WebSiteId { get; set; }
+
+    List<WebPage>? WebPages = new();
+    List<ToastMessage> messages = new List<ToastMessage>();
+
+    private ConfirmDialog dialog = default!;
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var context = await DbFactory.CreateDbContextAsync();
+
+        WebPages = await context.WebPages
+            .Where(wp => wp.WebSiteId == WebSiteId)
+            .ToListAsync();
+
+        if (ToastService == null)
+        {
+            throw new InvalidOperationException("ToastService not initialized.");
+        }
+    }
+
+    private async Task DeleteWebpageAsync(WebPage webpage)
+    {
+        var options = new ConfirmDialogOptions
+            {
+                YesButtonText = "Ja",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Avbryt",
+                NoButtonColor = ButtonColor.Danger
+            };
+
+        var confirmation = await dialog.ShowAsync(
+            title: "Är du säker på att du vill radera webbsidan?",
+            message1: $"Titel: {webpage.Title}",
+            message2: $"Beskrivning: {webpage.Description}",
+            confirmDialogOptions: options);
+
+        if (confirmation)
+        {
+            using var context = await DbFactory.CreateDbContextAsync();
+            var webpageToDelete = await context.WebPages.FindAsync(webpage.WebPageId);
+
+            if (webpageToDelete != null)
+            {
+                context.WebPages.Remove(webpageToDelete);
+                await context.SaveChangesAsync();
+
+                // Show success toast message with the webpage title
+                ShowMessage(ToastType.Success, webpage.Title);
+            }
+
+            // Refresh WebPages list and re-render
+            WebPages = await context.WebPages
+                .Where(wp => wp.WebSiteId == WebSiteId)
+                .ToListAsync();
+
+            StateHasChanged();
+        }
+    }
+
+    private void ShowMessage(ToastType toastType, string title)
+        => messages.Add(CreateToastMessage(toastType, title));
+
+    private ToastMessage CreateToastMessage(ToastType toastType, string title)
+        => new ToastMessage
+            {
+                Type = toastType,
+                Message = $"Webbsidan '{title}' är raderad."
+            };
+}
+
+
+
+
+@* @using BlazorBootstrap
+@using CMS.Services
+@inject NavigationManager NavigationManager
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+
+@if (WebPages?.Any() == true)
+{
+    <div class="webpageinfo">
+        <div class="webpage-header">
+            <p align="center">Webbsidor</p>
+        </div>
+
+        <div class="grid">
+            <table class="table table-striped">
+                <tbody>
+                    @foreach (var webpage in WebPages)
+                    {
+                        <tr>
+                            <td>
+                                <a href="/webpages/details?webpageid=@webpage.WebPageId">
+                                    @webpage.Title
+                                </a>
+                            </td>
+                            <td class="actions">
+                                <div class="d-flex justify-content-between">
+                                    <a href="@($"visit?websiteid={webpage.WebPageId}")" title="Besök webbsida" class="me-2">
+                                        <i class="material-icons" style="color: blue; font-size: 24px;">language</i>
+                                    </a>
+                                    <a href="@($"websites/edit?websiteid={webpage.WebPageId}")" title="Edit" class="me-2">
+                                        <i class="material-icons" style="color: orange; font-size: 24px;">edit_document</i>
+                                    </a>
+                                    <a @onclick="() => DeleteWebpageAsync(webpage)" title="Delete" class="me-auto">
+                                        <i class="material-icons" style="color: red; font-size: 28px;">delete_forever</i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+<ConfirmDialog @ref="dialog" />
+
+
+@code {
+    [Parameter]
+    public int WebSiteId { get; set; }
+
+    List<WebPage>? WebPages = new();
+
+    private ConfirmDialog dialog = default!;
+    [Inject] protected ToastService ToastService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var context = await DbFactory.CreateDbContextAsync();
+
+        WebPages = await context.WebPages
+            .Where(wp => wp.WebSiteId == WebSiteId)
+            .ToListAsync();
+    }
+
+    private async Task DeleteWebpageAsync(WebPage webpage)
+    {
+        var options = new ConfirmDialogOptions
+            {
+                YesButtonText = "Ja",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Avbryt",
+                NoButtonColor = ButtonColor.Danger
+            };
+
+        // Show confirmation dialog with title and messages (only 2, message1 & message2 allowed for this specific Confirmation)
+        // https://demos.blazorbootstrap.com/confirm-dialog and F12 on ShowAsync() to see options.
+        var confirmation = await dialog.ShowAsync(
+            title: "Är du säker på att du vill radera webbsidan?",
+            message1: $"Titel: {webpage.Title}",
+            message2: $"Beskrivning: {webpage.Description}",
+            confirmDialogOptions: options);
+
+        if (confirmation)
+        {
+            using var context = await DbFactory.CreateDbContextAsync();
+            var webpageToDelete = await context.WebPages.FindAsync(webpage.WebPageId);
+
+            if (webpageToDelete != null)
+            {
+                context.WebPages.Remove(webpageToDelete);
+                await context.SaveChangesAsync();
+            }
+
+            // Refresh WebPages list and re-render
+            WebPages = await context.WebPages
+                .Where(wp => wp.WebSiteId == WebSiteId)
+                .ToListAsync();
+
+            StateHasChanged();
+        }
+    }
+} *@
+
+
+@* @using CMS.Services
+@inject NavigationManager NavigationManager
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+
+@if (WebPages?.Any() == true)
+{
+    <div class="webpageinfo">
+        <p align="center">Webbsidor</p>
         <div class="grid">
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>Rubrik</th>
+                        <th>Titel</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var webpage in WebPages)
                     {
                         <tr>
-                            <td>@webpage.WebPageId</td>
                             <td>
                                 <a href="/webpages/details?webpageid=@webpage.WebPageId">
                                     @webpage.Title
@@ -46,4 +273,4 @@
             .Where(wp => wp.WebSiteId == WebSiteId)
             .ToListAsync();
     }
-}
+} *@

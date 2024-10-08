@@ -1,3 +1,4 @@
+using BlazorBootstrap;
 using CMS.Components;
 using CMS.Components.Account;
 using CMS.Data;
@@ -30,9 +31,13 @@ namespace CMS
             {
                 client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"] ?? builder.Configuration["Kestrel:Endpoints:Http:Url"] ?? "https://localhost:44340/");
             });
+          
+            builder.Services.AddBlazorBootstrap(); // Add BlazorBootstrap services
+            builder.Services.AddScoped<ToastService>(); // Add the ToastService here
 
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
@@ -40,7 +45,9 @@ namespace CMS
             // add visitorCounterService 
             builder.Services.AddScoped<VisitorCounterService>();
             builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
+
             //builder.Services.AddScoped<ContentService>();
+
 
             builder.Services.AddAuthentication(options =>
                 {
@@ -49,7 +56,7 @@ namespace CMS
                 })
                 .AddIdentityCookies();
 
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
