@@ -1,4 +1,4 @@
-﻿@page "/"
+@page "/"
 @using CMS.Data
 @using CMS.Services
 @inject IGetCurrentUserService GetCurrentUserService
@@ -16,47 +16,37 @@
         </span>
     </a>	
 </div>
-
-<!-- ABOUT -->
-<div id="section-about">
-
-<i class="bi bi-arrow-up-square-fill"></i>
-        <i class="bi bi-arrow-up"></i>
-
-</div>
-<!-- /ABOUT -->
-
-
-
-<!-- TEAM -->
-<div id="section-team">
-
-</div>
-<!-- /TEAM -->
-
-<!-- SERVICES -->
-<div id="section-services">
-
-</div>
-<!-- /SERVICES -->
-
-<!-- PRICES -->
-<div id="section-prices">
-
-</div>
-<!-- /PRICES -->
-
-
-  
-
-
-    <div class="grid-container">
-      <div class="box1">
-
-        <h1>HACKER HEROES</h1>
-        <h2>CMS</h2>
-        <img src="https://via.placeholder.com/300x300" alt="Bild i Box 1">
-      </div>
+<!--HOW IT WORKS / ABOUT SECTION-->
+<section id="about-section-wrapper">
+    <div class=" d-flex justify-content-center">
+        <div class="about-heading-wrapper text-center mb-md-5">
+            <h2 class="uppercase primary-heading mb-0">
+                <span class="material-symbols-outlined">question_mark</span>
+                Hur fungerar det
+            </h2>
+        </div>
+    </div>
+    <!--Instructions for using the website-->
+    <div class="row mb-5 about-heading-mobile-center">
+        <div class="col-12 mb-5 col-lg-6 planning-images-container">
+            <img src="/images/landingPage.png" alt="Planning image" class="img-fluid d-none d-md-block planning-image">
+            <img src="/images/landingPage2.png" alt="Planning image2"  class="img-fluid d-none d-md-block planning-image planning-image-2">
+        </div>
+        <div class="col-12 col-lg-6 d-flex align-items-center flex-column">
+            <h3 class="about-heading">
+                    Planera det själv
+                </h3>
+            <img src="/images/landingPage2.png" alt="Planera det själv" class="img-fluid d-block my-3 d-md-none about-mobile-only-image">
+            <p class="about-paragraphs shadow-lg p-4 mb-5 rounded-lg">
+                    Välkommen till vårt innehållshanteringssystem (CMS) som hjälper dig att enkelt skapa och hantera din webbplats.<br />
+                    Systemet är användarvänligt och kräver ingen avancerad teknisk kunskap.Du kan skapa menyer, redigera sidor och följa besöksstatistik direkt via adminpanelen.<br />
+                    Dessutom erbjuder vi en responsiv design som fungerar lika bra på mobil som på dator.<br />
+                        &rarr;&nbsp;Skapa ett admin-konto: Börja med att registrera dig och logga in som admin. Detta ger dig full tillgång till att skapa och hantera ditt innehåll.<br />
+                        &rarr;&nbsp;Skapa och redigera menyer: Använd adminpanelen för att bygga menyer. Här kan du enkelt lägga till och radera menyalternativ för att anpassa din webbplats.<br />
+                        &rarr;&nbsp;Lägg till innehåll: Skapa sidor genom att lägga till rubriker, text, bilder och länkar. Du kan även formatera text och lägga till innehåll på olika delar av sidan, som i huvudområdet, vänsterkolumnen eller footern.
+            </p>
+        </div>
+    </div>
 
 
 
