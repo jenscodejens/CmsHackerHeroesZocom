@@ -1,4 +1,4 @@
-﻿@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+﻿@* @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 @inject VisitorCounterService VisitorCounterService
 @inject NavigationManager NavigationManager
@@ -22,6 +22,53 @@ else
     }
 }
 
-<p>Denna sida har besökts @VisitCount gånger.</p>
+<p>Denna sida har besökts @VisitCount gånger.</p> *@
 
+@page "/editwebpage"
+@attribute [Authorize]
+
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using CMS.Entities
+@using CMS.Data
+@rendermode InteractiveServer
+@namespace CMS.Components.Pages.WebPages
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
+@implements IAsyncDisposable
+
+@attribute [Authorize]
+
+<PageTitle>Redigera sida</PageTitle>
+
+
+<p>
+    <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a>
+</p>
+
+@if (contents == null || !contents.Any())
+{
+    <p>Denna webbsidan har inget innehåll.</p>
+}
+else
+{
+    <QuickGrid Class="table" Items="contents">
+        @*  <PropertyColumn Property="content => content.ContentId" />
+    <PropertyColumn Property="content => content.WebPageId" />
+    <PropertyColumn Property="content => content.ContentName" />
+    <PropertyColumn Property="content => content.CreationDate" />
+    <PropertyColumn Property="content => content.LastUpdated" />
+    <PropertyColumn Property="content => content.ContentJson" />
+    <PropertyColumn Property="content => content.TemplateId" /> *@
+
+        <TemplateColumn Context="content">
+            <CMS.Components.Pages.ContentPages.ContentPreview ContentId="@content.ContentId" />
+            <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
+            <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |
+            <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a>
+        </TemplateColumn>
+    </QuickGrid>
+}
    
