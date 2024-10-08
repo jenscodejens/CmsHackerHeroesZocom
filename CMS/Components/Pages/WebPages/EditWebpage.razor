@@ -25,29 +25,58 @@ else
 <p>Denna sida har besökts @VisitCount gånger.</p> *@
 
 @page "/webpages/editwebpage"
+
+
 @attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using CMS.Entities
 @using CMS.Data
+@using CMS.Components.Pages.ContentPages
 @rendermode InteractiveServer
+@using BlazorComponents.HtmlTemplates
 @namespace CMS.Components.Pages.WebPages
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
+
 @attribute [Authorize]
 
-<PageTitle>Redigera sida</PageTitle>
+<style>
+    .containerEditWebPage {
+        position: relative;
+        padding: 20px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+    }
+
+    .overlay-btn {
+        position: absolute; /* Position relative to the containerEditWebPage */
+        top: 50%; /* Position from the top (50% of the parent container) */
+        left: 80%; /* Position from the left (50% of the parent container) */
+        transform: translate(-50%, -50%); /* Offset the button by half its width and height */
+        z-index: 10;
+        background-color: rgba(0, 123, 255, 0.2); /* Semi-transparent blue background (50% opacity) */
+        color: white;
+        border: 2px solid #007bff; /* Blue border */
+        padding: 10px 20px;
+    }
+
+    .overlay-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
 
 
 <p>
     <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
-    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a>
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a> |
+    <a href="@($"webpages/editwebpage?webpageid={WebPageId}")">Redigera Sidans information</a> 
 </p>
 
-@if (contents == null || !contents.Any())
+@if (contents == null)@* || !contents.Any()) *@
 {
     <p>Denna webbsidan har inget innehåll.</p>
 }
@@ -61,13 +90,38 @@ else
     <PropertyColumn Property="content => content.LastUpdated" />
     <PropertyColumn Property="content => content.ContentJson" />
     <PropertyColumn Property="content => content.TemplateId" /> *@
-
+        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Pausa redigering </button>
         <TemplateColumn Context="content">
-            <CMS.Components.Pages.ContentPages.ContentPreview ContentId="@content.ContentId" />
-            <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
-            <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> |
-            <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |
-            <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a>
+            @if (ContentForEditing != content.ContentId)
+            {
+
+
+@*                 <ContentPreview ContentId="@content.ContentId" />
+                <div class="float-left">
+                    <button type="button" class="btn btn-warning" @onclick="()=> EditContent(content)"> + </button>
+                </div> *@
+                <div class="containerEditWebPage" style="position: relative;">
+                    <div class="content">
+                        <ContentPreview ContentId="@content.ContentId" />
+                    </div>
+
+
+                    <button class="btn btn-primary overlay-btn .btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
+                </div>
+            }
+            else
+            {
+
+                   @*  <EditContent ContentId="@content.ContentId" />  *@
+                   <CascadingValue Value="content.ContentId">
+                    <EditContent />
+                </CascadingValue>
+            }
+            @*  <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> | *@
+            @* <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> | *@
+            @* <a href="" @onclick="()=> EditContent(content)" @onclick:preventDefault>Redigera</a> *@
+            @* <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> | *@
+            @* <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a> *@
         </TemplateColumn>
     </QuickGrid>
 }

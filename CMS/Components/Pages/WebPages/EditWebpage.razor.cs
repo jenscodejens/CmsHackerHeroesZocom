@@ -59,8 +59,25 @@ namespace CMS.Components.Pages.WebPages
         IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
         [SupplyParameterFromQuery]
         public int? WebPageId { get; set; }
+        private int? ContentForEditing { get; set; } = null;
+
+        public int ContentId { get; set; } // Fetch ContentId from the query
+
+        public Content? Content { get; set; }
 
         ApplicationDbContext context = default!;
+
+        private void EditContent(Content content)
+        {
+            ContentForEditing = content.ContentId;
+            ContentId = content.ContentId;
+            Content = content;
+        }
+
+        private void PauseEditContent()
+        {
+            ContentForEditing = null;
+        }
 
         protected override async Task OnInitializedAsync()
         {

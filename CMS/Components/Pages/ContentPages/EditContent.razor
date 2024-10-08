@@ -8,8 +8,6 @@
 
 @attribute [Authorize]
 
-<h3>Redigera ett innehåll</h3>
-
 @if (Content is null)
 {
     <p><em>Laddar...</em></p>
@@ -40,7 +38,7 @@ else
 }
 
 @code {
-    [SupplyParameterFromQuery]
+    [CascadingParameter]
     public int ContentId { get; set; } // Fetch ContentId from the query
 
     [SupplyParameterFromForm]
