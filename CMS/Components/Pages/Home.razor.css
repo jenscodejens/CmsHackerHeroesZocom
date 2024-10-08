@@ -1,37 +1,3 @@
-
-
-.grid-container {
-    grid-template-columns: repeat(4, 1fr) repeat(2, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 10px;
-    padding: 10px;
-    margin: -14px;
-}
-
-.box1 {
-    grid-column: 1 / 5;
-    grid-row: 1 / 3;
-    background: linear-gradient(to top right, #b703f3 0%, #ffd07a 35%, #ffc0fd 66%, #b703f3 100%);
-    padding: 3px;
-    border-radius: 12px;
-    margin-right: 10px;
-}
-
-.box1 h1 {
-    text-align: center;
-    font-size: 130px;
-    color: white;
-}
-
-.box1 h2 {
-    text-align: center;
-    margin-top: 10px;
-    font-size: 50px;
-    color: white;
-}
-
-
-
 /* General styling settings */
 * {
     box-sizing: border-box;
@@ -60,7 +26,6 @@ h2 {
 .primary-heading {
     font-size: 1.8rem;
 }
-
 
 /* BUTTONS */
 .button,
@@ -104,7 +69,7 @@ h2 {
     background-color: #d0a417;
     outline: none;
     box-shadow: none;
-    }
+}
 
 .btn-yellow {
     color: #000;
@@ -132,6 +97,132 @@ h2 {
     opacity: 0;
 }
 
+/*-------Back to top button----------*/
+.btt-button {
+    position: fixed;
+    height: 2.6rem;
+    width: 2.6rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    border-radius: .4rem;
+    background-color: #fcfcfc;
+    display: none;
+    z-index: 999999999;
+}
+
+.btt-button:hover {
+    background-color: #ebebebfd;
+}
+
+.btt-link {
+    cursor: pointer;
+}
+
+/*--------LANDING PAGE IMAGE section-------------*/
+
+.landing-page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: url(/images/landingPage.png) no-repeat top center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 95vh;
+}
+
+.landing-page-heading-wrapper {
+    margin-top: 13.1rem;
+    padding: 1rem 1.5rem;
+    background-color: rgba(34, 34, 34, 0.329);
+    border-radius: .3rem;
+}
+
+.landing-page-heading {
+    font-size: 3rem;
+    letter-spacing: .2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(32, 32, 32, 0.801);
+}
+
+.landing-page-paragraph {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+
+/*------------ABOUT section----------------*/
+#about-section-wrapper {
+    background-color: #f9f5f7;
+    color: #081216;
+    padding-top: 6rem;
+    text-align:center;
+}
+
+.about-paragraphs {
+    margin: 1rem 0;
+    background-color: #081216;
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.planning-images-container {
+    position: relative;
+}
+
+.planning-image {
+    width: 60%;
+    border-radius: 3px;
+    box-shadow: 0 .8rem 2rem rgba(0, 0, 0, 0.4);
+}
+
+.about-image {
+    float: right;
+    width: 50%;
+    border-radius: 3px;
+    box-shadow: 0 .8rem 2rem rgba(0, 0, 0, 0.4);
+}
+
+.about-mobile-only-image {
+    border-radius: 3px;
+    box-shadow: 0 .3rem 1rem rgba(0, 0, 0, 0.534);
+}
+
+.about-heading {
+    font-size: 1.5rem;
+    text-shadow: 0 2px 3px lightgrey;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-family: 'Oxygen', sans-serif;
+    letter-spacing: 2px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #f7c00f;
+    width: fit-content;
+}
+
+.about-heading-wrapper {
+    margin-top: -2rem;
+}
+
+/*---------------PAYMENT ---------------*/
+.icon-about {
+    color: #f7c00f;
+    font-size: 2rem;
+    margin: 1rem 0;
+    text-shadow: 0 1px 1px rgba(167, 156, 156, 0.774);
+}
+
+.payment-paragraph {
+    font-size: 1.1rem;
+}
+
+.card-payment {
+    box-shadow: 0 4px .5rem 0 rgba(0, 0, 0, 0.2), 0 6px 1.2rem 0 rgba(0, 0, 0, 0.19);
+}
+
 /*------------------CONTACT FORM SECTION--------------------------*/
 
 #contact-section {
@@ -147,7 +238,7 @@ h2 {
 }
 
 .form-container {
-    background-image: linear-gradient(to right, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 100%), url(/images/contactImage.png);
+    background-image: linear-gradient(to right, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 100%), url(../images/nature-view.jpg);
     background-size: cover;
     border-radius: 4px;
     box-shadow: 0 1rem 2rem rgb(0 0 0 / 30%);
@@ -168,55 +259,17 @@ h2 {
     text-align: left;
 }
 
-.contactform input,
-.contactform textarea {
-    border: none;
-    border-bottom: 2px solid transparent;
-    transition: all .2s;
-    border-radius: 2px;
-    display: block;
-}
-
-.contactform input:focus,
-.contactform textarea:focus {
-    outline: none;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .1);
-    border-bottom: 2px solid rgb(4, 185, 4);
-}
-
-.contactform input:focus:invalid,
-.contactform textarea:focus:invalid {
-    border-bottom: 2px solid #db0404;
-}
-
-/* Back to top button */
-.btt-button {
-  position: fixed;
-  height: 2.6rem;
-  width: 2.6rem;
-  bottom: 0.5rem;
-  right: 0.5rem;
-  border-radius: .4rem;
-  background-color: white;
-  display: none;
-  z-index: 999999999;
-}
-
-.btt-button:hover {
-  background-color:  #808080;
-}
-
-.btt-link{
-  cursor: pointer;
-}
-.material-symbols-outlined .material-symbols-outlined {
-    font-size: 40px; /* Adjust size as needed */
-}
-
-
 /*MEDIA QUERIES*/
 
 @media (min-width: 360px) {
+
+    .landing-page-heading-wrapper {
+        margin-top: 8rem;
+    }
+
+    .landing-page-container {
+        height: 90vh;
+    }
 
     .btn-main {
         font-size: .9rem;
@@ -238,13 +291,21 @@ h2 {
         font-size: 2.5rem;
     }
 
-    .nav-link {
-        padding: .5rem 1rem;
+    .landing-page-heading {
+        font-size: 3.5rem;
+        letter-spacing: .5rem;
     }
 
-    .navbar {
-        padding: .7rem 1rem;
+    .landing-page-paragraph {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
     }
+
+    .landing-page-heading-wrapper {
+        padding: 2rem 3rem;
+        margin-top: 1rem;
+    }
+
 
     .about-section-right-on-lg {
         text-align: right;
@@ -268,15 +329,19 @@ h2 {
         left: 15.5rem;
     }
 
+    .about-image2 {
+        position: absolute;
+    }
+
+    .about-image2 {
+        top: 1rem;
+        right: 17rem;
+    }
+
     .btn-main {
         font-size: 1.1rem;
     }
 
-    .map-heading {
-        margin-top: -2rem;
-    }
-
-    .packages-heading,
     .contact-main-heading {
         font-size: 2.1rem;
     }
@@ -302,6 +367,16 @@ h2 {
 
 /* for DESKTOP: 991px min*/
 @media (min-width: 991px) {
+
+    .planning-image-2 {
+        top: 2.5rem;
+        left: 12rem;
+    }
+
+    .about-image2 {
+        top: 4rem;
+        right: 12rem;
+    }
 
     .container {
         max-width: 1140px;
@@ -339,65 +414,7 @@ h2 {
         max-width: 90rem !important;
     }
 
-}
-
-
-
-/* Responsiv layout vid 768px */
-@media (min-width: 1024px) {
-  
-    .box1 h1 {
-        margin-top: 5%;
-    }
-
-    .box1 h2 {
-    font-size: 80px;
-    }
-  
-    .grid-container {
-    display: grid;
-    }  
-    .box4 img {
-        width: auto;
-        height: auto;
+    .heading-card-packages {
+        font-size: 1.2rem;
     }
 }
-@media (min-width: 1440px) {
-
-  .box1 h1 {
-      margin-top: 20px;
-    }
-
-  .box4 img {
-    width: auto;
-    height: 400px;
-  }
-}
-@media (max-width: 768px) {
-
-  .box1 h1 {
-    margin-top: 5%;
-  }
-  .box1 h1 {
-    font-size: 83px;
-  }
-    .box1 h2 {
-    font-size: 73px;
-    }
-}
-
-
-@media (max-width: 425px) {
-  .box4 img {
-    width: auto;
-    height: auto;
-  }
-  .box1 h1 {
-    font-size: 43px;
-  }
-    .box1 h2 {
-    font-size: 30px;
-    }
-}
-
-
