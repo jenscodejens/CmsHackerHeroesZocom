@@ -2,6 +2,112 @@
 @using CMS.Services
 @inject NavigationManager NavigationManager
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject ToastService ToastService
+
+@if (WebPages?.Any() == true)
+{
+    <div class="webpageinfo">
+        <div class="webpage-header">
+            <p align="center">Webbsidor</p>
+        </div>
+
+        <div class="grid">
+            <table class="table table-striped">
+                <tbody>
+                    @foreach (var webpage in WebPages)
+                    {
+                        <tr>
+                            <td>
+                                <a href="/webpages/details?webpageid=@webpage.WebPageId">
+                                    @webpage.Title
+                                </a>
+                            </td>
+                            <td class="actions">
+                                <div class="d-flex justify-content-between">
+                                    <a href="@($"visit?websiteid={webpage.WebPageId}")" title="Besök webbsida" class="me-2">
+                                        <i class="material-icons" style="color: blue; font-size: 24px;">language</i>
+                                    </a>
+                                    <a href="@($"websites/edit?websiteid={webpage.WebPageId}")" title="Edit" class="me-2">
+                                        <i class="material-icons" style="color: orange; font-size: 24px;">edit_document</i>
+                                    </a>
+                                    <a @onclick="() => DeleteWebpageAsync(webpage)" title="Delete" class="me-auto">
+                                        <i class="material-icons" style="color: red; font-size: 28px;">delete_forever</i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+@* <Toasts class="p-3" Messages="messages" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" /> *@
+<ConfirmDialog @ref="dialog" />
+
+@code {
+    [Parameter]
+    public int WebSiteId { get; set; }
+
+    List<WebPage>? WebPages = new();
+    private ConfirmDialog dialog = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var context = await DbFactory.CreateDbContextAsync();
+
+        WebPages = await context.WebPages
+            .Where(wp => wp.WebSiteId == WebSiteId)
+            .ToListAsync();
+    }
+
+    private async Task DeleteWebpageAsync(WebPage webpage)
+    {
+        var options = new ConfirmDialogOptions
+            {
+                YesButtonText = "Ja",
+                YesButtonColor = ButtonColor.Success,
+                NoButtonText = "Avbryt",
+                NoButtonColor = ButtonColor.Danger
+            };
+
+        var confirmation = await dialog.ShowAsync(
+            title: "Är du säker på att du vill radera webbsidan?",
+            message1: $"Titel: {webpage.Title}",
+            message2: $"Beskrivning: {webpage.Description}",
+            confirmDialogOptions: options);
+
+        if (confirmation)
+        {
+            using var context = await DbFactory.CreateDbContextAsync();
+            var webpageToDelete = await context.WebPages.FindAsync(webpage.WebPageId);
+
+            if (webpageToDelete != null)
+            {
+                context.WebPages.Remove(webpageToDelete);
+                await context.SaveChangesAsync();
+
+                // Show success toast message
+                //ToastService.Notify(ToastType.Success, "Webbsida raderad", $"Webbsidan '{webpage.Title}' har raderats.");
+                ToastMessage toastMessage = new ToastMessage(ToastType.Success, "Webbsida raderad", $"Webbsidan '{webpage.Title}' har raderats.");
+                ToastService.Notify(toastMessage);
+            }
+
+            // Refresh WebPages list
+            WebPages = await context.WebPages
+                .Where(wp => wp.WebSiteId == WebSiteId)
+                .ToListAsync();
+
+            StateHasChanged();
+        }
+    }
+}
+
+
+@* @using BlazorBootstrap
+@using CMS.Services
+@inject NavigationManager NavigationManager
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 
 @if (WebPages?.Any() == true)
 {
@@ -43,7 +149,7 @@
 }
 
 @* <Toasts class="p-3" Messages="messages" Placement="ToastsPlacement.TopRight" /> *@
-<ConfirmDialog @ref="dialog" />
+@* <ConfirmDialog @ref="dialog" />
 
 @code {
     [Parameter]
@@ -117,7 +223,7 @@
                 Type = toastType,
                 Message = $"Webbsidan '{title}' är raderad."
             };
-}
+} *@
 
 
 
