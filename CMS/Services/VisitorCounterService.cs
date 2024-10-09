@@ -1,8 +1,8 @@
-﻿
-using CMS.Data;
+﻿using CMS.Data;
 using CMS.Entities;
 using Microsoft.EntityFrameworkCore;
 
+namespace CMS.Services;
 public class VisitorCounterService
 {
     private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
@@ -53,8 +53,5 @@ public class VisitorCounterService
             .ToListAsync();
     }
 }
-
-
-
 
 

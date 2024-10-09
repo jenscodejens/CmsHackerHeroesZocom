@@ -1,16 +1,98 @@
+@* @using CMS.Entities
+@inject VisitorCounterService VisitorCounterService
+
+<div class="card" style="width: 18rem;">
+    <div style="position: relative;">
+        @if (WebSite.ImageUrl != null)
+        {
+            <img src="@WebSite.ImageUrl" alt="" style="object-fit:contain;width: 100%;height: 50%;" />
+        }
+        else
+        {
+            <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
+                 style="object-fit:contain;width: 100%;height: 50%;" />
+        }
+
+        <!-- Badge positioned as an overlay -->
+        <div style="position: absolute; top: 10px; right: 10px; border-radius: 5px; padding: 5px; z-index: 1;">
+            <Badge Color="BadgeColor.Primary" IndicatorType="BadgeIndicatorType.RoundedPill">
+                @VisitCount
+            </Badge>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <h5 class="card-title">@WebSite.Title</h5>
+        <p class="card-text">@WebSite.Description</p>
+        <div class="creation-info">
+            Skapad: @WebSite.CreationDate<br />
+        </div>
+        @if (WebSite.LastUpdated.HasValue)
+        {
+            <div class="creation-info">Uppdaterad: @WebSite.LastUpdated</div>
+        }
+        else
+        {
+            <div class="creation-info">&nbsp;</div>
+        }
+        <hr />
+        <div class="card-icons" style="border: 2px solid black; border-radius: 5px; padding: 3px; align-items: center;">
+            @if (WebSite.WebPages.Count > 0)
+            {
+                <a href="@($"visit?websiteid={WebSite.WebSiteId}")" title="Besök webbsida" class="me-2">
+                    <i class="material-icons" style="color: blue; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">language</i>
+                </a>
+            }
+            <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
+                <i class="material-icons" style="color: black; font-size: 24px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">edit_document</i>
+            </a>
+            <a href="@($"websites/details?websiteid={WebSite.WebSiteId}")" title="Detaljer" class="me-2">
+                <i class="material-icons" style="color: orange; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">remove_red_eye</i>
+            </a>
+            <a href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")" title="Lägg till webbsida" class="me-2">
+                <i class="material-icons" style="color: green; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">note_add</i>
+            </a>
+            <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" title="Radera" class="me-2">
+                <i class="material-icons" style="color: red; font-size: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">delete_forever</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public WebSite WebSite { get; set; }
+    private int VisitCount { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var visitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSite.WebSiteId, WebSite.ImageUrl ?? "");
+        VisitCount = visitCount;
+    }
+} *@
+
+
+
 @using CMS.Entities;
+@inject VisitorCounterService VisitorCounterService
 
 <div class="card" style="width: 18rem;">
     @if (WebSite.ImageUrl != null)
     {
-    <img src="@WebSite.ImageUrl" alt="" style="object-fit:contain;width: 100%;height: 50%;"/>
-
+@*     <div class="mb-1">
+            <div style="position: absolute; top: 10px; right: 10px; border-radius: 5px; padding: 5px;">
+                <Badge Color="BadgeColor.Primary" IndicatorType="BadgeIndicatorType.RoundedPill">
+                17
+                </Badge>
+            </div>
+    </div> *@
+    <img src="@WebSite.ImageUrl" alt="" style="object-fit:contain;width: 100%;height: 60%;"/>
     }
     else
     {
     <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
          style="object-fit:contain;width: 100%;height: 50%;"/>
     }
+
     <div class="card-body">
         <h5 class="card-title">@WebSite.Title</h5>
         <p class="card-text">@WebSite.Description</p> 
@@ -32,22 +114,31 @@
                     <i class="material-icons" style="color: blue; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">language</i>
                 </a>
              }
-@*             <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
-                <i class="material-icons" style="color: black; font-size: 24px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">edit_document</i>
-            </a> *@
             <a href="@($"websites/details?websiteid={WebSite.WebSiteId}")" title="Detaljer" class="me-2">
                 <i class="material-icons" style="color: orange; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">remove_red_eye</i>
             </a>
             <a href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")" title="Lägg till webbsida" class="me-2">
                 <i class="material-icons" style="color: green; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">note_add</i>
             </a>
-@*             <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" title="Radera" class="me-2">
-                <i class="material-icons" style="color: red; font-size: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">delete_forever</i>
-            </a> *@
         </div>
     </div>
 </div>
 
 @code {
     [Parameter] public WebSite WebSite { get; set; }
+    private int VisitCount { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var visitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSite.WebSiteId, WebSite.ImageUrl ?? "");
+        VisitCount = visitCount;
+    }
 }
+
+@*             <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" title="Radera" class="me-2">
+                <i class="material-icons" style="color: red; font-size: 25px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">delete_forever</i>
+            </a> *@
+
+@*             <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
+                <i class="material-icons" style="color: black; font-size: 24px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">edit_document</i>
+            </a> *@

@@ -24,14 +24,15 @@
                             </td>
                             <td class="actions">
                                 <div class="d-flex justify-content-between">
-                                    <a href="@($"visit?websiteid={webpage.WebPageId}")" title="Besök webbsida" class="me-2">
-                                        <i class="material-icons" style="color: blue; font-size: 24px;">language</i>
+                                    <a href="@($"WebPages/previewpage/{webpage.WebPageId}")" title="Besök webbsida" class="me-2">
+                                        <i class="material-icons" style="color: blue; font-size: 22px;">language</i>
                                     </a>
-                                    <a href="@($"websites/edit?websiteid={webpage.WebPageId}")" title="Edit" class="me-2">
-                                        <i class="material-icons" style="color: orange; font-size: 24px;">edit_document</i>
+                                    @* <a href="@($"websites/edit?websiteid={webpage.WebPageId}")" title="Edit" class="me-2"> *@
+                                    <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")" title="Edit" class="me-2">
+                                        <i class="material-icons" style="color: orange; font-size: 22px;">edit_document</i>
                                     </a>
                                     <a @onclick="() => DeleteWebpageAsync(webpage)" title="Delete" class="me-auto">
-                                        <i class="material-icons" style="color: red; font-size: 28px;">delete_forever</i>
+                                        <i class="material-icons" style="color: red; font-size: 26px;">delete_forever</i>
                                     </a>
                                 </div>
                             </td>
@@ -43,7 +44,6 @@
     </div>
 }
 <ConfirmDialog @ref="dialog" />
-<Toasts class="p-3" AutoHide="true" Delay="6000" Placement="ToastsPlacement.TopRight" />
 
 @code {
     [Parameter]
