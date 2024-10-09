@@ -1,38 +1,79 @@
-﻿//using CMS.Data;
-//using CMS.Entities;
-//using System.Text.Json; // or Newtonsoft.Json
-//using System.Threading.Tasks;
-//using Microsoft.EntityFrameworkCore;
+﻿using CMS.Data;
+using CMS.Entities;
+using Microsoft.EntityFrameworkCore;
 
-//namespace CMS.Services
-//{
-//    public class ContentService
-//    {
-//        private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
+namespace CMS.Services
+{
+    public class ContentService : IContentService
+    {
+        private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
+        private readonly IGetCurrentUserService _currentUserService;
 
-//        // Inject the IDbContextFactory instead of ApplicationDbContext directly
-//        public ContentService(IDbContextFactory<ApplicationDbContext> dbContextFactory)
-//        {
-//            _dbContextFactory = dbContextFactory;
-//        }
+        public ContentService(IDbContextFactory<ApplicationDbContext> dbContextFactory, IGetCurrentUserService currentUserService)
+        {
+            _dbContextFactory = dbContextFactory;
+            _currentUserService = currentUserService;
+        }
 
-//        public async Task SaveContentAsync(string contentName, int webPageId, Dictionary<string, string> textInputs, string backgroundColor, string textColor, int templateId)
-//        {
-//            // Create a new context instance on-demand using the factory
-//            await using var context = _dbContextFactory.CreateDbContext();
+        // Method to retrieve content by ID
+        public async Task<Content?> GetContentAsync(int contentId)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
+            return await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+        }
 
-//            var content = new Content
-//            {
-//                ContentName = contentName,
-//                WebPageId = webPageId,
-//                ContentJson = JsonSerializer.Serialize(textInputs), // or use Newtonsoft.Json
-//                Backgroundcolor = backgroundColor,
-//                TextColor = textColor,
-//                TemplateId = templateId
-//            };
+        // Method to save new content to the database
+        public async Task SaveContentAsync(Content content)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
 
-//            context.Contents.Add(content);
-//            await context.SaveChangesAsync();
-//        }
-//    }
-//}
+            // Ensure WebPageId exists in the WebPages table
+            var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == content.WebPageId);
+            if (!webPageExists)
+            {
+                throw new InvalidOperationException($"WebPageId {content.WebPageId} does not exist.");
+            }
+
+            context.Contents.Add(content);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error: {ex.InnerException?.Message}");
+                throw;
+            }
+        }
+
+        // Method to update existing content in the database
+        public async Task UpdateContentAsync(Content content)
+        {
+            await using var context = _dbContextFactory.CreateDbContext();
+
+            var existingContent = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == content.ContentId);
+            if (existingContent == null)
+            {
+                throw new InvalidOperationException($"Content with ID {content.ContentId} does not exist.");
+            }
+
+            existingContent.ContentName = content.ContentName;
+            existingContent.ContentJson = content.ContentJson;
+            existingContent.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+
+            context.Contents.Update(existingContent);
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                Console.WriteLine($"Error: {ex.InnerException?.Message}");
+                throw;
+            }
+        }
+    }
+
+}
