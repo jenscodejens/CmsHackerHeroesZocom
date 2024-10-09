@@ -1,14 +1,15 @@
 ﻿@page "/websites"
 @attribute [Authorize]
 
-@using Microsoft.AspNetCore.Components.QuickGrid
+@* @using Microsoft.AspNetCore.Components.QuickGrid *@
 @using CMS.Data
 
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-
 @implements IAsyncDisposable
+
+
 
 <PageTitle>Mina webbsites</PageTitle>
 
@@ -19,7 +20,7 @@
 </p>
 @if (UserId != null)
 {
-    <div class="flex-container" style="display:flex; flex-wrap: wrap; "> 
+    <div class="flex-container" style="display:flex; flex-wrap: nowrap; ">
     @foreach (var website in context.WebSites.Include(w=> w.WebPages).Where(w => w.UserId == UserId))
     {
         <WebSiteCard WebSite="@website"/>
@@ -49,5 +50,4 @@
     {
         await context.DisposeAsync();
     }
-
 }

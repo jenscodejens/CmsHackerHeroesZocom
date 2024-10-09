@@ -1,6 +1,7 @@
 ﻿@page "/WebSites/edit"
 @attribute [Authorize]
 
+@using CMS.Components.BlazorComponents
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
