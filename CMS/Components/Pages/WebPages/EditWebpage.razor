@@ -1,28 +1,4 @@
-﻿@* @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
-@rendermode InteractiveServer
-@inject VisitorCounterService VisitorCounterService
-@inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
-
-@if (contentList == null)
-{
-    <p>Laddar...</p>
-}
-else if (contentList.Count == 0)
-{
-    <p>Inget innehåll tillgängligt för denna webbsida.</p>
-}
-else
-{
-    @foreach (var content in contentList)
-    {
-        <div class="content-preview">
-            <CMS.Components.Pages.ContentPages.ContentPreview ContentId="@content.ContentId" />
-        </div>
-    }
-}
-
-<p>Denna sida har besökts @VisitCount gånger.</p> *@
+﻿
 
 @page "/webpages/editwebpage"
 
@@ -41,9 +17,6 @@ else
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
-
-@attribute [Authorize]
-
 <style>
     .containerEditWebPage {
         position: relative;
@@ -59,6 +32,18 @@ else
         transform: translate(-50%, -50%); /* Offset the button by half its width and height */
         z-index: 10;
         background-color: rgba(0, 123, 255, 0.2); /* Semi-transparent blue background (50% opacity) */
+        color: white;
+        border: 2px solid #007bff; /* Blue border */
+        padding: 10px 20px;
+    }
+
+    .overlay-edit {
+        position: absolute; /* Position relative to the containerEditWebPage */
+        top: 75%; /* Position from the top (50% of the parent container) */
+        left: 50%; /* Position from the left (50% of the parent container) */
+        transform: translate(-50%, -50%); /* Offset the button by half its width and height */
+        z-index: 10;
+        background-color: rgba(0, 123, 255, 0.5); /* Semi-transparent blue background (50% opacity) */
         color: white;
         border: 2px solid #007bff; /* Blue border */
         padding: 10px 20px;
@@ -87,55 +72,47 @@ else
     }
 </p>
 
-@if (contents == null)@* || !contents.Any()) *@
+@if (contents == null) @* || !contents.Any() *@
 {
     <p>Denna webbsidan har inget innehåll.</p>
 }
 else
 {
     <QuickGrid Class="table" Items="contents">
-        @*  <PropertyColumn Property="content => content.ContentId" />
-    <PropertyColumn Property="content => content.WebPageId" />
-    <PropertyColumn Property="content => content.ContentName" />
-    <PropertyColumn Property="content => content.CreationDate" />
-    <PropertyColumn Property="content => content.LastUpdated" />
-    <PropertyColumn Property="content => content.ContentJson" />
-    <PropertyColumn Property="content => content.TemplateId" /> *@
 
             
         <TemplateColumn Context="content">
             @if (StopEditing == false)
             {
-            @if (ContentForEditing != content.ContentId)
-            {
+                @if (ContentForEditing != content.ContentId)
+                {
+                    <div class="containerEditWebPage" style="position: relative;">
+                        <div class="content">
+                            <ContentPreview ContentId="@content.ContentId" />
+                        </div>
 
 
-@*                 <ContentPreview ContentId="@content.ContentId" />
-                <div class="float-left">
-                    <button type="button" class="btn btn-warning" @onclick="()=> EditContent(content)"> + </button>
-                </div> *@
-                <div class="containerEditWebPage" style="position: relative;">
-                    <div class="content">
-                        <ContentPreview ContentId="@content.ContentId" />
+                        <button class="btn btn-primary overlay-btn btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="containerEditWebPage" style="position: relative;">
+                        <div class="content">
+                            <ContentPreview ContentId="@content.ContentId" />
+                        </div>
+                        <div class="overlay-edit">
+                            <CascadingValue Value="content.ContentId">
+                                <EditContent />
+                            </CascadingValue>
+                            <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Klar </button>
+                            </div>
                     </div>
 
-
-                    <button class="btn btn-primary overlay-btn .btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
-                </div>
-            }
-            else
-            {
-
-                   @*  <EditContent ContentId="@content.ContentId" />  *@
-                   <CascadingValue Value="content.ContentId">
-                    <EditContent />
-                </CascadingValue>
-            }
-            @*  <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> | *@
-            @* <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> | *@
-            @* <a href="" @onclick="()=> EditContent(content)" @onclick:preventDefault>Redigera</a> *@
-            @* <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> | *@
-                @* <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a> *@
+                       @*  <CascadingValue Value="content.ContentId">
+                            <EditContent />
+                        </CascadingValue> *@
+                }
             }
             else
             {
@@ -148,4 +125,3 @@ else
         </TemplateColumn>
     </QuickGrid>
 }
-   

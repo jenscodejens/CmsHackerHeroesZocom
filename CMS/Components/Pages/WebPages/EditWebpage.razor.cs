@@ -69,6 +69,22 @@ namespace CMS.Components.Pages.WebPages
 
         ApplicationDbContext context = default!;
 
+
+        protected override async Task OnInitializedAsync()
+        {
+            context = DbFactory.CreateDbContext();
+
+            if (WebPageId.HasValue)
+            {
+                // Fetch content filtered by WebPageId
+                contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
+            }
+            else
+            {
+                // Fetch all content if no WebPageId is provided
+                //contents = context.Contents;
+            }
+        }
         private void EditContent(Content content)
         {
             ContentForEditing = content.ContentId;
@@ -89,22 +105,6 @@ namespace CMS.Components.Pages.WebPages
         {
             ContentForEditing = null;
             StopEditing = false;
-        }
-
-        protected override async Task OnInitializedAsync()
-        {
-            context = DbFactory.CreateDbContext();
-
-            if (WebPageId.HasValue)
-            {
-                // Fetch content filtered by WebPageId
-                contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
-            }
-            else
-            {
-                // Fetch all content if no WebPageId is provided
-                //contents = context.Contents;
-            }
         }
 
         public async ValueTask DisposeAsync() => await context.DisposeAsync();
