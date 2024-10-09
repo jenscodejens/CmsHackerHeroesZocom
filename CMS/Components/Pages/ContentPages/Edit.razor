@@ -117,6 +117,7 @@ else
     private enum ContentType
     {
         Menu,
+        Video,
         Others
     }
 
@@ -143,7 +144,6 @@ else
                 ? Content.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
                 : null;
         }
-    
 
         var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(Content.ContentJson);
         if (textInputs == null)

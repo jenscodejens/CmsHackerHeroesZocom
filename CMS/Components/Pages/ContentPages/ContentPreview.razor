@@ -54,7 +54,6 @@
                             if (menuItemName == test.ToString())
                             {
                                 string jsonString = input.Value.GetRawText();
-                                //Navbar = true;
                                 var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(jsonString);
                                 if (menuItemsWrapper != null)
                                 {
@@ -75,43 +74,12 @@
                         {
                             Console.WriteLine($"Data for contents name is invalid.");
                         }
-                    }
-
-
-                    // if (Navbar)
-                    // {
-                    //     var menuItemsWrapper = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItemsWrapper>(content.TextInputsJson);
-                    //     if (menuItemsWrapper != null)
-                    //     {
-
-
-                    //         var menu = menuItemsWrapper.ToDictionary();
-                    //         templateParameters[menuItemsWrapper.Name] = menuItemsWrapper.ToDictionary();
-
-                    //     }
-                    //     else
-                    //     {
-                    //         Console.WriteLine($"Data for menu is invalid.");
-                    //     }
-                    // }
-                    //     else
-                    //     {
-                    //         foreach (var input in textInputs)
-                    //         {
-                    //             // Convert JsonElement to the appropriate type
-                    //             templateParameters[input.Key] = ConvertJsonElement(input.Value);
-                    //         }
-                    //     }
-                    
+                    }  
                 }
                 else
                 {
                     Console.WriteLine($"Data for textInputs is missing.");
                 }
-
-                // Add the colors to the template parameters
-                //templateParameters["Backgroundcolor"] = content.Backgroundcolor ?? "grey";
-                //templateParameters["Textcolor"] = content.Textcolor ?? "black";
                 templateParameters["Contentname"] = content.ContentName ?? "no info entered"; /* ny */
             }
             else
@@ -172,7 +140,6 @@
     }
 }
 
-@* <h3>Content Preview</h3> *@
 @if (!string.IsNullOrEmpty(selectedTemplatePath))
 {
     @RenderDynamicComponent(selectedTemplatePath, templateParameters)
