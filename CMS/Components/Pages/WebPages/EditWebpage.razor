@@ -47,8 +47,8 @@ else
 <style>
     .containerEditWebPage {
         position: relative;
-        padding: 20px;
-        border: 1px solid #ccc;
+        padding: 0px;
+        border: 0px solid #ccc;
         background-color: #f9f9f9;
     }
 
@@ -73,7 +73,18 @@ else
 <p>
     <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
     <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a> |
-    <a href="@($"webpages/editwebpage?webpageid={WebPageId}")">Redigera Sidans information</a> 
+    <a href="@($"webpages/editwebpage?webpageid={WebPageId}")">Redigera Sidans information</a>
+    @if (StopEditing == false)
+    {
+        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Pausa redigering </button>
+        <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
+
+    }
+    else
+    {
+        <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
+
+    }
 </p>
 
 @if (contents == null)@* || !contents.Any()) *@
@@ -95,7 +106,6 @@ else
         <TemplateColumn Context="content">
             @if (StopEditing == false)
             {
-        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Pausa redigering </button>
             @if (ContentForEditing != content.ContentId)
             {
 

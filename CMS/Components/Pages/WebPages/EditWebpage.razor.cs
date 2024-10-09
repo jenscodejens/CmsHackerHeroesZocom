@@ -76,11 +76,19 @@ namespace CMS.Components.Pages.WebPages
             Content = content;
             StopEditing = false;
         }
+        private void AddContent()
+        {
 
+        }
         private void PauseEditContent()
         {
             ContentForEditing = null;
             StopEditing = true;
+        }
+        private void ResumeEditContent()
+        {
+            ContentForEditing = null;
+            StopEditing = false;
         }
 
         protected override async Task OnInitializedAsync()
