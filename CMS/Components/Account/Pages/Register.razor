@@ -15,7 +15,7 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject RoleManager<IdentityRole> RoleManager
-
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
 
 <PageTitle>Register</PageTitle>
 <div class="register-page">
@@ -31,6 +31,19 @@
             <h2 class="bold">Get Started Now</h2>
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
+         
+              <div class="mb-3">
+                <label for="first-name" class="label-bold">Förnamn</label>
+                <InputText type="text" @bind-Value="Input.FirstName" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="Förnamn" />
+                <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+            </div>
+       
+              <div class="mb-3">
+                <label for="last-name" class="label-bold">Efternamn</label>
+                <InputText type="text" @bind-Value="Input.LastName" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="Efternamn" />
+                <ValidationMessage For="() => Input.LastName" class="text-danger" />
+            </div>
+
             <div class="mb-3">
                 <label for="email" class="label-bold">Email address</label>
                 <InputText id="email" @bind-Value="Input.Email" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="Enter your email" />
@@ -103,6 +116,17 @@
         // Assign user to the specified role and check if the operation was successful
         var roleResult = await UserManager.AddToRoleAsync(user, roleType);
 
+        var profile = new Profile {
+            UserId = userId,
+            FirstName = Input.FirstName,
+            LastName = Input.LastName,
+            Email = Input.Email,
+            CreationDate = DateOnly.FromDateTime(DateTime.Now)
+         };
+        using var context = DbFactory.CreateDbContext();
+        await context.AddAsync(profile);
+        await context.SaveChangesAsync();
+
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
         var callbackUrl = NavigationManager.GetUriWithQueryParameters(
@@ -164,5 +188,15 @@
 
         [Display(Name = "isAdmin")]
         public bool IsAdmin { get; set; }  // Flag to register as Admin
+
+        [Required]
+        [MaxLength(100),MinLength(3)]
+        [Display(Name = "Förnamn")]
+        public string FirstName {get; set;} = "";
+    
+        [Required]
+        [MaxLength(100),MinLength(3)]
+        [Display(Name = "Efternamn")]
+        public string LastName {get; set;} = "";
     }
 }
