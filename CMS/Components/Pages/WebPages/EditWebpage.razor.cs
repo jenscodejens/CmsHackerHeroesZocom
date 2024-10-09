@@ -52,6 +52,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 namespace CMS.Components.Pages.WebPages
 {
     public partial class EditWebPage
@@ -64,6 +65,8 @@ namespace CMS.Components.Pages.WebPages
         public int ContentId { get; set; } // Fetch ContentId from the query
 
         bool StopEditing { get; set; } = false;
+
+        bool Create { get; set; } = false;
 
         public Content? Content { get; set; }
 
@@ -94,13 +97,24 @@ namespace CMS.Components.Pages.WebPages
         }
         private void AddContent()
         {
-
+            Create = true;
+            ContentForEditing = null;
+            StopEditing = true;
         }
         private void PauseEditContent()
         {
             ContentForEditing = null;
             StopEditing = true;
         }
+
+        private void StopContent()
+        {
+            ContentForEditing = null;
+            Create = false;
+            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            StateHasChanged();
+        }
+
         private void ResumeEditContent()
         {
             ContentForEditing = null;

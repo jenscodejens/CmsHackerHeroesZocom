@@ -116,11 +116,28 @@ else
             }
             else
             {
-                <div class="containerEditWebPage" style="position: relative;">
+                if (Create == true)
+                {
+
+                    <div class="containerEditWebPage" style="position: relative;">
+                        <div class="content">
+                            <ContentPreview ContentId="@content.ContentId" />
+                        </div>
+                        <div class="overlay-edit">
+                            <CascadingValue Value="content.WebPageId">
+                                <CreateContent />
+                            </CascadingValue>
+                            <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Klar </button>
+                        </div>
+                    </div>
+                    Create = false;
+                }
+                else
+                {
                     <div class="content">
                         <ContentPreview ContentId="@content.ContentId" />
                     </div>
-                </div>
+                }
             }
         </TemplateColumn>
     </QuickGrid>
