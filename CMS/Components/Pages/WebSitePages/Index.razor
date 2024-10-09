@@ -1,15 +1,10 @@
 ﻿@page "/websites"
 @attribute [Authorize]
 
-@* @using Microsoft.AspNetCore.Components.QuickGrid *@
 @using CMS.Data
-
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
-@inject NavigationManager NavigationManager
-@implements IAsyncDisposable
-
-
+@inject VisitorCounterService VisitorCounterService
 
 <PageTitle>Mina webbsites</PageTitle>
 
@@ -18,22 +13,25 @@
 <p>
     <a href="websites/create">Skapa ny webbsite</a>
 </p>
-@if (UserId != null)
+
+@if (UserId != null && WebSitesWithVisits != null)
 {
-    <div class="flex-container" style="display:flex; flex-wrap: nowrap; ">
-    @foreach (var website in context.WebSites.Include(w=> w.WebPages).Where(w => w.UserId == UserId))
-    {
-        <WebSiteCard WebSite="@website"/>
-    }
+    <div class="flex-container" style="display:flex; flex-wrap: nowrap;">
+        @foreach (var website in WebSitesWithVisits)
+        {
+            <WebSiteCard WebSite="@website.WebSite" VisitCount="@website.VisitCount" />
+        }
     </div>
 }
+else
+{
+    <p>Loading...</p>
+}
 
-    
 @code {
-
     public string UserId { get; set; }
-
     ApplicationDbContext context = default!;
+    private List<WebSiteWithVisitCount> WebSitesWithVisits = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,13 +39,40 @@
         if (user != null)
         {
             UserId = user.Id;
-        }
 
-        context = DbFactory.CreateDbContext();
+            context = DbFactory.CreateDbContext();
+
+            var userWebSites = await context.WebSites
+                .Include(w => w.WebPages)
+                .Where(w => w.UserId == UserId)
+                .ToListAsync();
+
+            // Loop to add the VisitCount to the WebSiteWithVisitCount object, done once for each website belonging to a specific UserId. Admin implementation has to wait
+            foreach (var website in userWebSites)
+            {
+                // Get all visits for the website
+                var visits = await VisitorCounterService.GetAllPageVisitsAsync(website.WebSiteId);
+
+                // Sum the VisitCount from the WebSiteVisit collection
+                var totalVisitCount = visits.Sum(v => v.VisitCount);
+
+                WebSitesWithVisits.Add(new WebSiteWithVisitCount
+                {
+                    WebSite = website,
+                    VisitCount = totalVisitCount
+                });
+            }
+        }
     }
 
     public async ValueTask DisposeAsync()
     {
         await context.DisposeAsync();
+    }
+
+    private class WebSiteWithVisitCount
+    {
+        public WebSite WebSite { get; set; }
+        public int VisitCount { get; set; }
     }
 }

@@ -1,8 +1,4 @@
-@using CMS.Entities
 @attribute [Authorize]
-@inject VisitorCounterService VisitorCounterService
-@inject NavigationManager NavigationManager
-@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 
 <div class="card" style="width: 16rem;">
     <div class="card-image">
@@ -15,12 +11,15 @@
             <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
                  class="card-img" />
         }
-        <!-- Badge positioned as an overlay -->
-        <div class="badge-overlay">
-            <Badge Color="BadgeColor.Primary" IndicatorType="BadgeIndicatorType.RoundedPill">
-                @VisitCount
-            </Badge>
-        </div>
+        <!-- Badge positioned as an overlay showing the WebSiteVisit.VisitCount if the page has had any visits, ugly page it not ;x -->
+        @if (VisitCount >=1)
+        {
+            <div class="badge-overlay">
+                <Badge Color="BadgeColor.Primary" IndicatorType="BadgeIndicatorType.RoundedPill">
+                    @VisitCount
+                </Badge>
+            </div>
+        }
     </div>
 
     <div class="card-body">
@@ -40,14 +39,14 @@
         }
         <hr />
 
-       <div class="card-icons">
+        <div class="card-icons">
             @if (WebSite.WebPages.Count > 0)
             {
                 <a href="@($"visit?websiteid={WebSite.WebSiteId}")" title="Besök webbsida" class="me-2">
                     <i class="material-icons icon-blue">language</i>
                 </a>
             }
-            else // To keep the position of the other two icons the same if WebPages.Count is 0
+            else
             {
                 <a href="@($"visit?websiteid={WebSite.WebSiteId}")" title="Besök webbsida" class="me-2">
                     <i class="material-icons icon-blue d-none">language</i>
@@ -65,5 +64,5 @@
 
 @code {
     [Parameter] public WebSite WebSite { get; set; }
-    private int VisitCount { get; set; }
+    [Parameter] public int VisitCount { get; set; }
 }

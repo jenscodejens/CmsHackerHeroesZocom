@@ -2,7 +2,6 @@
 using CMS.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace CMS.Services;
 public class VisitorCounterService
 {
     private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
@@ -48,10 +47,13 @@ public class VisitorCounterService
     public async Task<IEnumerable<WebSiteVisit>> GetAllPageVisitsAsync(int webSiteId)
     {
         using var context = _dbContextFactory.CreateDbContext();
+
+        // This is needed for the pre-loading of websites & visits list that WebSiteCard will eventually use while rendering
         return await context.WebSiteVisits
             .Where(v => v.WebSiteId == webSiteId)
             .ToListAsync();
     }
 }
+
 
 

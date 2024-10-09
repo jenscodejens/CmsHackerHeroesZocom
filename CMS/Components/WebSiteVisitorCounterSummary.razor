@@ -5,18 +5,18 @@
 <h3>Website Visits Summary</h3>
 
 @if (PageVisits == null)
-{
-<p>Loading...</p>
-}
-else
-{
-<ul>
-    @foreach (var visit in PageVisits)
     {
-    <li>@visit.PageUrl: @visit.VisitCount visits</li>
+        <p>Loading...</p>
     }
-</ul>
-}
+    else
+    {
+        <ul>
+            @foreach (var visit in PageVisits)
+            {
+                <li>@visit.PageUrl: @visit.VisitCount visits</li>
+            }
+        </ul>
+    }
 
 @code {
 [Parameter]
@@ -24,8 +24,8 @@ public int WebSiteId { get; set; }
 
 private IEnumerable<WebSiteVisit> PageVisits { get; set; }
 
-protected override async Task OnInitializedAsync()
-{
-PageVisits = await VisitorCounterService.GetAllPageVisitsAsync(WebSiteId);
-}
+    protected override async Task OnInitializedAsync()
+    {
+        PageVisits = await VisitorCounterService.GetAllPageVisitsAsync(WebSiteId);
+    }
 }

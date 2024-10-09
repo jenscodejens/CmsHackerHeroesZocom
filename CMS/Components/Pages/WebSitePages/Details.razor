@@ -6,50 +6,63 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
+@inject VisitorCounterService VisitorCounterService
+@inject NavigationManager NavigationManager
+
 <PageTitle>Detaljer</PageTitle>
 
 <h1>Detaljer</h1>
 
 <div>
-    <h4>WebbSida</h4>
-    <hr />
     @if (WebSite is null)
     {
         <p><em>Loading...</em></p>
     }
     else
     {
+        <h4>@WebSite.Title</h4>
+        <hr />
         <dl class="row">
-            <dt class="col-sm-2">Titel</dt>
-            <dd class="col-sm-10">@WebSite.Title</dd>
-            <dt class="col-sm-2">Beskrivning</dt>
-            <dd class="col-sm-10">@WebSite.Description</dd>
-            <dt class="col-sm-2">Skapad</dt>
-            <dd class="col-sm-10">@WebSite.CreationDate</dd>
+            @*      <dt class="col-sm-1">Titel</dt>
+                    <dd class="col-sm-11">@WebSite.Title</dd> *@
+            <dt class="col-sm-1">Beskrivning</dt>
+            <dd class="col-sm-11">@WebSite.Description</dd>
+            <dt class="col-sm-1">Skapad</dt>
+            <dd class="col-sm-11">@WebSite.CreationDate</dd>
             @if (WebSite.LastUpdated.HasValue)
             {
-                <dt class="col-sm-2">Senast uppdaterad</dt>
-                <dd class="col-sm-10">@WebSite.LastUpdated.Value</dd>
+                <dt class="col-sm-1">Senast uppdaterad</dt>
+                <dd class="col-sm-11">@WebSite.LastUpdated.Value</dd>
             }
-            <dt class="col-sm-2">Startsida</dt>
-            <dd class="col-sm-10">@landingPageTitle</dd>
+            <dt class="col-sm-1">Startsida</dt>
+            <dd class="col-sm-11">@landingPageTitle</dd>
+            <dt class="col-sm-1">Besökare</dt>
+            <dd class="col-sm-11">todo</dd>
 
             <AuthorizeView Roles="Admin">
-                <dt class="col-sm-2">Användar Id</dt>
-                <dd class="col-sm-10">@WebSite.UserId</dd>
+                <dt class="col-sm-1">Användar Id</dt>
+                <dd class="col-sm-11">@WebSite.UserId</dd>
             </AuthorizeView>
         </dl>
 
         <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
 
-        <div class="d-flex justify-content-between">
-            <a href="@("/websites")" title="Back" class="me-2">
-                <i class="material-icons" style="color: green; font-size: 22px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">arrow_circle_right</i>
-            </a>
-            <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
-                <i class="material-icons" style="color: orange; font-size: 22px;">edit_document</i>
-            </a>
+        <div class="d-flex align-items-center">
+            @* Back icon *@
+@*             <a href="@("/websites")" title="Back" class="me-2">
+                <i class="bi bi-arrow-left-square-fill" style="color: blue; font-size: 26px; padding-top: 5px; padding-bottom: 5px; padding-left: 100px;"></i>
+            </a> *@
+            @* Edit icon *@
+@*             <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
+                <i class="material-icons" style="color: orange; font-size: 28px;">edit_document</i>
+            </a>edit_square *@
         </div>
+        <hr />
+        <a>Återstår att hitta vettiga ikoner alt. använda mix av ikoner och knappar.</a>
+        <a> Eller måla en custom knapp med en ikon i mitten *shrug*</a>
+        <a href="@("/websites")" title="Back" class="me-2">
+            <i class="bi bi-arrow-left-square-fill" style="color: blue; font-size: 26px; padding-top: 5px; padding-bottom: 5px; padding-left: 10px;"></i>
+        </a>
     }
 </div>
 
@@ -87,97 +100,4 @@
     }
 }
 
-
-@* @page "/websites/details"
-@attribute [Authorize]
-
-@using CMS.Entities
-@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
-@inject NavigationManager NavigationManager
-@rendermode InteractiveServer
-
-<PageTitle>Detaljer</PageTitle>
-
-<h1>Detaljer</h1>
-
-<div>
-    <h4>WebbSida</h4>
-    <hr />
-    @if (WebSite is null)
-    {
-    <p><em>Loading...</em></p>
-    }
-    else
-    {
-    <dl class="row">
-        <dt class="col-sm-2">Titel</dt>
-            <dd class="col-sm-10">@WebSite.Title</dd>
-        <dt class="col-sm-2">Beskrivning</dt>
-            <dd class="col-sm-10">@WebSite.Description</dd>
-        <dt class="col-sm-2">Skapad</dt>
-            <dd class="col-sm-10">@WebSite.CreationDate</dd>
-            @if (WebSite.LastUpdated.HasValue)
-        {
-            <dt class="col-sm-2">Senast uppdaterad</dt>
-                <dd class="col-sm-10">@WebSite.LastUpdated.Value</dd>
-        }
-        <dt class="col-sm-2">Startsida</dt>
-        <dd class="col-sm-10">@landingPageTitle</dd>
-
-        <AuthorizeView Roles="Admin">
-            <dt class="col-sm-2">Användar Id</dt>
-                <dd class="col-sm-10">@WebSite.UserId</dd>
-        </AuthorizeView>
-    </dl>
-
-        <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
-
-        <div class="d-flex justify-content-between">
-            <a href="@("/websites")" title="Back" class="me-2">
-                <i class="material-icons" style="color: green; font-size: 32px; padding-top: 5px; padding-bottom: 5px; padding-left: 5px;">arrow_circle_right</i>
-            </a>
-        </div>  
-    }
-</div>
-
-@code {
-    WebSite? WebSite;
-    private string? landingPageTitle;
-
-    [SupplyParameterFromQuery]
-    public int WebSiteId { get; set; }
-
-    protected override async Task OnInitializedAsync()
-    {
-        using var context = DbFactory.CreateDbContext();
-        WebSite = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
-
-        if (WebSite?.LandingPage != null)
-        {
-            var landingPage = await context.WebPages
-                .FirstOrDefaultAsync(wp => wp.WebPageId == WebSite.LandingPage);
-
-            landingPageTitle = landingPage?.Title;
-        }
-        else if (WebSite?.LandingPage is null)
-        {
-            var hasWebPages = await context.WebPages
-                 .AnyAsync(wp => wp.WebSiteId == WebSiteId);
-
-            if (hasWebPages)
-            {
-                landingPageTitle = "Webbsiten har ingen startsida vald";
-            }
-            else
-            {
-                landingPageTitle = "Webbsiten har inga webbsidor";
-            }
-        }
-
-        if (WebSite is null)
-        {
-            NavigationManager.NavigateTo("notfound");
-        }
-    }
-} *@
 

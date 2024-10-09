@@ -1,0 +1,26 @@
+﻿h4 {
+    color: blue;
+}
+
+a[onclick] {
+    cursor: pointer;
+}
+
+/*.ButtonColor.Primary {
+    background-color: blue;
+    color: white;
+    padding: 5px 15px;
+    border-radius: 4px;
+}
+
+.ButtonColor.Primary:hover {
+    background-color: #0056b2 !important;
+}
+
+.icon-container {
+    width: 68px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}*/
