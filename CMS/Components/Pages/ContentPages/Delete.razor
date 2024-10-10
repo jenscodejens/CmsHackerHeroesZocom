@@ -65,6 +65,6 @@
         using var context = DbFactory.CreateDbContext();
         context.Contents.Remove(content!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo($"/contents?webpageid={content.WebPageId}");
+        // NavigationManager.NavigateTo($"/contents?webpageid={content.WebPageId}");
     }
 }

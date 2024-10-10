@@ -32,30 +32,44 @@
         background-color: rgba(0, 0, 0, 0);
     }
 
-    .overlay-btn {
-        position: absolute; /* Position relative to the containerEditWebPage */
-        top: 50%; /* Position from the top (50% of the parent container) */
-        left: 80%; /* Position from the left (50% of the parent container) */
-        transform: translate(-50%, -50%); /* Offset the button by half its width and height */
-        z-index: 10;
-        background-color: rgba(0, 123, 255, 0.6); /* Semi-transparent blue background (50% opacity) */
+    .containerEditWebPagebuttons {
+        position: absolute; /* Position the buttons absolutely within the container */
+        top: 15%; /* Adjust to control vertical position of buttons */
+        left: 75%; /* Adjust to control horizontal position (move towards the right) */
+        transform: translate(-50%, 0); /* Adjust buttons horizontally */
+        z-index: 10; /* Ensure buttons appear above content */
+        display: flex; /* Arrange buttons side by side */
+        gap: 20px; /* Space between Edit and Delete buttons */
+    }
+
+    .overlay-btn-edit {
+        background-color: rgba(0, 123, 255, 0.6); /* Blue background */
         color: white;
-        border: 2px solid #007bff; /* Blue border */
+        border: 2px solid #007bff;
         padding: 10px 20px;
     }
 
     .overlay-btn-delete {
-        position: absolute; /* Position relative to the containerEditWebPage */
-        top: 50%; /* Position from the top (50% of the parent container) */
-        left: 80%; /* Position from the left (50% of the parent container) */
-        transform: translate(-50%, -50%); /* Offset the button by half its width and height */
-        z-index: 10;
-        background-color: rgba(255, 0, 0, 0.6); /* Semi-transparent blue background (50% opacity) */
+        background-color: rgba(255, 0, 0, 0.6); /* Red background */
         color: white;
-        border: 2px solid #007bff; /* Blue border */
+        border: 2px solid #ff0000;
         padding: 10px 20px;
     }
 
+        /* Optional: Hover effect for buttons */
+        .overlay-btn-edit:hover, .overlay-btn-delete:hover {
+            background-color: #0056b3;
+        }
+
+    .button-container {
+        display: flex;
+        justify-content: flex-start; /* Align the buttons to the left */
+        flex-wrap: nowrap; /* Prevent buttons from wrapping */
+    }
+
+        .button-container button {
+            flex: 0 0 auto; /* Ensure buttons do not stretch */
+        }
     .overlay-edit {
         position: absolute; /* Position relative to the containerEditWebPage */
         top: 200%; /* Position from the top (50% of the parent container) */
@@ -185,8 +199,14 @@ else
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
-                        <button class="btn btn-primary overlay-btn btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
-                        <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content)"> Ta bort </button>
+
+                        <!-- Button container placed in the top-right corner of the content -->
+                        <div class="containerEditWebPagebuttons">
+                            <div class="button-container">
+                                <button class="btn btn-primary overlay-btn-edit btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
+                                    <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content.ContentId)"> Ta bort </button>
+                            </div>
+                        </div>
                     </div>
                      break;
                 }
@@ -209,8 +229,8 @@ else
                                 <ContentPreview ContentId="@content.ContentId" />
                             </div>
                             <div class="overlay-edit">
-                                <CascadingValue Value="content.WebPageId">
-                                 @*    <CMS.Component.ContentPages.Delete /> *@
+                                <CascadingValue Value="@ContentForEditing">
+                                    <CMS.Components.Pages.ContentPages.Delete />
                                 </CascadingValue>
                                 <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
                             </div>

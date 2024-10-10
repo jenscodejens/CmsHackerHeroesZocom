@@ -71,9 +71,9 @@ namespace CMS.Components.Pages.WebPages
             PageExecution = ExecuteAction.CreateContent;
         }
 
-        private void DeleteContent()
+        private void DeleteContent(int contentId)
         {
-            ContentForEditing = null;
+            ContentForEditing = contentId;
             PageExecution = ExecuteAction.Delete;
         }
 
@@ -89,6 +89,7 @@ namespace CMS.Components.Pages.WebPages
 
         private void EditPageinformationDone()
         {
+            ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
@@ -103,6 +104,7 @@ namespace CMS.Components.Pages.WebPages
 
         private void ResumeEditContent()
         {
+            ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
             StopEditing = false;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
