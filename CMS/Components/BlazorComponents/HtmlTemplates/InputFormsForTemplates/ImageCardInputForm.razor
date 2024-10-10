@@ -14,41 +14,50 @@
 <h3>Single Input Form</h3>
 
 <div>
-    <form>
-        <div>
-            <label>Content Name</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" />
-
-            <label>Image URL</label>
-            <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
-
-            <label>Card Title</label>
-            <input type="text" @bind="CardTitle" placeholder="Enter Card Title" />
-
-            <label>Card Text 1</label>
-            <input type="text" @bind="CardText1" placeholder="Enter Card Text 1" />
-
-            <label>Card Text 2</label>
-            <input type="text" @bind="CardText2" placeholder="Enter Card Text 2" />
-        </div>
-
-        <div>
-            <!--Color Controls -->
-            <label>Background Color:</label>
-            <input type="color" @bind="BackgroundColor" />
-            <br>
-            <label>Text Color:</label>
-            <input type="color" @bind="TextColor" />
-        </div>
+    <EditForm Model="@this" OnValidSubmit="SaveToDatabase">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+            <div class="mb-3">
+                <label>Content Name</label>
+                <InputText type="text" @bind-Value="ContentName" placeholder="Enter name for content" class="form-control "/>
+            </div>
+            <div class="mb-3">
+                <label>Image URL</label>
+            <InputText type="text" @bind-Value="ImageInput" placeholder="Enter Image URL" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label>Card Title</label>
+            <InputText type="text" @bind-Value="CardTitle" placeholder="Enter Card Title" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label>Card Text 1</label>
+            <InputText type="text" @bind-Value="CardText1" placeholder="Enter Card Text 1" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label>Card Text 2</label>
+            <InputText type="text" @bind-Value="CardText2" placeholder="Enter Card Text 2" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label>Card Text 2</label>
+            <InputText type="text" @bind-Value="CardText2" placeholder="Enter Card Text 2" class="form-control" />
+            </div>
+            @* <div class="mb-3">
+                <label>Background Color:</label>
+            <InputText type="color" @bind-Value="BackgroundColor" placeholder="red"/>
+            </div>
+            <div class="mb-3">
+                <label>Text Color:</label>
+            <InputText type="color" @bind-Value="TextColor" placeholder="black" />
+            </div> *@
 
         <div style="margin-top: 10px;">
-            <button type="button" @onclick="PreviewImage">PreviewImage</button>
-            @if (!MultiPageMode) // Show button only if not in multi-page mode
+            <button type="button" @onclick="PreviewImage" class="btn btn-primary">Preview Image</button>
+            @if (!MultiPageMode)
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="submit" class="btn btn-success">Save To Database</button>
             }
         </div>
-    </form>
+    </EditForm>
 
     <!-- Success message -->
     @if (saveSuccessful)
@@ -56,7 +65,6 @@
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
             Content saved successfully!
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
         </div>
     }
 </div>
@@ -85,7 +93,7 @@
     {
         if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
         {
-            SaveToDatabase(); // Call the save method
+            await SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
         }
     }

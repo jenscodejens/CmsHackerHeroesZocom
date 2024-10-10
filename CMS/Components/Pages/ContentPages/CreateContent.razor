@@ -12,9 +12,9 @@
 
 <h3>Skapa ett innehåll</h3>
 
-<div>
-    <label for="templateDropdown">Välj en mall:</label>
-    <select id="templateDropdown" @onchange="OnTemplateChanged">
+<div class="mb-3">
+    <label for="templateDropdown" class="form-label">Välj en mall:</label>
+    <select id="templateDropdown" class="form-select" @onchange="OnTemplateChanged">
         <option value="">-- Välj mall --</option>
         @if (templates != null)
         {

@@ -12,41 +12,42 @@
 <h3>Single Video Input Form</h3>
 
 <div>
-    <form>
+    <EditForm Model="@this" OnValidSubmit="SaveToDatabase">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
         <div>
             <label>Content Name</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" />
+            <InputText @bind-Value="ContentName" placeholder="Enter name for content" class="form-control" />
 
             <!-- Video URL Input -->
             <label>Video URL</label>
-            <input type="text" @bind="VideoUrl" placeholder="Enter Video URL" />
+            <InputText @bind-Value="VideoUrl" placeholder="Enter Video URL" class="form-control" />
 
             <!-- Video Size Controls -->
             <label>Video Width (px or %):</label>
-            <input type="text" @bind="VideoWidth" placeholder="e.g., 100% or 500px" />
+            <InputText @bind-Value="VideoWidth" placeholder="e.g., 100% or 500px" class="form-control" />
 
             <label>Video Height (px or %):</label>
-            <input type="text" @bind="VideoHeight" placeholder="e.g., auto or 300px" />
+            <InputText @bind-Value="VideoHeight" placeholder="e.g., auto or 300px" class="form-control" />
 
             <!-- Video Alignment Controls -->
             <label>Video Alignment:</label>
-            <select @bind="VideoAlignment">
+            <InputSelect @bind-Value="VideoAlignment" class="form-control">
                 <option value="left">Left</option>
                 <option value="center">Center</option>
                 <option value="right">Right</option>
-            </select>
-
+            </InputSelect>
         </div>
-
 
         <div style="margin-top: 10px;">
-            <button type="button" @onclick="PreviewImage">PreviewImage</button>
+            <button type="button" @onclick="PreviewImage" class="btn btn-primary">Preview Video</button>
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="submit" class="btn btn-success">Save To Database</button>
             }
         </div>
-    </form>
+    </EditForm>
 
     <!-- Success message -->
     @if (saveSuccessful)
@@ -56,6 +57,4 @@
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
         </div>
     }
-
 </div>
-     

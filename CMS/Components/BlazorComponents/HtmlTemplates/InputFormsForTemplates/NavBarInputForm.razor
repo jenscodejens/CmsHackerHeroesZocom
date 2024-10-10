@@ -1,9 +1,9 @@
-﻿@using CMS.Components.BlazorComponents.HtmlTemplates;
-@using CMS.Data;
-@using CMS.Entities;
-@using Microsoft.AspNetCore.Components;
-@using Microsoft.EntityFrameworkCore;
-@using System.Threading.Tasks;
+﻿@using CMS.Components.BlazorComponents.HtmlTemplates
+@using CMS.Data
+@using CMS.Entities
+@using Microsoft.AspNetCore.Components
+@using Microsoft.EntityFrameworkCore
+@using System.Threading.Tasks
 @using CMS.Components.BlazorComponents.HtmlTemplates
 @inherits BaseNavBarTemplate
 @inject IContentService ContentService
@@ -20,7 +20,6 @@
 
         <div class="collapse navbar-collapse" id="navbaris">
             <ul class="navbar-nav mr-auto">
-
                 @foreach (var item in MenuItems)
                 {
                     <li class="nav-item">
@@ -29,33 +28,39 @@
                         </NavLink>
                     </li>
                 }
-              
             </ul>
         </div>
     </nav>
     <a>Tryck på en titel i menyn för att editera valet.</a>
 
     <div>
-        @{if (currentStep == InputStep.ContentNameInput)
+        @if (currentStep == InputStep.ContentNameInput)
         {
-            <form>
-            
-                        <label for="meny">Menys namn:</label>
-                        <input type="text" @bind="inputValue" placeholder="" />
-                        <button type="button" @onclick="AddMenuName">Lägg till</button>
-           
-            </form>
+            <EditForm Model="@this" OnValidSubmit="AddMenuName">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label for="meny">Menys namn:</label>
+                    <InputText @bind-Value="inputValue" class="form-control" placeholder="Meny namn" />
+                </div>
+                <button type="submit" class="btn btn-primary">Lägg till</button>
+            </EditForm>
         }
-            else if ((currentStep == InputStep.AddItem))
+        else if (currentStep == InputStep.AddItem)
         {
-            
+            <EditForm Model="@this" OnValidSubmit="AddItem">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-        
+                <div class="mb-3">
                     <label for="title">Menyval namn:</label>
+                    <InputText @bind-Value="inputValue" class="form-control" placeholder="Menyval namn" />
+                </div>
 
-                    <input type="text" @bind="inputValue" placeholder="Menyval namn" />
-
-                        <select id="templateDropdown" @bind="templateDropdown">
+                <div class="mb-3">
+                    <label for="templateDropdown">Välj Sida:</label>
+                    <InputSelect @bind-Value="templateDropdown" class="form-control">
                         <option value="">-- Välj Sida --</option>
                         @if (webpages != null)
                         {
@@ -64,27 +69,35 @@
                                 <option value="@item.Value">@item.Key</option>
                             }
                         }
-                    </select>
-                    <button type="button" @onclick="AddItem">Lägg till</button>
-                    <button type="button" @onclick="AbortItem">Avbryt</button>
+                    </InputSelect>
+                </div>
 
-            
-            }
-            else if ((currentStep == InputStep.Wait))
+                <button type="submit" class="btn btn-primary">Lägg till</button>
+                <button type="button" @onclick="AbortItem" class="btn btn-secondary">Avbryt</button>
+            </EditForm>
+        }
+        else if (currentStep == InputStep.Wait)
+        {
+            <button type="button" @onclick="NewItem" class="btn btn-primary">Lägg till menyval</button>
+            @if (!MultiPageMode)
             {
-                    <button type="button" @onclick="NewItem">Lägg till menyval</button>
-                    @if (!MultiPageMode) // Show button only if not in multi-page mode
-                    {
-                        <button type="button" @onclick="Save">Spara meny</button>
-                    }
+                <button type="button" @onclick="Save" class="btn btn-success">Spara meny</button>
             }
-            else if ((currentStep == InputStep.Edit))
-            {
-                    <label for="title">Menyval nam:</label>
+        }
+        else if (currentStep == InputStep.Edit)
+        {
+            <EditForm Model="@this" OnValidSubmit="UpdateItem">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
 
-                    <input type="text" @bind="inputValue" placeholder="inputValue" />
+                <div class="mb-3">
+                    <label for="title">Menyval namn:</label>
+                    <InputText @bind-Value="inputValue" class="form-control" placeholder="Menyval namn" />
+                </div>
 
-                    <select id="templateDropdown" @bind="templateDropdown">
+                <div class="mb-3">
+                    <label for="templateDropdown">Välj Sida:</label>
+                    <InputSelect @bind-Value="templateDropdown" class="form-control">
                         <option value="">-- Välj Sida --</option>
                         @if (webpages != null)
                         {
@@ -93,21 +106,27 @@
                                 <option value="@item.Value">@item.Key</option>
                             }
                         }
-                    </select>
-                    <button type="button" @onclick="AbortItem">Avbryt</button>
-                    <button type="button" @onclick="UpdateItem">Ändra</button>
-                    <button type="button" @onclick="DeleteItem">Ta bort</button>
-            }
+                    </InputSelect>
+                </div>
 
+                <button type="submit" class="btn btn-success">Ändra</button>
+                <button type="button" @onclick="DeleteItem" class="btn btn-danger">Ta bort</button>
+                <button type="button" @onclick="AbortItem" class="btn btn-secondary">Avbryt</button>
+            </EditForm>
         }
 
         <div>
-            <!--Color Controls -->
-            <label>Background Color:</label>
-            <input type="color" @bind="BackgroundColor" />
-            <br>
-            <label>Text Color:</label>
-            <input type="color" @bind="TextColor" />
+            <!--Color Controls-->
+            <div class="row">
+                <div class="col-md-6">
+                    <label>Background Color:</label>
+                    <InputText @bind-Value="BackgroundColor" type="color" class="form-control form-control-color" />
+                </div>
+                <div class="col-md-6">
+                    <label>Text Color:</label>
+                    <InputText @bind-Value="TextColor" type="color" class="form-control form-control-color" />
+                </div>
+            </div>
         </div>
 
         <!-- Success message -->
@@ -116,12 +135,7 @@
             <div class="alert alert-success" role="alert" style="margin-top: 20px;">
                 Content saved successfully!
                 <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
             </div>
         }
-
     </div>
-
 </div>
-
-
