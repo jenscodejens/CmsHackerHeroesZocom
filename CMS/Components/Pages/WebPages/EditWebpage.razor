@@ -135,7 +135,6 @@ else
             {
                 if (Create == true)
                 {
-
                     <div class="containerEditWebPage" style="position: relative;">
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
@@ -149,21 +148,6 @@ else
                     </div>
                     Create = false; @* flytta till klar funktion *@
                 }
-               @*  else if (editPageinformation == true)
-                {
-                    <div class="containerEditWebPage" style="position: relative;">
-                        <div class="content">
-                            <ContentPreview ContentId="@content.ContentId" />
-                        </div>
-                        <div class="overlay-edit">
-                            <CascadingValue Value="content.WebPageId">
-                                <CMS.Components.Pages.WebPages.Edit />
-                            </CascadingValue>
-                            <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Klar </button>
-                        </div>
-                    </div>
-                    editPageinformation = false;
-                } *@
                 else
                 {
                     <div class="content">
