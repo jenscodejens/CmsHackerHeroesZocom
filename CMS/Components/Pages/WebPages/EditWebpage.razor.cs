@@ -66,6 +66,8 @@ namespace CMS.Components.Pages.WebPages
 
         bool StopEditing { get; set; } = false;
 
+        bool editPageinformation { get; set; } = false;
+
         bool Create { get; set; } = false;
 
         public Content? Content { get; set; }
@@ -106,8 +108,18 @@ namespace CMS.Components.Pages.WebPages
             ContentForEditing = null;
             StopEditing = true;
         }
+        private void EditPageinformation()
+        {
+            editPageinformation = true;
+        }
 
-        private void StopContent()
+        private void EditPageinformationDone()
+        {
+            editPageinformation = true;
+            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            StateHasChanged();
+        }
+        private void CreateDone()
         {
             ContentForEditing = null;
             Create = false;

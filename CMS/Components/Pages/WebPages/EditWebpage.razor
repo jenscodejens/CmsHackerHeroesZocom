@@ -51,7 +51,7 @@
         transform: translate(-50%, -50%); /* Offset the button by half its width and height */
         z-index: 10;
         background-color: rgba(255, 255, 255, 1);
-        color: white;
+        color: black;
         border: 2px solid #007bff; /* Blue border */
         padding: 10px 20px;
     }
@@ -63,20 +63,18 @@
 
 
 <p>
-    <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
-    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a> |
-    <a href="@($"webpages/editwebpage?webpageid={WebPageId}")">Redigera Sidans information</a>
+
     @if (StopEditing == false)
     {
         <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Pausa redigering </button>
         <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
-
     }
     else
     {
         <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
 
     }
+        <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera Sidans information </button>
 </p>
 
 @if (contents == null) 
@@ -89,6 +87,22 @@ else
 
             
         <TemplateColumn Context="content">
+            @if (editPageinformation == true)
+            {
+            <div class="containerEditWebPage" style="position: relative;">
+                <div class="content">
+                    <ContentPreview ContentId="@content.ContentId" />
+                </div>
+                <div class="overlay-edit">
+                    <CascadingValue Value="content.WebPageId">
+                        <CMS.Components.Pages.WebPages.Edit />
+                    </CascadingValue>
+                    <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Klar </button>
+                </div>
+            </div>
+            editPageinformation = false;
+            }
+
             @if (StopEditing == false)
             {
                 @if (ContentForEditing != content.ContentId)
@@ -130,11 +144,26 @@ else
                             <CascadingValue Value="content.WebPageId">
                                 <CreateContent />
                             </CascadingValue>
-                            <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Klar </button>
+                            <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
                         </div>
                     </div>
-                    Create = false;
+                    Create = false; @* flytta till klar funktion *@
                 }
+               @*  else if (editPageinformation == true)
+                {
+                    <div class="containerEditWebPage" style="position: relative;">
+                        <div class="content">
+                            <ContentPreview ContentId="@content.ContentId" />
+                        </div>
+                        <div class="overlay-edit">
+                            <CascadingValue Value="content.WebPageId">
+                                <CMS.Components.Pages.WebPages.Edit />
+                            </CascadingValue>
+                            <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Klar </button>
+                        </div>
+                    </div>
+                    editPageinformation = false;
+                } *@
                 else
                 {
                     <div class="content">
