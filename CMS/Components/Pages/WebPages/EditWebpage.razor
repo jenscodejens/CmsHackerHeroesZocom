@@ -17,7 +17,7 @@
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
-<style>
+ <style>
     .containerEditWebPage {
         position: relative;
         padding: 0px;
@@ -79,7 +79,7 @@
     }
 </p>
 
-@if (contents == null) @* || !contents.Any() *@
+@if (contents == null) 
 {
     <p>Denna webbsidan har inget innehåll.</p>
 }
@@ -115,10 +115,6 @@ else
                             <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Klar </button>
                             </div>
                     </div>
-
-                       @*  <CascadingValue Value="content.ContentId">
-                            <EditContent />
-                        </CascadingValue> *@
                 }
             }
             else
