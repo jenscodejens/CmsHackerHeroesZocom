@@ -28,6 +28,20 @@ namespace CMS.Components.Pages.WebPages
 
         ApplicationDbContext context = default!;
 
+        private ExecuteAction PageExecution { get; set; } = ExecuteAction.EditSelect;
+
+
+        private enum ExecuteAction
+        {
+            Wait,
+            EditSelect,
+            StopEditing,
+            EditPageinformation,
+            CreateContent,
+            Preview,
+            Delete,
+            EditContent
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -49,42 +63,50 @@ namespace CMS.Components.Pages.WebPages
             ContentForEditing = content.ContentId;
             ContentId = content.ContentId;
             Content = content;
-            StopEditing = false;
+            PageExecution = ExecuteAction.EditContent;
         }
         private void AddContent()
         {
-            Create = true;
             ContentForEditing = null;
-            StopEditing = true;
+            PageExecution = ExecuteAction.CreateContent;
         }
+
+        private void DeleteContent()
+        {
+            ContentForEditing = null;
+            PageExecution = ExecuteAction.Delete;
+        }
+
         private void PauseEditContent()
         {
             ContentForEditing = null;
-            StopEditing = true;
+            PageExecution = ExecuteAction.Preview;
         }
         private void EditPageinformation()
         {
-            editPageinformation = true;
+            PageExecution = ExecuteAction.EditPageinformation;
         }
 
         private void EditPageinformationDone()
         {
-            editPageinformation = true;
+            PageExecution = ExecuteAction.EditSelect;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
         private void CreateDone()
         {
             ContentForEditing = null;
-            Create = false;
+            PageExecution = ExecuteAction.EditSelect;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
 
         private void ResumeEditContent()
         {
-            ContentForEditing = null;
+            PageExecution = ExecuteAction.EditSelect;
             StopEditing = false;
+            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            StateHasChanged();
         }
 
         public async ValueTask DisposeAsync() => await context.DisposeAsync();
