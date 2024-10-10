@@ -12,43 +12,57 @@
 @inherits BaseHeaderTemplate //gets the base parameters we have in every template/inputform
 <h3>Input Form</h3>
 
-<div>
-    <form>
-            <div>
-                <label>Content Name:</label>
-                <input type="text" @bind="ContentName" />
-                <br>
-                <label>Input Value 1:</label>
-                <input type="text" @bind="TextInput1" />
-                <br>
-                <label>Input value 2:</label>
-                <input type="text" @bind="TextInput2" />
-                <br>
-                <!--Color Controls -->
+<div class="container">
+    <EditForm Model="@this" OnValidSubmit="SaveToDatabase">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Content Name:</label>
+            <InputText @bind-Value="ContentName" placeholder="Enter content name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Input Value 1:</label>
+            <InputText @bind-Value="TextInput1" placeholder="Enter value for Input 1" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Input Value 2:</label>
+            <InputText @bind-Value="TextInput2" placeholder="Enter value for Input 2" class="form-control" />
+        </div>
+
+        <!-- Color Controls -->
+        <div class="row mb-3">
+            <div class="col-md-6">
                 <label>Background Color:</label>
-                <input type="color" @bind="BackgroundColor" />
-                <br>
+                <InputText @bind-Value="BackgroundColor" type="color" class="form-control form-control-color" />
+            </div>
+            <div class="col-md-6">
                 <label>Text Color:</label>
-                <input type="color" @bind="TextColor"/>
+                <InputText @bind-Value="TextColor" type="color" class="form-control form-control-color" />
             </div>
-            <div style="margin-top: 10px;">
-                <button type="button" @onclick="PreviewImage">PreviewImage</button>
-                @if (!MultiPageMode) // Show button only if not in multi-page mode
-                {
-                    <button type="button" @onclick="SaveToDatabase">Save To Database</button>
-                }
-            </div>
-    </form>
+        </div>
+
+        <div style="margin-top: 10px;">
+            <button type="button" @onclick="PreviewImage" class="btn btn-primary">Preview Image</button>
+            @if (!MultiPageMode) // Show button only if not in multi-page mode
+            {
+                <button type="submit" class="btn btn-success">Save To Database</button>
+            }
+        </div>
+    </EditForm>
+
     <!-- Success message -->
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
             Content saved successfully!
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
         </div>
     }
 </div>
+
 
 @code {
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
@@ -58,11 +72,11 @@
     [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
     private bool saveSuccessful = false;  // New flag to show the success message
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
         {
-            SaveToDatabase(); // Call the save method
+            await SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
         }
     }

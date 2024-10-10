@@ -27,15 +27,16 @@
 else
 {
     <QuickGrid Class="table" Items="contents">
-        <PropertyColumn Property="content => content.ContentId" />
+       @*  <PropertyColumn Property="content => content.ContentId" />
         <PropertyColumn Property="content => content.WebPageId" />
         <PropertyColumn Property="content => content.ContentName" />
         <PropertyColumn Property="content => content.CreationDate" />
         <PropertyColumn Property="content => content.LastUpdated" />
         <PropertyColumn Property="content => content.ContentJson" />
-        <PropertyColumn Property="content => content.TemplateId" />
+        <PropertyColumn Property="content => content.TemplateId" /> *@
 
         <TemplateColumn Context="content">
+            <CMS.Components.Pages.ContentPages.ContentPreview ContentId="@content.ContentId" />
             <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
             <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> |
             <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |

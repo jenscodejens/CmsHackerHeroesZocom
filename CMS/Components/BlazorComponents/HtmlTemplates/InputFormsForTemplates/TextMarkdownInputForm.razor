@@ -3,25 +3,27 @@
 @using CMS.Entities
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
-@using System.Threading.Tasks
 @using Newtonsoft.Json
-
 @rendermode InteractiveServer
-
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IContentService ContentService
-@inherits BaseTextTemplateMarkdown //gets the base parameters we have in every template/inputform
+@inherits BaseTextTemplateMarkdown
 
 <h3>Markdown Input Form</h3>
 
 <div>
-    <form>
-        <div>
-            <label>Content Name</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" class="form-control" />
+    <EditForm Model="@this" OnValidSubmit="SaveToDatabase">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
 
-            <!-- Markdown Text Editor -->
+        <div class="mb-3">
+            <label>Content Name</label>
+            <InputText @bind-Value="ContentName" placeholder="Enter name for content" class="form-control" />
+        </div>
+
+        <!-- Markdown Text Editor -->
+        <div class="mb-3">
             <label>Markdown Content:</label>
             <MarkdownEditor @bind-Value="MarkdownContent" SpellChecker="false">
                 <Toolbar>
@@ -36,12 +38,12 @@
         </div>
 
         <div style="margin-top: 10px;">
-            @if (!MultiPageMode) // Show button only if not in multi-page mode
+            @if (!MultiPageMode)
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="submit" class="btn btn-success">Save To Database</button>
             }
         </div>
-    </form>
+    </EditForm>
 
     <!-- Success message -->
     @if (saveSuccessful)
@@ -49,41 +51,35 @@
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
             Content saved successfully!
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
         </div>
     }
 </div>
 
 @code {
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
     private string PreviewContent { get; set; } = string.Empty;
-
-    private bool hasSaved = false; // Flag to track if save has been executed
-    [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
-    [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
-
-    private bool saveSuccessful = false;  // New flag to show the success message
+    private bool hasSaved = false;
+    [Parameter] public bool SaveBtnClicked { get; set; }
+    [Parameter] public bool MultiPageMode { get; set; }
+    private bool saveSuccessful = false;
 
     protected override void OnParametersSet()
     {
-        if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
+        if (SaveBtnClicked && !hasSaved)
         {
-            SaveToDatabase(); // Call the save method
-            hasSaved = true; // Set the flag to prevent further saves
+            SaveToDatabase();
+            hasSaved = true;
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        // Load content only if ContentId exists (edit mode)
         if (ContentId.HasValue)
         {
             await LoadExistingContent(ContentId.Value);
         }
     }
 
-    // A class representing the structure of the JSON data stored in the database
     private class ContentData
     {
         public string MarkdownContent = string.Empty;
@@ -95,10 +91,8 @@
 
         if (existingContent != null)
         {
-            // Pre-fill form fields with existing content data
             ContentName = existingContent.ContentName;
 
-            // Deserialize the ContentJson field to extract additional form data
             if (!string.IsNullOrEmpty(existingContent.ContentJson))
             {
                 var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
@@ -107,8 +101,6 @@
         }
     }
 
-
-    // Save all inputs to the database when the "Save" button is clicked
     private async Task SaveToDatabase()
     {
         var user = await GetCurrentUserService.GetCurrentUserAsync();
@@ -129,8 +121,6 @@
                 TemplateId = TemplateId
             };
 
-       
-        // Save or update content based on ContentId presence
         if (ContentId.HasValue)
         {
             content.ContentId = ContentId.Value;
@@ -141,16 +131,13 @@
             await ContentService.SaveContentAsync(content);
         }
         saveSuccessful = true;
-
     }
 
-    // Convert Markdown to HTML (for preview)
     private string ConvertMarkdownToHtml(string markdown)
     {
-        return Markdig.Markdown.ToHtml(markdown); // Using Markdig for Markdown to HTML conversion
+        return Markdig.Markdown.ToHtml(markdown);
     }
 
-    // Navigate to the contents page after saving
     private void Done()
     {
         NavigationManager.NavigateTo($"/contents?webpageid={WebPageId}");

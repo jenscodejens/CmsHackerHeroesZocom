@@ -11,59 +11,80 @@
 @inject IContentService ContentService 
 @inherits BaseImageTemplate //gets the base parameters we have in every template/inputform
 
+@rendermode InteractiveServer
+
 <h3>Single Image Input Form</h3>
 
 <div>
-    <form>
-        <div>
+    <EditForm Model="@this" OnValidSubmit="SaveToDatabase">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
             <label>Content Name</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" />
+            <InputText @bind-Value="ContentName" placeholder="Enter name for content" class="form-control" />
+        </div>
 
-            <label>Image URL</label>
-            <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
+        <div class="mb-3">
+            <p class="mt-2">Enter an Image URL:</p>
+            <InputText @bind-Value="ImageInput" placeholder="Enter Image URL" class="form-control" />
+        </div>
 
-            <!-- Image Size Controls -->
-            <label>Image Width (px or %):</label>
-            <input type="text" @bind="ImageWidth" placeholder="e.g., 100% or 500px" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label>Image Width (px or %):</label>
+                <InputText @bind-Value="ImageWidth" placeholder="e.g., 100% or 500px" class="form-control" />
+            </div>
+            <div class="col-md-6">
+                <label>Image Height (px or %):</label>
+                <InputText @bind-Value="ImageHeight" placeholder="e.g., auto or 300px" class="form-control" />
+            </div>
+        </div>
 
-            <label>Image Height (px or %):</label>
-            <input type="text" @bind="ImageHeight" placeholder="e.g., auto or 300px" />
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label>Border Width (px):</label>
+                <InputNumber @bind-Value="BorderWidth" placeholder="Enter border width" class="form-control" />
+            </div>
+            <div class="col-md-1">
+                <label>Border Color:</label>
+                <InputText @bind-Value="BorderColor" type="color" class="form-control form-control-color" />
+            </div>
+        </div>
 
-            <!-- Image Border Controls -->
-            <label>Border Width (px):</label>
-            <input type="number" @bind="BorderWidth" placeholder="Enter border width" />
+        <div class="mb-3">
+            <label>Border Radius:</label>
+            <InputNumber @bind-Value="BorderRadius" placeholder="Enter border radius" class="form-control" />
+            <input type="range" min="0" max="100" step="1" @bind="BorderRadius" class="form-range" />
+        </div>
 
-            <label>Border Color:</label>
-            <input type="color" @bind="BorderColor" />
-
-            <label>Border Radius (px):</label>
-            <input type="number" @bind="BorderRadius" placeholder="Enter border radius" />
-
-            <!-- Image Shadow Controls -->
+        <div class="mb-3">
             <label>Box Shadow (CSS format):</label>
-            <input type="text" @bind="BoxShadow" placeholder="e.g., 0 4px 8px rgba(0, 0, 0, 0.2)" />
+            <InputText @bind-Value="BoxShadow" placeholder="e.g., 0 4px 8px rgba(0, 0, 0, 0.2)" class="form-control" />
+        </div>
 
-            <!-- Background Color Controls -->
+        <div class="mb-3">
             <label>Background Color:</label>
-            <input type="color" @bind="BackgroundColor" />
+            <InputText @bind-Value="BackgroundColor" type="color" class="form-control form-control-color"/>
+        </div>
 
-            <!-- Image Alignment Controls -->
+        <div class="mb-3">
             <label>Image Alignment:</label>
-            <select @bind="ImageAlignment">
+            <InputSelect @bind-Value="ImageAlignment" class="form-control">
                 <option value="left">Left</option>
                 <option value="center">Center</option>
                 <option value="right">Right</option>
-            </select>
+            </InputSelect>
         </div>
 
         <div style="margin-top: 10px;">
-            <button type="button" @onclick="PreviewImage">PreviewImage</button>
-            @if (!MultiPageMode) // Show button only if not in multi-page mode
+            <button type="button" @onclick="PreviewImage" class="btn btn-primary">Preview Image</button>
+            @if (!MultiPageMode)
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="submit" class="btn btn-success">Save To Database</button>
             }
         </div>
-    </form>
+    </EditForm>
 
     <!-- Success message -->
     @if (saveSuccessful)
@@ -71,7 +92,6 @@
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
             Content saved successfully!
             <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
         </div>
     }
 </div>
@@ -84,7 +104,21 @@
     [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
     private bool saveSuccessful = false;  // New flag to show the success message
 
-    protected override void OnParametersSet()
+    private async Task HandleSelected(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        if (files.Count > 0)
+        {
+            var file = files[0];
+            var buffer = new byte[file.Size];
+            await file.OpenReadStream().ReadAsync(buffer);
+
+            // Convert the file to a Base64 string (for demonstration, you can adjust as needed)
+            ImageInput = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
+        }
+    }
+
+    protected override async void OnParametersSet()
     {
         if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
         {
@@ -206,6 +240,7 @@
         else
         {
             await ContentService.SaveContentAsync(content);
+            Thread.Sleep(5000);
         }
 
         saveSuccessful = true;
