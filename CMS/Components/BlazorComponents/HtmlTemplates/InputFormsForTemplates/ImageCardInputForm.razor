@@ -85,7 +85,7 @@
     {
         if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
         {
-            SaveToDatabase(); // Call the save method
+            await SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
         }
     }
@@ -96,7 +96,7 @@
         if (ContentId.HasValue)
         {
             await LoadExistingContent(ContentId.Value);
-            PreviewImage();
+            await PreviewImage();
         }
     }
 

@@ -22,9 +22,9 @@ public class GetCurrentUserService : IGetCurrentUserService
         var authuser = authstate.User;
         if (authuser.Identity.IsAuthenticated) 
         {
-        var Name = authuser.Identity.Name;
-        var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == Name);
-        return user;
+            var Name = authuser.Identity.Name;
+            var user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == Name);
+            return user;
         }
 
         return null;

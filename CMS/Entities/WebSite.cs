@@ -18,7 +18,7 @@ namespace CMS.Entities
         public int? LandingPage { get; set; }
         public int? Header { get; set; }
         public int? Footer { get; set; }
-        public ApplicationUser ApplicationUser { get; set; } 
-        public ICollection<WebPage> WebPages { get; set; }  // Virtual för lazyloading
+        public ApplicationUser? ApplicationUser { get; set; } 
+        public ICollection<WebPage>? WebPages { get; set; }  // Virtual för lazyloading
     }
 }

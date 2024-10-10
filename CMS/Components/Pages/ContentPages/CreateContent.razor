@@ -58,10 +58,10 @@
 
     [Parameter] public bool MultiPageMode { get; set; } = false; // Default to false
 
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
     private List<Template> templates = new List<Template>(); // Initialize with an empty list
-    private string selectedTemplatePath;
-    private string selectedInputFormPath;
+    private string? selectedTemplatePath;
+    private string? selectedInputFormPath;
     private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
 
     protected override async Task OnInitializedAsync()

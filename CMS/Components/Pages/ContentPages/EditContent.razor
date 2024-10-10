@@ -52,8 +52,8 @@ else
     [Parameter]
     public bool MultiPageMode { get; set; } = false;
 
-    private string selectedTemplatePath;
-    private string selectedInputFormPath;
+    private string? selectedTemplatePath;
+    private string? selectedInputFormPath;
     private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
 
     protected override async Task OnInitializedAsync()

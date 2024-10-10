@@ -13,7 +13,7 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
     public class BaseImageCardTemplate : BaseTemplateComponent
     {
         [Parameter] public string ContentName { get; set; } = string.Empty;
-        [Parameter] public string ImageInput { get; set; }
+        [Parameter] public string? ImageInput { get; set; }
         [Parameter] public string CardTitle { get; set; } = "CardTitle";
         [Parameter] public string CardText1 { get; set; } = "CardText1";
         [Parameter] public string CardText2 { get; set; } = "CardText2";
@@ -23,15 +23,15 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
     public class BaseImageTemplate : BaseTemplateComponent
     {
         [Parameter] public string ContentName { get; set; } = string.Empty;
-        [Parameter] public string ImageInput { get; set; }
-        [Parameter] public string ImageWidth { get; set; }
-        [Parameter] public string ImageHeight { get; set; }
+        [Parameter] public string? ImageInput { get; set; }
+        [Parameter] public string? ImageWidth { get; set; }
+        [Parameter] public string? ImageHeight { get; set; }
         [Parameter] public decimal BorderWidth { get; set; }
-        [Parameter] public string BorderColor { get; set; }
+        [Parameter] public string? BorderColor { get; set; }
         [Parameter] public decimal BorderRadius { get; set; }
-        [Parameter] public string BoxShadow { get; set; }
-        [Parameter] public string BackgroundColor { get; set; }
-        [Parameter] public string ImageAlignment { get; set; }
+        [Parameter] public string? BoxShadow { get; set; }
+        [Parameter] public string? BackgroundColor { get; set; }
+        [Parameter] public string? ImageAlignment { get; set; }
     }
     public class BaseTextTemplateMarkdown : BaseTemplateComponent
     {

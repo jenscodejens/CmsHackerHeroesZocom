@@ -45,10 +45,10 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
-        public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
+        public Dictionary<string, string> Pages = new() { { "Länk saknas","Titel saknas"  } };
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -192,11 +192,11 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 
         //ToDo: Handle async method.
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
             {
-                Save(); // Call the save method
+                await Save(); // Call the save method
                 hasSaved = true; // Set the flag to prevent further saves
             }
         }

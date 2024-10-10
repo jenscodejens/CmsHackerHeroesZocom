@@ -37,9 +37,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
 
         private bool saveSuccessful = false;  // New flag to show the success message
-        public string UserId { get; set; }
+        public string? UserId { get; set; }
 
-        private class videoInputs
+        private class VideoInputs
         {
             public string VideoUrl { get; set; } = string.Empty;
             public string VideoWidth { get; set; } = string.Empty;
@@ -69,7 +69,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
                     if (!string.IsNullOrEmpty(Currentcontent.ContentJson))
                     {
-                        var contentData = JsonConvert.DeserializeObject<videoInputs>(Currentcontent.ContentJson);
+                        var contentData = JsonConvert.DeserializeObject<VideoInputs>(Currentcontent.ContentJson);
                         //Todo verfication and alertmessage if conted not loaded.
                         VideoUrl = contentData.VideoUrl;
                         VideoWidth = contentData.VideoWidth;
@@ -86,11 +86,11 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
         }
 
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
             {
-                SaveToDatabase(); // Call the save method
+                await SaveToDatabase(); // Call the save method
                 hasSaved = true; // Set the flag to prevent further saves
             }
         }

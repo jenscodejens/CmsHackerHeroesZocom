@@ -37,7 +37,7 @@ else
 @code {
     [Parameter] public int WebPageId { get; set; }
 
-    private List<Content> contentList;
+    private List<Content>? contentList;
     private int VisitCount { get; set; }
     private string CurrentPageUrl => NavigationManager.Uri;
     private int WebSiteId { get; set; }

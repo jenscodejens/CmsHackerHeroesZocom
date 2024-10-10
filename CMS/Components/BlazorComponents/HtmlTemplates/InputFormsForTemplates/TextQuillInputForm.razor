@@ -111,11 +111,11 @@
     }
 
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
         {
-            SaveToDatabase(); // Call the save method
+            await SaveToDatabase(); // Call the save method
             hasSaved = true; // Set the flag to prevent further saves
         }
     }

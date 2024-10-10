@@ -22,7 +22,7 @@ else
 [Parameter]
 public int WebSiteId { get; set; }
 
-private IEnumerable<WebSiteVisit> PageVisits { get; set; }
+private IEnumerable<WebSiteVisit>? PageVisits { get; set; }
 
 protected override async Task OnInitializedAsync()
 {

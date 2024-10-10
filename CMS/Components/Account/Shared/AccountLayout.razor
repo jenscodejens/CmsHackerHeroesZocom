@@ -15,7 +15,7 @@ else
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
         if (HttpContext is null)
         {
