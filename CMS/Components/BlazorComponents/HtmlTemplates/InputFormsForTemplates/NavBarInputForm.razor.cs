@@ -24,7 +24,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             Done
         }
 
-
         [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
         //[CascadingParameter] public int? ContentId { get; set; }
@@ -52,8 +51,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         protected override async Task OnInitializedAsync()
         {
-
-
             await GetUserID();
             //ToDo: Add user verification, altternatives: check if user are assigned to a website(multiple users assigned to a website, or multiple users per website+webpage+content,
             //if content can be edited by multiple users this will not be working:
