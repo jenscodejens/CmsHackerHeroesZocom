@@ -11,7 +11,9 @@ namespace CMS.Components.Pages.WebPages
 {
     public partial class EditWebPage
     {
-        IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
+        [Inject] private NavigationManager NavigationManager { get; set; } = default!;
+
+        IQueryable<Content> contents { get; set; } = Enumerable.Empty<Content>().AsQueryable();
         [SupplyParameterFromQuery]
         public int? WebPageId { get; set; }
         private int? ContentForEditing { get; set; } = null;
@@ -47,6 +49,13 @@ namespace CMS.Components.Pages.WebPages
         {
             context = DbFactory.CreateDbContext();
 
+           var  WebPage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+           
+            if (WebPage is null)
+            {
+                NavigationManager.NavigateTo("/error");
+            }
+
             if (WebPageId.HasValue)
             {
                 // Fetch content filtered by WebPageId
@@ -67,6 +76,7 @@ namespace CMS.Components.Pages.WebPages
         }
         private void AddContent()
         {
+
             ContentForEditing = null;
             PageExecution = ExecuteAction.CreateContent;
         }

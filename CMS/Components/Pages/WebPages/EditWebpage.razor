@@ -109,14 +109,15 @@
 
 </style>
 
+@* Todo: Investigate the handling of the use of components, to remove excess use/"writing"" of components*@
 
 <p>
 
     @if (PageExecution != ExecuteAction.Preview)
     {
-        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska Sida </button>
+        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
         <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
-        <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera Sidans information </button>
+        <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
     }
     else
     {
@@ -128,6 +129,17 @@
 {
     <p>Denna webbsidan har inget innehåll.</p>
 }
+else if (!contents.Any())
+                        {
+                            <div class="containerEditWebPage" style="position: relative;">
+                                <div class="content">
+                                        <CascadingValue Value="WebPageId">
+                                        <CreateContent />
+                                    </CascadingValue>
+                                </div>
+                                <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
+                            </div>
+                        }
 else
 {
     <QuickGrid Class="table" Items="contents">
@@ -172,14 +184,15 @@ else
                     {
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
-                        </div>
+                            </div>
+                        }
+
+                        break;
                     }
-                       
-                break;
-                }
                 case ExecuteAction.CreateContent:
-                {
-                    <div class="containerEditWebPage" style="position: relative;">
+                    {
+                       
+                        <div class="containerEditWebPage" style="position: relative;">
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
