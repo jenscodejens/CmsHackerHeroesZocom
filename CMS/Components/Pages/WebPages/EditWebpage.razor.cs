@@ -1,50 +1,4 @@
-﻿//using CMS.Entities;
-//using Microsoft.AspNetCore.Components.Authorization;
-//using Microsoft.AspNetCore.Components;
-//using Microsoft.EntityFrameworkCore.Internal;
-//using Microsoft.EntityFrameworkCore;
-
-//namespace CMS.Components.Pages.WebPages
-//{
-//    public partial class EditWebPage
-//    {
-//        [Parameter] public int WebPageId { get; set; }
-
-//        private List<Content> contentList;
-//        private int VisitCount { get; set; }
-//        private string CurrentPageUrl => NavigationManager.Uri;
-//        private int WebSiteId { get; set; }
-
-//        protected override async Task OnInitializedAsync()
-//        {
-//            using var dbContext = DbContextFactory.CreateDbContext();
-
-//            contentList = await dbContext.Contents
-//                                         .Where(c => c.WebPageId == WebPageId)
-//                                         .ToListAsync();
-
-//            // Get the WebSiteId associated with this WebPage
-//            var webPage = await dbContext.WebPages.FirstOrDefaultAsync(wp => wp.WebPageId == WebPageId);
-//            if (webPage != null)
-//            {
-//                WebSiteId = webPage.WebSiteId;
-
-//                // Check if the user is logged in
-//                var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-//                var user = authState.User;
-
-//                if (!user.Identity.IsAuthenticated)
-//                {
-//                    // Only increment the visit count if the user is not logged in
-//                    await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
-//                }
-
-//                // Get the updated visit count for this page
-//                VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
-//            }
-//        }
-//    }
-//}
+﻿
 using CMS.Data;
 using CMS.Entities;
 using Microsoft.AspNetCore.Components;
@@ -74,6 +28,20 @@ namespace CMS.Components.Pages.WebPages
 
         ApplicationDbContext context = default!;
 
+        private ExecuteAction PageExecution { get; set; } = ExecuteAction.EditSelect;
+
+
+        private enum ExecuteAction
+        {
+            Wait,
+            EditSelect,
+            StopEditing,
+            EditPageinformation,
+            CreateContent,
+            Preview,
+            Delete,
+            EditContent
+        }
 
         protected override async Task OnInitializedAsync()
         {
@@ -95,34 +63,41 @@ namespace CMS.Components.Pages.WebPages
             ContentForEditing = content.ContentId;
             ContentId = content.ContentId;
             Content = content;
-            StopEditing = false;
+            PageExecution = ExecuteAction.EditContent;
         }
         private void AddContent()
         {
-            Create = true;
             ContentForEditing = null;
-            StopEditing = true;
+            PageExecution = ExecuteAction.CreateContent;
         }
+
+        private void DeleteContent(int contentId)
+        {
+            ContentForEditing = contentId;
+            PageExecution = ExecuteAction.Delete;
+        }
+
         private void PauseEditContent()
         {
             ContentForEditing = null;
-            StopEditing = true;
+            PageExecution = ExecuteAction.Preview;
         }
         private void EditPageinformation()
         {
-            editPageinformation = true;
+            PageExecution = ExecuteAction.EditPageinformation;
         }
 
         private void EditPageinformationDone()
         {
-            editPageinformation = true;
+            ContentForEditing = null;
+            PageExecution = ExecuteAction.EditSelect;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
         private void CreateDone()
         {
             ContentForEditing = null;
-            Create = false;
+            PageExecution = ExecuteAction.EditSelect;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
@@ -130,7 +105,9 @@ namespace CMS.Components.Pages.WebPages
         private void ResumeEditContent()
         {
             ContentForEditing = null;
-            StopEditing = false;
+            PageExecution = ExecuteAction.EditSelect;
+            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            StateHasChanged();
         }
 
         public async ValueTask DisposeAsync() => await context.DisposeAsync();
