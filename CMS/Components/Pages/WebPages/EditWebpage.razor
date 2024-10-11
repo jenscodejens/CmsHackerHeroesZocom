@@ -229,12 +229,13 @@ else
                                 <ContentPreview ContentId="@content.ContentId" />
                             </div>
                             <div class="overlay-edit">
-                                <CascadingValue Value="@ContentForEditing">
-                                    <CMS.Components.Pages.ContentPages.Delete />
-                                </CascadingValue>
+                        
+                                    <CMS.Components.Pages.ContentPages.Delete ContentId="@ContentForEditing" />
+                                
                                 <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
                             </div>
                         </div>
+                        PageExecution = ExecuteAction.Wait;
                         break;
                     }
                 default:          

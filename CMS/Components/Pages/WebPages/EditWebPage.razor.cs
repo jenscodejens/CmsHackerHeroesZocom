@@ -106,7 +106,6 @@ namespace CMS.Components.Pages.WebPages
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            StopEditing = false;
             contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
