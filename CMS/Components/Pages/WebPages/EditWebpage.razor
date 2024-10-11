@@ -149,33 +149,33 @@ else
                             <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Avbryt </button>
                         </div>
                     </div>
-                        PageExecution = ExecuteAction.Preview;
-                        break;         
-                    }
+                    PageExecution = ExecuteAction.Preview;
+                    break;         
+                }
                 case ExecuteAction.EditContent:
+                {
+                    if (content.ContentId == ContentForEditing)
                     {
-                        if (content.ContentId == ContentForEditing)
-                        {
-                            <div class="containerEditWebPage" style="position: relative;">
-                                <div class="content">
-                                    <ContentPreview ContentId="@content.ContentId" />
-                                </div>
-                                <div class="overlay-edit">
-                                    <CascadingValue Value="content.ContentId">
-                                        <EditContent />
-                                    </CascadingValue>
-                                    <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Avbryt </button>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
+                        <div class="containerEditWebPage" style="position: relative;">
                             <div class="content">
                                 <ContentPreview ContentId="@content.ContentId" />
                             </div>
-                        }
+                            <div class="overlay-edit">
+                                <CascadingValue Value="content.ContentId">
+                                    <EditContent />
+                                </CascadingValue>
+                                <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Avbryt </button>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="content">
+                            <ContentPreview ContentId="@content.ContentId" />
+                        </div>
+                    }
                        
-                    break;
+                break;
                 }
                 case ExecuteAction.CreateContent:
                 {
@@ -214,36 +214,47 @@ else
                 {
                     <div class="content">
                         <ContentPreview ContentId="@content.ContentId" />
-                    </div>
-                    
-                    break;
+                        </div>
+
+                        break;
+                    }
+                case ExecuteAction.Delete:
+                    {
+                        if (ContentForEditing == content.ContentId)
+                        {
+                            Content contentdelete = new()
+                                        {
+                                            ContentId = (int)ContentForEditing
+                                        };
+                            <div class="containerEditWebPage" style="position: relative;">
+                                <div class="content">
+                                    <ContentPreview ContentId="@content.ContentId" />
+                                </div>
+                                <div class="overlay-edit">
+                                    <CascadingValue Value="@contentdelete.ContentId">
+                                        <CMS.Components.Pages.ContentPages.Delete />
+                                    </CascadingValue>
+                                    <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Gå tillbaka </button>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="content">
+                                <ContentPreview ContentId="@content.ContentId" />
+                            </div>
+                        }
+                        break;
                 }
                 case ExecuteAction.Wait:
                 {
                     break;
                 }
-                case ExecuteAction.Delete:
-                    {
-                        <div class="containerEditWebPage" style="position: relative;">
-                            <div class="content">
-                                <ContentPreview ContentId="@content.ContentId" />
-                            </div>
-                            <div class="overlay-edit">
-                        
-                                    <CMS.Components.Pages.ContentPages.Delete ContentId="@ContentForEditing" />
-                                
-                                <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
-                            </div>
-                        </div>
-                        PageExecution = ExecuteAction.Wait;
-                        break;
-                    }
                 default:          
                 {
                     <div class="content">
                         <ContentPreview ContentId="@content.ContentId" />
                     </div>
-                    
                     break;
                 }
             }

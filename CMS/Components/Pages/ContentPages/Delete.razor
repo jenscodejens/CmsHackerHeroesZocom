@@ -8,11 +8,10 @@
 
 <PageTitle>Radera innehåll</PageTitle>
 
-<h1>Radera</h1>
+@* <h1>Radera</h1>
 
-<h3>Är du säker på att du vill radera innehållet?</h3>
+<h3>Är du säker på att du vill radera innehållet?</h3> *@
 <div>
-    <h4>Content</h4>
     <hr />
     @if (content is null)
     {
@@ -20,51 +19,91 @@
     }
     else
     {
-        <dl class="row">
+        @*  <dl class="row">
             <dt class="col-sm-2">ContentId</dt>
             <dd class="col-sm-10">@content.ContentId</dd>
         </dl>
         <dl class="row">
             <dt class="col-sm-2">WebPageId</dt>
             <dd class="col-sm-10">@content.WebPageId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">Innehållsnamn</dt>
+        </dl> *@
+        @*       <dl class="row">
+            <dt class="col-sm-2">Innehåll: @content.ContentName</dt>
             <dd class="col-sm-10">@content.ContentName</dd>
-        </dl>
-@*         <dl class="row">
+        </dl> *@
+        @*         <dl class="row">
             <dt class="col-sm-2">Innehållsmall</dt>
             <dd class="col-sm-10">@content.Template.TemplateType</dd>
         </dl> *@
-        <EditForm method="post" Model="content" OnValidSubmit="DeleteContent" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button> |
-            <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a>
-        </EditForm>
+        if (Success == false)
+        {
+            <h1>Radera</h1>
+
+            <h3>Är du säker på att du vill radera innehållet?</h3>
+            
+                <hr />
+            <dl class="row">
+                <div class="content">
+                    <ContentPreview ContentId="@content.ContentId" />
+                </div>
+            </dl>
+            <dl class="row">
+                <EditForm method="post" Model="content" OnValidSubmit="()=> DeleteContent(content.ContentId)" FormName="delete"     
+            Enhance
+                 >
+                     <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button>
+                 </EditForm>
+             </dl>
+        }
+        else
+        {
+            <dl class="row">
+                Innehåll raderat.
+            </dl>
+        }
+        @*  <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a> *@
     }
 </div>
 
 @code {
-    Content? content;
+    Content? content { get; set; } = null;
 
-    [SupplyParameterFromQuery]
-    public int ContentId { get; set; }
+    [CascadingParameter]
+    public int? ContentId { get; set; } = null;
+
+    private bool Success { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        content = await context.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+        if (ContentId != null)
+        {
+            content = await context.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+        }
+        else
+        {
+            Console.WriteLine("No value passed to Delete content for ContentId, Id is null."); 
+        }
 
-        if (content is null)
+        if (content == null)
         {
             NavigationManager.NavigateTo("notfound");
         }
     }
 
-    public async Task DeleteContent()
+    public async Task DeleteContent(int contentId)
     {
+
         using var context = DbFactory.CreateDbContext();
-        context.Contents.Remove(content!);
-        await context.SaveChangesAsync();
-        // NavigationManager.NavigateTo($"/contents?webpageid={content.WebPageId}");
+        var contentToDelete = await context.Contents.FirstOrDefaultAsync(c => c.ContentId == contentId);
+
+        if (contentToDelete != null)
+        {
+            context.Contents.Remove(contentToDelete);
+            await context.SaveChangesAsync();
+            Success = true;
+            // NavigationManager.NavigateTo("/contents");
+        }
     }
+
 }
