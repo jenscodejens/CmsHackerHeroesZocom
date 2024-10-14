@@ -74,7 +74,7 @@
         <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
 
     }
-        <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera Sidans information </button>
+        <button type="button" class="btn btn-success" @onclick="()=> EditPageInformation()"> Redigera Sidans information </button>
 </p>
 
 @if (contents == null) 
@@ -87,7 +87,7 @@ else
 
             
         <TemplateColumn Context="content">
-            @if (editPageinformation == true)
+            @if (EditPageInfo == true)
             {
             <div class="containerEditWebPage" style="position: relative;">
                 <div class="content">
@@ -97,10 +97,10 @@ else
                     <CascadingValue Value="content.WebPageId">
                         <CMS.Components.Pages.WebPages.Edit />
                     </CascadingValue>
-                    <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Klar </button>
+                    <button type="button" class="btn btn-warning" @onclick="()=> EditPageInformationDone()"> Klar </button>
                 </div>
             </div>
-            editPageinformation = false;
+            EditPageInfo = false;
             }
 
             @if (StopEditing == false)
