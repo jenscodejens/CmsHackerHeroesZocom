@@ -35,7 +35,7 @@
     .containerEditWebPagebuttons {
         position: absolute; /* Position the buttons absolutely within the container */
         top: 15%; /* Adjust to control vertical position of buttons */
-        left: 75%; /* Adjust to control horizontal position (move towards the right) */
+        left: 50%; /* Adjust to control horizontal position (move towards the right) */
         transform: translate(-50%, 0); /* Adjust buttons horizontally */
         z-index: 10; /* Ensure buttons appear above content */
         display: flex; /* Arrange buttons side by side */
@@ -43,14 +43,14 @@
     }
 
     .overlay-btn-edit {
-        background-color: rgba(0, 123, 255, 0.6); /* Blue background */
+        background-color: rgba(0, 123, 255, 0.9); /* Blue background */
         color: white;
         border: 2px solid #007bff;
         padding: 10px 20px;
     }
 
     .overlay-btn-delete {
-        background-color: rgba(255, 0, 0, 0.6); /* Red background */
+        background-color: rgba(255, 0, 0, 0.9); /* Red background */
         color: white;
         border: 2px solid #ff0000;
         padding: 10px 20px;
@@ -72,7 +72,7 @@
         }
     .overlay-edit {
         position: absolute; /* Position relative to the containerEditWebPage */
-        top: 200%; /* Position from the top (50% of the parent container) */
+        top:190px; /* Position from the top (50% of the parent container) */
         left: 50%; /* Position from the left (50% of the parent container) */
         transform: translate(-50%, -50%); /* Offset the button by half its width and height */
         z-index: 10;
@@ -84,7 +84,7 @@
 
     .overlay-editwebpageinfo {
         position: absolute; /* Position relative to the viewport (screen) */
-        top: 20%; /* Adjust this value as needed for how far down you want it to appear */
+        top: -20px; /* Adjust this value as needed for how far down you want it to appear */
         left: 50%; /* Center it horizontally */
         transform: translateX(-50%); /* Offset the button by half its width */
         z-index: 10;
@@ -107,29 +107,53 @@
             padding: 0 !important;
         }
 
+ /* Main button container */
+    .containerMainButtons {
+        position: fixed; /* Fixes the container */
+        bottom: 3%; /* Always at the top of the screen */
+        left: 3%; /* Optional: Align it to the left */
+        width: 100%; /* Optional: Make it full width */
+        z-index: 100; /* Ensure it stays above other content */
+        background-color: rgba(0, 0, 0, 0); /* Optional: adds a background */
+        padding: 0; /* Padding for the container */
+    }
+
+    .btn {
+        font-size: 14px; /* Smaller font */
+        padding: 5px 1px; /* Smaller padding */
+    }
 </style>
+
+
+
 
 @* Todo: Investigate the handling of the use of components, to remove excess use/"writing"" of components*@
 
-<p>
 
-    @if (PageExecution != ExecuteAction.Preview)
-    {
-        <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
-        <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
-        <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
-    }
-    else
-    {
-        <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
-    }
-</p>
+    <p>
+         <div class="containerMainButtons">
+        @if (PageExecution != ExecuteAction.Preview)
+        {
+ 
+            <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
+            <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
+            <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
+ 
+        }
+        else
+        {
 
-@if (contents == null) 
+            <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
+
+        }
+        </div>
+    </p>
+
+@if (Contents == null)
 {
     <p>Denna webbsidan har inget innehåll.</p>
 }
-else if (!contents.Any())
+else if (!Contents.Any())
                         {
                             <div class="containerEditWebPage" style="position: relative;">
                                 <div class="content">
@@ -142,7 +166,7 @@ else if (!contents.Any())
                         }
 else
 {
-    <QuickGrid Class="table" Items="contents">
+    <QuickGrid Class="table" Items="Contents">
 
             
         <TemplateColumn Context="content">
