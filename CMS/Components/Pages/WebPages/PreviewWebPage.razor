@@ -1,4 +1,5 @@
-﻿@page "/webpages/previewpage/{webPageId:int}"
+﻿
+@page "/webpages/previewpage/{webPageId:int}"
 
 @using CMS.Data
 @using CMS.Models
@@ -12,7 +13,11 @@
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
+
+
 <h3>Förhandsgranskning Webbsida</h3>
+
+
 
 @if (contentList == null)
 {
@@ -34,6 +39,69 @@ else
 
 <p>Denna sida har besökts @VisitCount gånger.</p>
 
+
+@code {
+    [Parameter] public int WebPageId { get; set; }
+    private List<Content> contentList;
+    private int VisitCount { get; set; }
+    private string CurrentPageUrl => NavigationManager.Uri;
+    private int WebSiteId { get; set; }
+    private bool hasIncrementedVisit = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadContentAsync();
+        // Remove the call to CheckAndIncrementVisitAsync() from here
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CheckAndIncrementVisitAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadContentAsync()
+    {
+        using var dbContext = DbContextFactory.CreateDbContext();
+        contentList = await dbContext.Contents
+            .Where(c => c.WebPageId == WebPageId)
+            .ToListAsync();
+
+        // Get the WebSiteId associated with this WebPage
+        var webpage = await dbContext.WebPages.FirstOrDefaultAsync(wp => wp.WebPageId == WebPageId);
+        if (webpage != null)
+        {
+            WebSiteId = webpage.WebSiteId;
+        }
+    }
+
+    private async Task CheckAndIncrementVisitAsync()
+    {
+        if (!hasIncrementedVisit)
+        {
+            // Check if the user is logged in
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (!user.Identity.IsAuthenticated)
+            {
+                // Only increment the visit count if the user is not logged in
+                await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
+                hasIncrementedVisit = true;
+            }
+
+            // Get the updated visit count for this page
+            VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
+        }
+    }
+}
+
+
+
+@*
 @code {
     [Parameter] public int WebPageId { get; set; }
 
@@ -42,6 +110,11 @@ else
     private string CurrentPageUrl => NavigationManager.Uri;
     private int WebSiteId { get; set; }
 
+
+    
+
+
+    
     protected override async Task OnInitializedAsync()
     {
         using var dbContext = DbContextFactory.CreateDbContext();
@@ -70,7 +143,6 @@ else
             VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
         }
     }
+    
 }
-
-
-
+*@

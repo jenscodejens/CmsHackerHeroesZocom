@@ -20,7 +20,7 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     @foreach (var webpage in website.WebPages)
                     {
@@ -36,10 +36,10 @@
     
         <AuthorizeView>
             <Authorized>
-                <a href="websites/edit?websiteid=@WebSiteId">Edit Website</a>
+                <a href="websites/edit?websiteid=@WebSiteId">Redigera webbsida</a>
             </Authorized>
         </AuthorizeView>
-        <p style="font-size: small;">This page has been visited @VisitCount times.</p>
+       
       
         <VisitorWebPagePreview WebPageId="@WebPageId"/>
         <br/>
@@ -48,15 +48,13 @@
 </div>
 
 @code {
-   
     [SupplyParameterFromQuery]
     public int WebSiteId { get; set; }
 
-    [SupplyParameterFromQuery] public int WebPageId { get; set; }
-   
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
     private WebSite website;
-    private int VisitCount { get; set; }
-    private string CurrentPageUrl => NavigationManager.Uri;
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,20 +65,24 @@
 
         if (WebPageId == 0 && website != null)
         {
-            WebPageId= website.WebPages.FirstOrDefault().WebPageId;
+            WebPageId = website.WebPages.FirstOrDefault()?.WebPageId ?? 0;
         }
 
         if (website is null)
         {
             NavigationManager.NavigateTo("notfound");
         }
-        else
-        {
-            // Increment the visit count for this specific page
-            await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
-            // Get the updated visit count for this page
-            VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
-        }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 

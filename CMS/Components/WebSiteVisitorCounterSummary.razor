@@ -26,6 +26,8 @@ private IEnumerable<WebSiteVisit> PageVisits { get; set; }
 
 protected override async Task OnInitializedAsync()
 {
+       
+
 PageVisits = await VisitorCounterService.GetAllPageVisitsAsync(WebSiteId);
 }
 }

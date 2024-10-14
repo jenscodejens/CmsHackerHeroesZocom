@@ -1,6 +1,51 @@
 ﻿@using CMS.Services
 @inject VisitorCounterService VisitorCounterService
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<p>Visits: @VisitCount</p>
+
+@code {
+    [Parameter] public int WebSiteId { get; set; }
+
+    private int VisitCount { get; set; }
+    private string CurrentPageUrl => NavigationManager.Uri;
+    private bool hasIncrementedVisit = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await CheckAndIncrementVisitAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task CheckAndIncrementVisitAsync()
+    {
+        if (!hasIncrementedVisit)
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            var user = authState.User;
+
+            if (!user.Identity.IsAuthenticated)
+            {
+                await VisitorCounterService.IncrementPageVisitAsync(WebSiteId, CurrentPageUrl);
+                hasIncrementedVisit = true;
+            }
+        }
+
+        // Always get and display the visit count, regardless of authentication status
+        VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
+    }
+
+}
+
+
+@*
+@using CMS.Services
+@inject VisitorCounterService VisitorCounterService
+@inject NavigationManager NavigationManager
 
 
 <p>Visits @VisitCount times.</p>
@@ -23,5 +68,5 @@ VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, Curre
 }
 
 
-
+*@
 
