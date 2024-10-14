@@ -1,4 +1,5 @@
-﻿using CMS.Models;
+﻿using CMS.Data;
+using CMS.Models;
 
 namespace CMS.Entities
 {
@@ -14,5 +15,6 @@ namespace CMS.Entities
         public DateOnly? LastUpdated { get; set; }
         public WebPage WebPages { get; set; }
         public Template Template { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
     }
 }

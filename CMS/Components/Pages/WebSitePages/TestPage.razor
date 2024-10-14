@@ -1,0 +1,95 @@
+﻿@page "/test"
+@attribute [Authorize]
+
+@using CMS.Components.BlazorComponents
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Test</PageTitle>
+
+<h1>Test</h1>
+
+<h4>Test webbsida</h4>
+<hr />
+
+<SortableList TItem="ContentRenderingOrder"
+              Data="contentRenderingOrders"
+              Context="item"
+              OnUpdate="@OnContentListUpdate">
+    <ItemTemplate>
+        @item.Content?.ContentName (ID: @item.ContentId)
+    </ItemTemplate>
+</SortableList>
+
+@code {
+    public int WebPageId = 1;
+    public WebPage? WebPage { get; set; }
+    public List<ContentRenderingOrder> contentRenderingOrders = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Fetch WebPage along with ContentRenderingOrders and Content data
+        WebPage = await context.WebPages
+            .Include(wp => wp.ContentRenderingOrders)
+                .ThenInclude(cro => cro.Content) // Include Content to access ContentName
+            .FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
+        if (WebPage is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+        else
+        {
+            // Initial list for OnInitializedAsync
+            contentRenderingOrders = WebPage.ContentRenderingOrders
+                .OrderBy(cro => cro.Order)
+                .ToList();
+        }
+    }
+
+    private async Task OnContentListUpdate(SortableListEventArgs args)
+    {
+        // Get the item to be moved
+        var itemToMove = contentRenderingOrders[args.OldIndex];
+
+        // Remove the item from the old position
+        contentRenderingOrders.RemoveAt(args.OldIndex);
+
+        // Insert the item at the new position
+        if (args.NewIndex < contentRenderingOrders.Count)
+            contentRenderingOrders.Insert(args.NewIndex, itemToMove);
+        else
+            contentRenderingOrders.Add(itemToMove);
+
+        await UpdateContentIdsBasedOnNewOrder();
+    }
+
+    private async Task UpdateContentIdsBasedOnNewOrder()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Rearrange the list, Order is fixed but ContentId's are not
+        var orderedContentIds = contentRenderingOrders
+            .OrderBy(cro => cro.Order)
+            .Select(cro => cro.ContentId)
+            .ToList();
+
+        for (int i = 0; i < contentRenderingOrders.Count; i++)
+        {
+            var cro = contentRenderingOrders[i];
+            var dbEntry = await context.ContentRenderingOrders.FindAsync(cro.ContentOrderId);
+
+            if (dbEntry != null)
+            {
+                // Maintain the original Order and update the ContentId
+                dbEntry.ContentId = orderedContentIds[i];
+            }
+        }
+
+        await context.SaveChangesAsync();
+    }
+}

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CMS.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace CMS.Entities
 {
@@ -13,7 +14,10 @@ namespace CMS.Entities
         public DateOnly? LastUpdated { get; set; }
         public string VisitorUrl { get; set; } = string.Empty;
         public WebSite WebSite { get; set; }
-        public ICollection<Content> Contents { get; set; }
-     
+        public ApplicationUser ApplicationUser { get; set; }
+        //public ICollection<Content> Contents { get; set; }
+
+        // TODO: använd inte new nedan, kolla upp videon från youtube igen om bättre lösning
+        public ICollection<ContentRenderingOrder> ContentRenderingOrders { get; set; } = new List<ContentRenderingOrder>();
     }
 }

@@ -1,3 +1,4 @@
+using BlazorBootstrap;
 using CMS.Components;
 using CMS.Components.Account;
 using CMS.Data;
@@ -33,6 +34,9 @@ namespace CMS
 
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddScoped<ToastService>(); // ToastService here, semi-working. Still need fixing in App.razor, cant use rendermode interactiveserver there in head and rout
+            builder.Services.AddScoped<SortableListJsInterop>();
+
 
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
