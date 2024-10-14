@@ -13,25 +13,18 @@ namespace CMS.Components.Pages.WebPages
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-        IQueryable<Content> contents { get; set; } = Enumerable.Empty<Content>().AsQueryable();
+        IQueryable<Content> Contents { get; set; } = Enumerable.Empty<Content>().AsQueryable();
         [SupplyParameterFromQuery]
         public int? WebPageId { get; set; }
         private int? ContentForEditing { get; set; } = null;
 
-        public int ContentId { get; set; } // Fetch ContentId from the query
-
-        bool StopEditing { get; set; } = false;
-
-        bool editPageinformation { get; set; } = false;
-
-        bool Create { get; set; } = false;
+        public int ContentId { get; set; }
 
         public Content? Content { get; set; }
 
         ApplicationDbContext context = default!;
 
         private ExecuteAction PageExecution { get; set; } = ExecuteAction.EditSelect;
-
 
         private enum ExecuteAction
         {
@@ -59,7 +52,7 @@ namespace CMS.Components.Pages.WebPages
             if (WebPageId.HasValue)
             {
                 // Fetch content filtered by WebPageId
-                contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
+                Contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
             }
             else
             {
@@ -101,14 +94,14 @@ namespace CMS.Components.Pages.WebPages
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            Contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
         private void CreateDone()
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            Contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
 
@@ -116,7 +109,7 @@ namespace CMS.Components.Pages.WebPages
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            Contents = context.Contents.Where(c => c.WebPageId == WebPageId);
             StateHasChanged();
         }
 
