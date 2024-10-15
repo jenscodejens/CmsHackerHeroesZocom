@@ -17,8 +17,8 @@
 
 .overlay-btn-edit {
     background-color: rgba(255, 255, 255, 0.9); /* Red background */
-    color: white;
-    border: 2px solid #000000;
+    color: black;
+    border: 2px solid black;
     border-radius: 50%; /* This makes the button round */
     padding: 20px; /* Ensure equal padding for width and height */
     width: 40px; /* Set width to ensure a fixed size */
@@ -30,7 +30,7 @@
 
 .overlay-btn-delete {
     background-color: rgba(255, 255, 255, 0.9); /* Red background */
-    color: white;
+    color: black;
     border: 2px solid #000000;
     border-radius: 50%; /* This makes the button round */
     padding: 20px; /* Ensure equal padding for width and height */
@@ -43,7 +43,7 @@
 
 .overlay-btn-main {
     background-color: rgba(255, 255, 255, 0.9); /* Red background */
-    color: white;
+    color: black;
     border: 2px solid #000000;
     border-radius: 50%; /* This makes the button round */
     padding: 20px; /* Ensure equal padding for width and height */
