@@ -1,0 +1,16 @@
+﻿/*.icon-button {
+    display: inline-flex;*/ /* Gör det möjligt att centrera innehållet */
+    /*justify-content: center;*/ /* Centrera horisontellt */
+    /*align-items: center;*/ /* Centrera vertikalt */
+    /*width: 80px;*/ /* Använd önskad bredd */
+    /*height: 40px;*/ /* Använd önskad höjd */
+    /*background-color: blue;*/ /* Blå bakgrundsfärg */
+    /*border: none;*/ /* Ingen kantlinje */
+    /*border-radius: 5px;*/ /* Rundade hörn om så önskas */
+    /*text-decoration: none;*/ /* Ta bort understrykning */
+/*}
+
+    .icon-button i {
+        color: white;*/ /* Färg på ikonen */
+        /*font-size: 22px;*/ /* Storlek på ikonen */
+    /*}*/

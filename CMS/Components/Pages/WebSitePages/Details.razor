@@ -11,7 +11,7 @@
 
 <PageTitle>Detaljer</PageTitle>
 
-<h1>Detaljer</h1>
+@* <h3>Detaljer</h3> *@
 
 <div>
     @if (WebSite is null)
@@ -20,30 +20,76 @@
     }
     else
     {
-        <h4>@WebSite.Title</h4>
+        <div class="d-flex align-items-center">
+            <h4>Detaljer: </h4>
+            <a href="@($"/websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera webbsiten" class="icon-button blue-icon-button ms-3">
+                <span>@WebSite.Title</span>
+                <i class="material-icons ms-2">edit_document</i>
+            </a>
+        </div>
         <hr />
-        <dl class="row">
-            @*      <dt class="col-sm-1">Titel</dt>
-                    <dd class="col-sm-11">@WebSite.Title</dd> *@
-            <dt class="col-sm-1">Beskrivning</dt>
-            <dd class="col-sm-11">@WebSite.Description</dd>
-            <dt class="col-sm-1">Skapad</dt>
-            <dd class="col-sm-11">@WebSite.CreationDate</dd>
-            @if (WebSite.LastUpdated.HasValue)
-            {
-                <dt class="col-sm-1">Senast uppdaterad</dt>
-                <dd class="col-sm-11">@WebSite.LastUpdated.Value</dd>
-            }
-            <dt class="col-sm-1">Startsida</dt>
-            <dd class="col-sm-11">@landingPageTitle</dd>
-            <dt class="col-sm-1">Besökare</dt>
-            <dd class="col-sm-11">todo</dd>
 
-            <AuthorizeView Roles="Admin">
-                <dt class="col-sm-1">Användar Id</dt>
-                <dd class="col-sm-11">@WebSite.UserId</dd>
-            </AuthorizeView>
-        </dl>
+        <div class="d-flex justify-content-center">
+            <div class="card">
+                <dl class="row">
+                    <div class="item">
+                        <dt class="col-sm-1">Beskrivning</dt>
+                        <dd>@WebSite.Description</dd>
+                    </div>
+                    <div class="item">
+                        <dt class="col-sm-1">Skapad</dt>
+                        <dd>@WebSite.CreationDate</dd>
+                    </div>
+                    @if (WebSite.LastUpdated.HasValue)
+                    {
+                        <div class="item">
+                            <dt class="col-sm-1">Senast uppdaterad</dt>
+                            <dd>@WebSite.LastUpdated.Value</dd>
+                        </div>
+                    }
+                    <div class="item">
+                        <dt class="col-sm-1">Startsida</dt>
+                        <dd>@landingPageTitle</dd>
+                    </div>
+                    <div class="item">
+                        <dt class="col-sm-1">Besökare</dt>
+                        <dd>todo</dd>
+                    </div>
+
+                    <AuthorizeView Roles="Admin">
+                        <div class="item">
+                            <dt class="col-sm-1">Användar Id</dt>
+                            <dd>@WebSite.UserId</dd>
+                        </div>
+                    </AuthorizeView>
+                </dl>
+            </div>
+        </div>
+
+@*         <div class="d-flex justify-content-between">
+            <dl class="row">
+                        <dt class="col-sm-1">Titel</dt>
+                        <dd class="col-sm-11">@WebSite.Title</dd>
+                <dt class="col-sm-1">Beskrivning</dt>
+                <dd class="col-sm-11">@WebSite.Description</dd>
+                <dt class="col-sm-1">Skapad</dt>
+                <dd class="col-sm-11">@WebSite.CreationDate</dd>
+                @if (WebSite.LastUpdated.HasValue)
+                {
+                    <dt class="col-sm-1">Senast uppdaterad</dt>
+                    <dd class="col-sm-11">@WebSite.LastUpdated.Value</dd>
+                }
+                <dt class="col-sm-1">Startsida</dt>
+                <dd class="col-sm-11">@landingPageTitle</dd>
+                <dt class="col-sm-1">Besökare</dt>
+                <dd class="col-sm-11">todo</dd>
+
+                <AuthorizeView Roles="Admin">
+                    <dt class="col-sm-1">Användar Id</dt>
+                    <dd class="col-sm-11">@WebSite.UserId</dd>
+                </AuthorizeView>
+            </dl>
+        </div> *@
 
         <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
 
@@ -57,12 +103,13 @@
                 <i class="material-icons" style="color: orange; font-size: 28px;">edit_document</i>
             </a>edit_square *@
         </div>
-        <hr />
-        <a>Återstår att hitta vettiga ikoner alt. använda mix av ikoner och knappar.</a>
-        <a> Eller måla en custom knapp med en ikon i mitten *shrug*</a>
-        <a href="@("/websites")" title="Back" class="me-2">
-            <i class="bi bi-arrow-left-square-fill" style="color: blue; font-size: 26px; padding-top: 5px; padding-bottom: 5px; padding-left: 10px;"></i>
-        </a>
+
+        <div class="d-flex align-items-center">
+            <a href="@("/websites")" title="Tillbaka" class="icon-button green-icon-button ms-3">
+                <span>Tillbaka</span>
+                <i class="material-icons ms-2">keyboard_return</i>
+            </a>
+        </div>
     }
 </div>
 

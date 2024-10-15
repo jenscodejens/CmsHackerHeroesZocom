@@ -1,10 +1,96 @@
-﻿h4 {
-    color: blue;
+﻿.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #000;
+    border-radius: 5px;
+    padding: 16px;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 32px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid #ccc;
+    padding: 8px 0;
+}
+
+dt, dd {
+    flex-grow: 1;
+    padding-right: 25px;
+    min-width: 0;
+}
+
+dt {
+    font-weight: bold;
 }
 
 a[onclick] {
     cursor: pointer;
 }
+
+/* Shared button layout */
+.icon-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 16px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+    .icon-button span {
+        margin-right: 8px; /* Add space between text and icon */
+        font-size: 16px;
+    }
+
+    .icon-button i {
+        color: white;
+        font-size: 22px;
+    }
+
+/* Specific color variations */
+.blue-icon-button {
+    background-color: blue;
+}
+
+.green-icon-button {
+    background-color: green;
+    margin-top: 20px;
+}
+
+
+/*.icon-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px 16px;*/ /* Adjust padding as needed */
+    /*background-color: blue;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;*/ /* Set text color to white */
+    /*cursor: pointer;
+}
+
+    .icon-button span {
+        margin-right: 8px;  Add space between text and icon 
+        font-size: 16px;  Adjust font size if needed 
+    }
+
+    .icon-button i {
+        color: white;
+        font-size: 22px;
+    }*/
+
 
 /*.ButtonColor.Primary {
     background-color: blue;
@@ -23,4 +109,9 @@ a[onclick] {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+h4 {
+    color: blue;
 }*/
+

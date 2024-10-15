@@ -1,18 +1,11 @@
-﻿@page "/test"
+﻿@* Test page *@
+@page "/test"
 
-<button class="btn" @onclick="OnButtonClick">
-    <span class="material-icons">image</span>
-</button>
+@* @using BlazorBootstrap
+@using CMS.Services
+@inject NavigationManager NavigationManager
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject ToastService ToastService *@
 
-@code {
-    [SupplyParameterFromQuery]
-    public int WebSiteId { get; set; }
+<i class="fa-solid fa-house"></i>
 
-    [Inject]
-    private NavigationManager Navigation { get; set; }
-
-    private void OnButtonClick()
-    {
-        Navigation.NavigateTo($"/webpages/details?webpageid=1");
-    }
-}

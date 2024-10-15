@@ -1,4 +1,4 @@
-﻿/*﻿*/ /*Komponenten är lika bred som dess vidaste komponent*/
+﻿/*Komponenten är lika bred som dess vidaste komponent*/
 .webpageinfo {
 	background-color: #f2f2f2;
 	padding: 10px;
@@ -13,14 +13,14 @@
 	flex-shrink: 0;
 }
 
-.webpageinfo p {
-	background-color: #007bff;
-	color: white;
-	padding: 5px;
-	align-content: center;
-	margin-bottom: 10px;
-	border-radius: 5px;
-}
+	.webpageinfo p {
+		background-color: #007bff;
+		color: white;
+		padding: 5px;
+		align-content: center;
+		border-radius: 5px;
+		/*	margin-bottom: 10px;*/
+	}
 
 .grid {
 	display: flex;
@@ -33,7 +33,7 @@
 	max-width: calc(50% - 5px);
 }
 
-::deep tr {
+/*::deep tr {
 	height: 1.8rem;
 }
 
@@ -44,6 +44,6 @@
 ::deep tr:nth-child(even) {
 	background-color: white;
 }
-
+*/
 
 

@@ -36,10 +36,6 @@ namespace CMS
                 .AddInteractiveServerComponents();
             builder.Services.AddScoped<ToastService>(); // Add the ToastService here
 
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
-
-
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
