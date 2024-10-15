@@ -34,8 +34,8 @@
 
     .containerEditWebPagebuttons {
         position: absolute; /* Position the buttons absolutely within the container */
-        top: 15%; /* Adjust to control vertical position of buttons */
-        left: 50%; /* Adjust to control horizontal position (move towards the right) */
+        bottom: 5%; /* Adjust to control vertical position of buttons */
+        left: 20%; /* Adjust to control horizontal position (move towards the right) */
         transform: translate(-50%, 0); /* Adjust buttons horizontally */
         z-index: 10; /* Ensure buttons appear above content */
         display: flex; /* Arrange buttons side by side */
@@ -43,11 +43,17 @@
     }
 
     .overlay-btn-edit {
-        background-color: rgba(0, 123, 255, 0.9); /* Blue background */
+        background-color: rgba(255, 255, 255, 0.9); /* Red background */
         color: white;
-        border: 2px solid #007bff;
-        border-radius: 50%;
-        padding: 20px 20px;
+        border: 2px solid #000000;
+        border-radius: 50%; /* This makes the button round */
+        padding: 20px; /* Ensure equal padding for width and height */
+        width: 40px; /* Set width to ensure a fixed size */
+        height: 40px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+
     }
 
     .overlay-btn-delete {
@@ -56,8 +62,21 @@
         border: 2px solid #000000;
         border-radius: 50%; /* This makes the button round */
         padding: 20px; /* Ensure equal padding for width and height */
-        width: 30px; /* Set width to ensure a fixed size */
-        height: 30px; /* Set height to ensure a fixed size */
+        width: 40px; /* Set width to ensure a fixed size */
+        height: 40px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+    }
+
+    .overlay-btn-main {
+        background-color: rgba(255, 255, 255, 0.9); /* Red background */
+        color: white;
+        border: 2px solid #000000;
+        border-radius: 50%; /* This makes the button round */
+        padding: 20px; /* Ensure equal padding for width and height */
+        width: 40px; /* Set width to ensure a fixed size */
+        height: 40px; /* Set height to ensure a fixed size */
         display: flex;
         justify-content: center; /* Center the icon horizontally */
         align-items: center; /* Center the icon vertically */
@@ -72,6 +91,7 @@
         display: flex;
         justify-content: flex-start; /* Align the buttons to the left */
         flex-wrap: nowrap; /* Prevent buttons from wrapping */
+        gap: 10px; /* Space between buttons */
     }
 
         .button-container button {
@@ -85,7 +105,7 @@
         z-index: 10;
         background-color: rgba(255, 255, 255, 1);
         color: black;
-        border: 2px solid #007bff; /* Blue border */
+        border: 2px solid black; /* Blue border */
         padding: 10px 20px;
     }
 
@@ -97,7 +117,7 @@
         z-index: 10;
         background-color: rgba(255, 255, 255, 1);
         color: black;
-        border: 2px solid #007bff;
+        border: 2px solid black;
         padding: 10px 20px;
     }
 
@@ -114,17 +134,32 @@
             padding: 0 !important;
         }
 
+    .btn a p {
+        display: none;
+    }
+
+    .btn a:hover p {
+        display: block;
+    }
+
  /* Main button container */
     .containerMainButtons {
         position: fixed; /* Fixes the container */
         bottom: 3%; /* Always at the top of the screen */
-        left: 3%; /* Optional: Align it to the left */
+        left: 30%; /* Optional: Align it to the left */
         width: auto; /* Optional: Make it full width */
         z-index: 100; /* Ensure it stays above other content */
         background-color: rgba(255, 255, 255, 1); /* Optional: adds a background */
         padding: 10px; /* Padding for the container */
-        border: 2px solid #007bff;
+        border: 2px solid black;
         border-radius: 10px;
+    }
+
+    .buttons-containermain {
+        display: flex; /* Aligns buttons horizontally */
+        justify-content: space-between; /* Space out buttons evenly (you can change this to 'center' or 'flex-start') */
+        align-items: center; /* Vertically center buttons */
+        gap: 10px; /* Space between buttons */
     }
 
     .btn {
@@ -142,20 +177,37 @@
 
     <p>
          <div class="containerMainButtons">
+             <div class="button-container">
         @if (PageExecution != ExecuteAction.Preview)
         {
  
-            <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
+          @*   <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
             <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
             <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
+ *@
+            <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
+                <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
+            </a>
+
+            <a class="btn overlay-btn-main" @onclick="()=> AddContent()" aria-label="Lägg till innehåll" title="Lägg till innehåll">
+                <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
+            </a>
+
+            <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
+                <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+            </a>
  
         }
         else
         {
+            <a class="btn overlay-btn-main" @onclick="()=> ResumeEditContent()" aria-label="Fortsätt redigera" title="Fortsätt redigera">
+                <i class="fa fa-play fa-1x" aria-hidden="true"></i>
+            </a>
 
-            <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
+           @*  <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button> *@
 
         }
+        </div>
         </div>
     </p>
 
@@ -253,11 +305,11 @@ else
                               @*   <button class="btn btn-primary overlay-btn-edit btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
                                 <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content.ContentId)"> Ta bort </button>
  *@
-                                    <a class="btn overlay-btn-edit" @onclick="()=> EditContent(content)" aria-label="Redigera">
-                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                <a class="btn overlay-btn-edit" @onclick="()=> EditContent(content)" aria-label="Redigera" title="Redigera">
+                                        <i class="fa fa-pencil fa-2x" aria-hidden="true"></i>
                                 </a>
-                                    <a class="btn overlay-btn-delete" @onclick="()=> DeleteContent(content.ContentId)" aria-label="Ta bort">
-                                    <i class="fa fa-trash-o fa-1x" aria-hidden="true"></i>
+                                <a class="btn overlay-btn-delete" @onclick="()=> DeleteContent(content.ContentId)" aria-label="Ta bort" title="Radera">
+                                    <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>
