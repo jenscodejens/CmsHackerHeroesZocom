@@ -25,13 +25,6 @@
         background-color: rgba(0, 0, 0, 0);
     }
 
-    .container {
-        position: relative;
-        padding: 0px;
-        border: 0px solid #ccc;
-        background-color: rgba(0, 0, 0, 0);
-    }
-
     .containerEditWebPagebuttons {
         position: absolute; /* Position the buttons absolutely within the container */
         bottom: 5%; /* Adjust to control vertical position of buttons */
@@ -83,8 +76,8 @@
     }
 
         /* Optional: Hover effect for buttons */
-        .overlay-btn-edit:hover, .overlay-btn-delete:hover {
-            background-color: #0056b3;
+    .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover {
+            background-color: lightgray;
         }
 
     .button-container {
@@ -121,10 +114,6 @@
         padding: 10px 20px;
     }
 
-    .overlay-btn:hover {
-        background-color: #0056b3;
-    }
-
     .table, .table th, .table td {
         border: none !important; /* Removes borders from the whole table */
     }
@@ -155,17 +144,9 @@
         border-radius: 10px;
     }
 
-    .buttons-containermain {
-        display: flex; /* Aligns buttons horizontally */
-        justify-content: space-between; /* Space out buttons evenly (you can change this to 'center' or 'flex-start') */
-        align-items: center; /* Vertically center buttons */
-        gap: 10px; /* Space between buttons */
-    }
-
     .btn {
         font-size: 14px; /* Smaller font */
         padding: 5px 1px; /* Smaller padding */
-  
     }
 </style>
 
