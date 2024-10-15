@@ -39,21 +39,28 @@
         transform: translate(-50%, 0); /* Adjust buttons horizontally */
         z-index: 10; /* Ensure buttons appear above content */
         display: flex; /* Arrange buttons side by side */
-        gap: 20px; /* Space between Edit and Delete buttons */
+        gap: 23px; /* Space between Edit and Delete buttons */
     }
 
     .overlay-btn-edit {
         background-color: rgba(0, 123, 255, 0.9); /* Blue background */
         color: white;
         border: 2px solid #007bff;
-        padding: 10px 20px;
+        border-radius: 50%;
+        padding: 20px 20px;
     }
 
     .overlay-btn-delete {
-        background-color: rgba(255, 0, 0, 0.9); /* Red background */
+        background-color: rgba(255, 255, 255, 0.9); /* Red background */
         color: white;
-        border: 2px solid #ff0000;
-        padding: 10px 20px;
+        border: 2px solid #000000;
+        border-radius: 50%; /* This makes the button round */
+        padding: 20px; /* Ensure equal padding for width and height */
+        width: 30px; /* Set width to ensure a fixed size */
+        height: 30px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
     }
 
         /* Optional: Hover effect for buttons */
@@ -240,11 +247,18 @@ else
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
 
-                        <!-- Button container placed in the top-right corner of the content -->
+                        
                         <div class="containerEditWebPagebuttons">
                             <div class="button-container">
-                                <button class="btn btn-primary overlay-btn-edit btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
-                                    <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content.ContentId)"> Ta bort </button>
+                              @*   <button class="btn btn-primary overlay-btn-edit btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
+                                <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content.ContentId)"> Ta bort </button>
+ *@
+                                    <a class="btn overlay-btn-edit" @onclick="()=> EditContent(content)" aria-label="Redigera">
+                                    <i class="fa fa-cog" aria-hidden="true"></i>
+                                </a>
+                                    <a class="btn overlay-btn-delete" @onclick="()=> DeleteContent(content.ContentId)" aria-label="Ta bort">
+                                    <i class="fa fa-trash-o fa-1x" aria-hidden="true"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
