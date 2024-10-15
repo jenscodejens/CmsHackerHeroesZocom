@@ -72,7 +72,7 @@
         }
     .overlay-edit {
         position: absolute; /* Position relative to the containerEditWebPage */
-        top:190px; /* Position from the top (50% of the parent container) */
+        top:190px;
         left: 50%; /* Position from the left (50% of the parent container) */
         transform: translate(-50%, -50%); /* Offset the button by half its width and height */
         z-index: 10;
@@ -112,15 +112,18 @@
         position: fixed; /* Fixes the container */
         bottom: 3%; /* Always at the top of the screen */
         left: 3%; /* Optional: Align it to the left */
-        width: 100%; /* Optional: Make it full width */
+        width: auto; /* Optional: Make it full width */
         z-index: 100; /* Ensure it stays above other content */
-        background-color: rgba(0, 0, 0, 0); /* Optional: adds a background */
-        padding: 0; /* Padding for the container */
+        background-color: rgba(255, 255, 255, 1); /* Optional: adds a background */
+        padding: 10px; /* Padding for the container */
+        border: 2px solid #007bff;
+        border-radius: 10px;
     }
 
     .btn {
         font-size: 14px; /* Smaller font */
         padding: 5px 1px; /* Smaller padding */
+  
     }
 </style>
 
