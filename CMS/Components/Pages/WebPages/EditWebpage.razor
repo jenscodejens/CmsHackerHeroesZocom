@@ -18,113 +18,7 @@
 @implements IAsyncDisposable
 
  <style>
-    .containerEditWebPage {
-        position: relative;
-        padding: 0px;
-        border: 0px solid #ccc;
-        background-color: rgba(0, 0, 0, 0);
-    }
-
-    .container {
-        position: relative;
-        padding: 0px;
-        border: 0px solid #ccc;
-        background-color: rgba(0, 0, 0, 0);
-    }
-
-    .containerEditWebPagebuttons {
-        position: absolute; /* Position the buttons absolutely within the container */
-        top: 15%; /* Adjust to control vertical position of buttons */
-        left: 50%; /* Adjust to control horizontal position (move towards the right) */
-        transform: translate(-50%, 0); /* Adjust buttons horizontally */
-        z-index: 10; /* Ensure buttons appear above content */
-        display: flex; /* Arrange buttons side by side */
-        gap: 20px; /* Space between Edit and Delete buttons */
-    }
-
-    .overlay-btn-edit {
-        background-color: rgba(0, 123, 255, 0.9); /* Blue background */
-        color: white;
-        border: 2px solid #007bff;
-        padding: 10px 20px;
-    }
-
-    .overlay-btn-delete {
-        background-color: rgba(255, 0, 0, 0.9); /* Red background */
-        color: white;
-        border: 2px solid #ff0000;
-        padding: 10px 20px;
-    }
-
-        /* Optional: Hover effect for buttons */
-        .overlay-btn-edit:hover, .overlay-btn-delete:hover {
-            background-color: #0056b3;
-        }
-
-    .button-container {
-        display: flex;
-        justify-content: flex-start; /* Align the buttons to the left */
-        flex-wrap: nowrap; /* Prevent buttons from wrapping */
-    }
-
-        .button-container button {
-            flex: 0 0 auto; /* Ensure buttons do not stretch */
-        }
-    .overlay-edit {
-        position: absolute; /* Position relative to the containerEditWebPage */
-        top:190px;
-        left: 50%; /* Position from the left (50% of the parent container) */
-        transform: translate(-50%, -50%); /* Offset the button by half its width and height */
-        z-index: 10;
-        background-color: rgba(255, 255, 255, 1);
-        color: black;
-        border: 2px solid #007bff; /* Blue border */
-        padding: 10px 20px;
-    }
-
-    .overlay-editwebpageinfo {
-        position: absolute; /* Position relative to the viewport (screen) */
-        top: -20px; /* Adjust this value as needed for how far down you want it to appear */
-        left: 50%; /* Center it horizontally */
-        transform: translateX(-50%); /* Offset the button by half its width */
-        z-index: 10;
-        background-color: rgba(255, 255, 255, 1);
-        color: black;
-        border: 2px solid #007bff;
-        padding: 10px 20px;
-    }
-
-    .overlay-btn:hover {
-        background-color: #0056b3;
-    }
-
-    .table, .table th, .table td {
-        border: none !important; /* Removes borders from the whole table */
-    }
-
-        /* Optional: Remove padding to ensure tight layout */
-        .table th, .table td {
-            padding: 0 !important;
-        }
-
- /* Main button container */
-    .containerMainButtons {
-        position: fixed; /* Fixes the container */
-        bottom: 10%; /* Always at the top of the screen */
-        left: 3%; /* Optional: Align it to the left */
-        width: auto; /* Optional: Make it full width */
-        z-index: 100; /* Ensure it stays above other content */
-        background-color: rgba(255, 255, 255, 1); /* Optional: adds a background */
-        padding: 5px; /* Padding for the container */
-        border: 2px solid #007bff;
-        border-radius: 10px;
-    }
-
-    .btn {
-        font-size: 14px; /* Smaller font */
-        padding: 5px 1px; /* Smaller padding */
   
-    }
 </style>
 
 
@@ -159,20 +53,37 @@
 
     <p>
          <div class="containerMainButtons">
+             <div class="button-container">
         @if (PageExecution != ExecuteAction.Preview)
         {
  
-            <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
-            <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till </button>
+          @*   <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
+            <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
             <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
+ *@
+            <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
+                <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
+            </a>
+
+            <a class="btn overlay-btn-main" @onclick="()=> AddContent()" aria-label="Lägg till innehåll" title="Lägg till innehåll">
+                <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
+            </a>
+
+            <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
+                <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+            </a>
  
         }
         else
         {
+            <a class="btn overlay-btn-main" @onclick="()=> ResumeEditContent()" aria-label="Fortsätt redigera" title="Fortsätt redigera">
+                <i class="fa fa-play fa-1x" aria-hidden="true"></i>
+            </a>
 
-            <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button>
+           @*  <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button> *@
 
         }
+        </div>
         </div>
     </p>
 
@@ -264,11 +175,18 @@ else
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
 
-                        <!-- Button container placed in the top-right corner of the content -->
+                        
                         <div class="containerEditWebPagebuttons">
                             <div class="button-container">
-                                <button class="btn btn-primary overlay-btn-edit btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
-                                    <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content.ContentId)"> Ta bort </button>
+                              @*   <button class="btn btn-primary overlay-btn-edit btn-primary-outline" @onclick="()=> EditContent(content)"> Redigera </button>
+                                <button class="btn btn-primary overlay-btn-delete btn-primary-outline" @onclick="()=> DeleteContent(content.ContentId)"> Ta bort </button>
+ *@
+                                <a class="btn overlay-btn-edit" @onclick="()=> EditContent(content)" aria-label="Redigera" title="Redigera">
+                                        <i class="fa fa-pencil fa-2x" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn overlay-btn-delete" @onclick="()=> DeleteContent(content.ContentId)" aria-label="Ta bort" title="Radera">
+                                    <i class="fa fa-trash-o fa-2x" aria-hidden="true"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
