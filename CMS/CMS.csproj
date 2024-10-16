@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Components\Layout\EditWebPageWithPreview.razor.cs" />
     <Compile Remove="Services\GetCurrentUserIdService.cs" />
     <Compile Remove="Components\Pages\WebSitePages\Visit.cshtml.cs" />
   </ItemGroup>
@@ -43,7 +42,6 @@
 
   <ItemGroup>
     <Content Include="Components\BlazorComponents\ConnectedWebPagesInfo.razor.css" />
-    <Content Include="Components\Layout\EditWebPageWithPreview.razor.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -9,6 +9,7 @@ using System.Net.NetworkInformation;
 using CMS.Shared;
 using System.Text.Json;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
@@ -48,7 +49,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; } = null;
 
         protected override async Task OnInitializedAsync()
         {
@@ -73,7 +74,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private async Task LoadNavBarContent()
         {
-            if (ContentExists((int)ContentId))
+            if (ContentExists((int)ContentId!))
             {
                 var content = await ContentService.GetContentAsync((int)ContentId);
                 if (content != null)
@@ -87,7 +88,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private void GetNavbarContent(Content? content)
         {
-            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content!.ContentJson);
             if (textInputs != null)
             {
                 foreach (var jsonContent in textInputs)
@@ -99,7 +100,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     }
                     else
                     {
-                        Console.WriteLine($"Data for contents name is invalid.");
+                        
                     }
                 }
             }
@@ -128,7 +129,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             {
                 MenuItems = menuItemsWrapper.ToDictionary();
                 currentStep = InputStep.Wait;
-                TemplateId = content.TemplateId;
+                TemplateId = content!.TemplateId;
                 inputValueContentName = content.ContentName;
                 ContentId = content.ContentId;
                 WebPageId = content.WebPageId;
@@ -140,16 +141,16 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         {
             if (objectName.ToString() == "Backgroundcolor")
             {
-                BackgroundColor = ConvertJsonElement(jsonContent.Value).ToString();
+                BackgroundColor = ConvertJsonElement(jsonContent.Value)!.ToString()!;
             }
             else if (objectName.ToString() == "Textcolor")
             {
-                TextColor = ConvertJsonElement(jsonContent.Value).ToString();
+                TextColor = ConvertJsonElement(jsonContent.Value)!.ToString()!;
             }
             else
             {
-                var error = ConvertJsonElement(jsonContent.Value).ToString();
-                Console.WriteLine($"NavbarInputForm can not match value : {error}.");
+                var error = ConvertJsonElement(jsonContent.Value)!.ToString();
+                NavigationManager.NavigateTo($"/Error");
             }
         }
 
@@ -186,17 +187,21 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private async Task GetUserID()
         {
             var user = await GetCurrentUserService.GetCurrentUserAsync();
-            UserId = user.Id;
+            if (user == null)
+            {
+                NavigationManager.NavigateTo($"/Error");
+            }
+                UserId = user!.Id;
         }
 
 
 
         //ToDo: Handle async method.
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
             {
-                Save(); // Call the save method
+                await Save(); // Call the save method
                 hasSaved = true; // Set the flag to prevent further saves
             }
         }
@@ -348,7 +353,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
             if (!webPageExists)
             {
-                throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+                NavigationManager.NavigateTo($"/Error");
             }
 
             NavBarTextInputJson textInputJson = ConvertMenuItemsToJson();
@@ -364,8 +369,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     WebPageId = WebPageId,
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
-                    ContentId = (int)ContentId,
-                    UserId = UserId,
+                    ContentId = (int)ContentId!,
+                    UserId = UserId!,
                     LastUpdated = updatetime
                 };
                 //context.Contents.Update(content);
@@ -378,7 +383,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     WebPageId = WebPageId,
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
-                    UserId = UserId,
+                    UserId = UserId!,
                     CreationDate = DateOnly.FromDateTime(DateTime.Now)
                 };
                 // context.Contents.Add(content);
