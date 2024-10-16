@@ -7,6 +7,7 @@ namespace CMS.Data
     public class ApplicationUser : IdentityUser
     {
         public ICollection<WebSite> WebSites { get; set; }
+        public Profile Profile {get; set;}
     }
 
 }
