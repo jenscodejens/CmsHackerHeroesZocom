@@ -46,8 +46,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
         private string oldKey = string.Empty;
-        //private string inputItemValue = string.Empty;
-        private string htmlString = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;

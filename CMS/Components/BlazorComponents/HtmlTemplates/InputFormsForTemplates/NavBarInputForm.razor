@@ -18,6 +18,7 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbaris">
+           
             <ul class="navbar-nav mr-auto">
 
                 @foreach (var item in MenuItems)
@@ -28,14 +29,85 @@
                         </NavLink>
                     </li>
                 }
+            </ul>>
+                    @if (currentStep == InputStep.ContentNameInput)
+                    {
+                        <form>
+
+                            <label for="meny">Menys namn:</label>
+                            <input type="text" @bind="inputValue" placeholder="" />
+                            <button type="button" @onclick="AddMenuName">Lägg till</button>
+
+                        </form>
+                    }
+                    else if ((currentStep == InputStep.AddItem))
+                    {
+                        <label for="title"></label>
+
+                        <input type="text" @bind="inputValue" placeholder="Menyval namn" />
+
+                        <select id="templateDropdown" @bind="templateDropdown">
+                            <option value="">-- Välj Sida --</option>
+                            @if (webpages != null)
+                            {
+                            @foreach (var menuItem in Pages)
+                                {
+                                <option value="@menuItem.Value">@menuItem.Key</option>
+                                }
+                            }
+                        </select>
+                        <button type="button" @onclick="AddItem">Lägg till</button>
+                        <button type="button" @onclick="AbortItem">Avbryt</button>
+
+
+                    }
+                    else if ((currentStep == InputStep.Wait))
+                    {
+                            <button type="button" @onclick="NewItem">Lägg till menyval</button>
+                            @if (!MultiPageMode) // Show button only if not in multi-page mode
+                            {
+                                <button type="button" @onclick="Save">Spara meny</button>
+                            }
+                    }
+                    else if ((currentStep == InputStep.Edit))
+                    {
+                        <label for="title">Menyval nam:</label>
+
+                        <input type="text" @bind="inputValue" placeholder="inputValue" />
+
+                        <select id="templateDropdown" @bind="templateDropdown">
+                            <option value="">-- Välj Sida --</option>
+                            @if (webpages != null)
+                            {
+                                @foreach (var menuItem in Pages)
+                                {
+                                <option value="@menuItem.Value">@menuItem.Key</option>
+                                }
+                            }
+                        </select>
+                        @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+                        {
+                            <button type="button" @onclick="AbortItem">Avbryt</button>
+                            <button type="button" @onclick="UpdateItem">Ändra</button>
+                            <button type="button" @onclick="DeleteItem">Ta bort</button>
+                        }
+                        else
+                        {
+                            <button type="button" @onclick="UpdateItem">Ändra</button>
+                        }
+
+                    }
+                
+
               
-            </ul>
+                
+              
+            
         </div>
     </nav>
     <a>Tryck på en titel i menyn för att editera valet.</a>
 
-    <div>
-        @{if (currentStep == InputStep.ContentNameInput)
+       @*  @{if (currentStep == InputStep.ContentNameInput)
         {
             <form>
             
@@ -68,6 +140,11 @@
             }
             else if ((currentStep == InputStep.Wait))
             {
+                    <li class="nav-item">
+                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
+                            @item.Key
+                        </NavLink>
+                    </li>
                     <button type="button" @onclick="NewItem">Lägg till menyval</button>
                     @if (!MultiPageMode) // Show button only if not in multi-page mode
                     {
@@ -103,7 +180,8 @@
 
             }
 
-        }
+        } *@
+    <div>
 
         <div>
             <!--Color Controls -->
