@@ -44,7 +44,7 @@ else
                          <ValidationSummary class="text-danger" />
                          <div class="mb-3">
                              <label for="contentid" class="form-label">Innehålls Id:</label>
-                             <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" readonly />
+                                <InputNumber id="contentid" @bind-Value="Content.ContentId" class="form-control" disabled />
                              <ValidationMessage For="() => Content.ContentId" class="text-danger" />
                          </div>
                          <div class="mb-3">
@@ -59,7 +59,7 @@ else
                          </div>
                          <div class="mb-3">
                              <label for="creationdate" class="form-label">Skapad:</label>
-                             <InputDate id="creationdate" @bind-Value="Content.CreationDate" class="form-control" readonly />
+                                <InputDate id="creationdate" @bind-Value="Content.CreationDate" class="form-control" disabled />
                              <ValidationMessage For="() => Content.CreationDate" class="text-danger" />
                          </div>
                          @* If the Content has had no update yet then the form wont show *@
@@ -67,7 +67,7 @@ else
                             {
                                 <div class="mb-3">
                                     <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
-                                    <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                                    <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" disabled />
                                     <ValidationMessage For="() => Content.LastUpdated" class="text-danger" />
                                 </div>
                             }

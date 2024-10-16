@@ -40,7 +40,7 @@
             </div>
             <div class="mb-3">
                 <label for="creationdate" class="form-label">Skapad:</label>
-                <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
+                <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" disabled />
                 <ValidationMessage For="() => WebPage.CreationDate" class="text-danger" />
             </div>
 
