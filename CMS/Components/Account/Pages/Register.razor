@@ -17,10 +17,10 @@
 @inject RoleManager<IdentityRole> RoleManager
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Registrera konto</PageTitle>
 <div class="register-page">
 
-<h1 class="spaced-heading">Register</h1>
+    <h1 class="spaced-heading">Registrera konto</h1>
 
 <div class="row">
     <div class="col-md-4">
@@ -28,8 +28,6 @@
         <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
             <DataAnnotationsValidator />
             
-            <h2 class="bold">Get Started Now</h2>
-            <hr />
             <ValidationSummary class="text-danger" role="alert" />
          
               <div class="mb-3">
@@ -45,29 +43,29 @@
             </div>
 
             <div class="mb-3">
-                <label for="email" class="label-bold">Email address</label>
-                <InputText id="email" @bind-Value="Input.Email" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="Enter your email" />
+                <label for="email" class="label-bold">E-post</label>
+                <InputText id="email" @bind-Value="Input.Email" class="form-control round-border" autocomplete="username" aria-required="true" placeholder="E-post" />
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="password" class="label-bold">Password</label>
-                <InputText id="password" type="password" @bind-Value="Input.Password" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Enter password" />
+                <label for="password" class="label-bold">Lösenord</label>
+                <InputText id="password" type="password" @bind-Value="Input.Password" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Lösenord" />
                 <ValidationMessage For="() => Input.Password" class="text-danger" />
             </div>
             <div class="mb-3">
-                <label for="confirm-password" class="label-bold">Confirm Password</label>
-                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Confirm password" />
+                    <label for="confirm-password" class="label-bold">Bekräfta lösenord</label>
+                <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control round-border" autocomplete="new-password" aria-required="true" placeholder="Bekräfta lösenord" />
                 <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
             </div>
             <div>
                 <InputCheckbox @bind-Value="Input.IsAdmin" class="darker-border-checkbox form-check-input" />
-                    <label for="roleType" class="label-bold">Are you a Admin?</label>
+                    <label for="roleType" class="label-bold">Är du Admin?</label>
             </div>
             
-            <button type="submit" class="w-100 btn btn-lg section-color label-bold round-border">Signup</button>
+            <button type="submit" class="w-100 btn btn-lg section-color label-bold round-border">Skapa konto</button>
 
             <div class="col-mb-3 mt-4">
-                <span class="bold">Have an acount? <a class="bold no-underline" href="Account/Login"> Sign In</a></span>
+                <span class="bold">Har du ett konto redan? <a class="bold no-underline" href="Account/Login"> Logga in</a></span>
             </div>
         </EditForm>
     </div>
