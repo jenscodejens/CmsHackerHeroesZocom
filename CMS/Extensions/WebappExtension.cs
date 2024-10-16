@@ -17,11 +17,8 @@ namespace CMS.Extensions
                 var registerService = scope.ServiceProvider.GetRequiredService<ICreateUserService>();
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-
                 try
                 {
-                    // Ändra till: await SeedData.InitAsync(context, registerService, roleManager);
-                    // Om du vill ha tidigare seed med mock users/websites/webpages
                     await SeedWithoutWebsites.InitAsync(context, registerService, roleManager);
                 }
                 catch (Exception ex)
