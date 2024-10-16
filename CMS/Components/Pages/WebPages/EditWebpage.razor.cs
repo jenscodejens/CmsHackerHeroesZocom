@@ -13,6 +13,7 @@ namespace CMS.Components.Pages.WebPages
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
+        //Todo: Test Contents.Any()(in frontend) leads to Exception when backing to page from other page.
         IQueryable<Content> Contents { get; set; } = Enumerable.Empty<Content>().AsQueryable();
         [SupplyParameterFromQuery]
         public int? WebPageId { get; set; }
