@@ -38,7 +38,7 @@
             </AuthorizeView>
         </dl>
         <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
-        <p>Denna sida har besökts @VisitCount gånger.</p>
+      
 
         <div>
             <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
@@ -48,6 +48,50 @@
     }
 </div>
 
+
+@code {
+    WebSite? website;
+    private string? landingPageTitle;
+
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        website = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
+
+        if (website?.LandingPage != null)
+        {
+            var landingPage = await context.WebPages
+                .FirstOrDefaultAsync(wp => wp.WebPageId == website.LandingPage);
+
+            landingPageTitle = landingPage?.Title;
+        }
+        else if (website?.LandingPage is null)
+        {
+            var hasWebPages = await context.WebPages
+                 .AnyAsync(wp => wp.WebSiteId == WebSiteId);
+
+            if (hasWebPages)
+            {
+                landingPageTitle = "Webbsiten har ingen startsida vald";
+            }
+            else
+            {
+                landingPageTitle = "Webbsiten har inga webbsidor";
+            }
+        }
+
+        if (website is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
+
+
+@*
 @code {
     WebSite? website;
     private int VisitCount { get; set; }
@@ -90,3 +134,4 @@
         }
     }
 }
+*@

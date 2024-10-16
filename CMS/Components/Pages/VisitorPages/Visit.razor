@@ -39,7 +39,7 @@
                 <a href="websites/edit?websiteid=@WebSiteId">Edit Website</a>
             </Authorized>
         </AuthorizeView>
-        <p style="font-size: small;">This page has been visited @VisitCount times.</p>
+       
       
         <VisitorWebPagePreview WebPageId="@WebPageId"/>
         <br/>
@@ -47,6 +47,37 @@
     }
 </div>
 
+
+@code {
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
+    private WebSite website;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        website = await context.WebSites
+            .Include(w => w.WebPages)
+            .FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
+
+        if (WebPageId == 0 && website != null)
+        {
+            WebPageId = website.WebPages.FirstOrDefault().WebPageId;
+        }
+
+        if (website is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
+
+
+@*
 @code {
    
     [SupplyParameterFromQuery]
@@ -83,4 +114,4 @@
         }
     }
 }
-
+*@
