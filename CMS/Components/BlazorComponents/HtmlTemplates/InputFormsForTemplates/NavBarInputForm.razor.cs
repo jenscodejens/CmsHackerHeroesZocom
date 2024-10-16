@@ -10,6 +10,8 @@ using CMS.Shared;
 using System.Text.Json;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.AspNetCore.Identity;
+using CMS.Components.BlazorComponents.HtmlTemplates;
+using System.Runtime.ExceptionServices;
 
 
 namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
@@ -34,15 +36,18 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
         [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
 
+        private bool infoMessage = false;
         private bool saveSuccessful = false;
         private bool Update = false;
         private bool hasSaved = false; // Flag to track if save has been executed
+        private string navBarInfoMessage = string.Empty;
         private string inputValue = string.Empty;
         private string inputKey = string.Empty;
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
         private string oldKey = string.Empty;
         //private string inputItemValue = string.Empty;
+        private string htmlString = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
@@ -81,8 +86,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 {
                     GetNavbarContent(content);
                 }
-
-
             }
         }
 
@@ -238,7 +241,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             inputValueContentName = inputValue; // Input NavBar name
             inputValue = string.Empty;
-            currentStep = InputStep.AddItem;  
+            SetInparametersForMenuOptions(MenuItems.FirstOrDefault().Key, MenuItems.FirstOrDefault().Value);
+            currentStep = InputStep.Edit;  
         }
 
         private void AddItem()
@@ -266,52 +270,134 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private void Edit(string href)
         {
-            foreach (var item in MenuItems)
+            if (inputValueContentName == string.Empty)
             {
-                //Todo: Set Alertmessage?: error is not found.
-                if (item.Key == href)
-                {
-                    inputValue = item.Key;
-                    oldKey = item.Key;
-                    templateDropdown = item.Value;
-                }
-
-
+                currentStep = InputStep.ContentNameInput;
             }
-            currentStep = InputStep.Edit;
+            else 
+            { 
+                foreach (var item in MenuItems)
+                {
+                    //Todo: Set Alertmessage?: error is not found.
+                    //var initializedValues = InitializedMenuOptionExists(item);
+                    if (!InitializedMenuOptionExists(item))
+                    {
+                        //Todo: further actions needed?
+                        if (item.Key == href)
+                        {
+                            inputValue = item.Key;
+                            oldKey = item.Key;
+                            templateDropdown = item.Value;
+                        }
+                        infoMessage = false;
+                    }
+                    else
+                    {
+                        SetInparametersForMenuOptions(item.Key, item.Value);
+                        AlertMessage("Lägg till ett eget alternativ för menyn.", InputStep.Edit);
+                        
+                    }
+                }
+                    currentStep = InputStep.Edit;
+            }
+        }
+
+        private void AlertMessageHide()
+        {
+            infoMessage = false;
+            navBarInfoMessage = "";
+        }
+
+        private void AlertMessage(string Message, InputStep Step)
+        {
+            infoMessage = true;
+            navBarInfoMessage = Message;
+            currentStep = Step;
+        }
+
+        private bool InitializedMenuOptionExists(KeyValuePair<string, string> Item)
+        {
+            BaseNavBarTemplate initializedNavBar = new();
+            var initializedElement = initializedNavBar.MenuItems.FirstOrDefault();
+            if (Item.Key == initializedElement.Key)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool InitializedMenuOptionExists(string Key)
+        {
+            BaseNavBarTemplate initializedNavBar = new();
+            var initializedElement = initializedNavBar.MenuItems.FirstOrDefault();
+            if (Key == initializedElement.Key)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void SetInparametersForMenuOptions(string Key, string Value)
+        {
+            inputValue = Key;
+            oldKey = Key;
+            templateDropdown = Value;
         }
 
         private void UpdateItem()
         {
-            //ToDo: Check, not 2 keys with the same values.
+            AlertMessageHide();
+            //ToDo: Check, not 2 keys with the same values?
             // Check if the new key already exists
-            if (MenuItems.ContainsKey(inputValue) && oldKey != inputValue)
+            if ((MenuItems.ContainsKey(inputValue) && oldKey != inputValue) || inputValue == String.Empty)
             {
-                    //ToDo: Alert message: You cannot use the same name for two items.
-                   return; // Exit the method to prevent adding the same key   
+                AlertMessage("Menyvalet kan inte lämnas utan titel eller ha samman namn som tidigare.", InputStep.Edit);
+                return; // Exit the method to prevent adding the same key   
             }
 
             if (MenuItems.ContainsKey(oldKey))
-            {             
-                string value = MenuItems[oldKey];              
-                MenuItems.Remove(oldKey);              
+            {
+                //Todo: Fix; Should not enter here if same data is stored.
+                string value = MenuItems[oldKey];
+                MenuItems.Remove(oldKey);
                 MenuItems[inputValue] = templateDropdown; // Maintain the same value while keeping insertion order              
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
             else
-            { 
+            {
                 MenuItems.Add(inputValue, templateDropdown); // Add new key-value
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
-           
+            if (InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+            {
+                if (InitializedMenuOptionExists(templateDropdown))
+                {
+                    MenuItems.Remove(oldKey);
+                }
+                else
+                {
+                    AlertMessage("Lägg till ett eget alternativ för menyn.", InputStep.Edit);
+                    currentStep = InputStep.Edit;
+                }
+               
+            }
+
+
         }
 
         private void AbortItem()
         {
-            inputValue = string.Empty;
-            currentStep = InputStep.Wait;
+            if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+            {
+                inputValue = string.Empty;
+                currentStep = InputStep.Wait;
+            }
+            else 
+            {
+                currentStep = InputStep.Edit;
+            }
         }
 
         private void DeleteItem()

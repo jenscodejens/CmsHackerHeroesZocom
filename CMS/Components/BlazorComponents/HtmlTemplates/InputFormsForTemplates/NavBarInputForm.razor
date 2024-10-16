@@ -47,9 +47,6 @@
         }
             else if ((currentStep == InputStep.AddItem))
         {
-            
-
-        
                     <label for="title">Menyval namn:</label>
 
                     <input type="text" @bind="inputValue" placeholder="Menyval namn" />
@@ -93,9 +90,17 @@
                             }
                         }
                     </select>
-                    <button type="button" @onclick="AbortItem">Avbryt</button>
-                    <button type="button" @onclick="UpdateItem">Ändra</button>
-                    <button type="button" @onclick="DeleteItem">Ta bort</button>
+                    @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+                    {
+                        <button type="button" @onclick="AbortItem">Avbryt</button>
+                        <button type="button" @onclick="UpdateItem">Ändra</button>
+                        <button type="button" @onclick="DeleteItem">Ta bort</button>
+                    }
+                    else
+                    {
+                        <button type="button" @onclick="UpdateItem">Ändra</button>
+                    }
+
             }
 
         }
@@ -108,6 +113,13 @@
             <label>Text Color:</label>
             <input type="color" @bind="TextColor" />
         </div>
+
+        @if (infoMessage)
+        {
+            <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+                @navBarInfoMessage           
+            </div>
+        }
 
         <!-- Success message -->
         @if (saveSuccessful)
