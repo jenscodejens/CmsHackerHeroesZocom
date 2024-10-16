@@ -126,9 +126,9 @@ h2 {
     justify-content: center;
     color: #fff;
     background: url(/images/landingPage.png) no-repeat top center;
-    -webkit-background-size: cover;
+/*    -webkit-background-size: cover;
     -moz-background-size: cover;
-    -o-background-size: cover;
+    -o-background-size: cover;*/
     background-size: cover;
     height: 95vh;
 }
@@ -331,9 +331,6 @@ h2 {
 
     .about-image2 {
         position: absolute;
-    }
-
-    .about-image2 {
         top: 1rem;
         right: 17rem;
     }
