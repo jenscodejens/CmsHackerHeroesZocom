@@ -66,7 +66,7 @@ li.nav-item {
     transition: all .4s ease-in-out;
 }
 
-.nav-link:after,
+/*.nav-link:after,*/
 .nav-link:after {
     content: "";
     position: absolute;

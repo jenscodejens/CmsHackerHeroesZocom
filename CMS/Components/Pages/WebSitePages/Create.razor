@@ -31,7 +31,7 @@
             </div>
             <div class="mb-3">
                 <label for="creationdate" class="form-label">Skapad:</label>
-                <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" disabled />
+                <InputDate id="creationdate" @bind-Value="WebSite.CreationDate" class="form-control" readonly />
                 <ValidationMessage For="() => WebSite.CreationDate" class="text-danger" />
             </div>
             <button type="submit" class="btn btn-primary">Skapa</button>
