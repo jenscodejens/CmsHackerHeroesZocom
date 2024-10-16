@@ -1,6 +1,8 @@
-﻿@page "/contents"
+﻿
+@page "/contents"
 @attribute [Authorize]
 
+@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using CMS.Entities
@@ -12,6 +14,14 @@
 @attribute [Authorize]
 
 <PageTitle>Index innehåll</PageTitle>
+
+<Breadcrumbs crumbs="@(new List<(string, string)> 
+    { 
+        ("Home", "/"), 
+        ("Websites", "/websites"),
+        ("Webpages", $"/webpages?websiteid={WebSiteId}"),
+        ("Contents", $"/contents?webpageid={WebPageId}")
+    })" />
 
 <h1>Index Innehåll</h1>
 
@@ -44,7 +54,45 @@ else
     </QuickGrid>
 }
 
+@code {
+    IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
 
+    [SupplyParameterFromQuery]
+    public int? WebPageId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public int? WebSiteId { get; set; }
+
+    ApplicationDbContext context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        if (WebPageId.HasValue)
+        {
+            // Fetch content filtered by WebPageId
+            contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
+
+            // If WebSiteId is not provided, try to get it from the WebPage
+            if (!WebSiteId.HasValue)
+            {
+                var webPage = await context.WebPages.FirstOrDefaultAsync(wp => wp.WebPageId == WebPageId.Value);
+                WebSiteId = webPage?.WebSiteId;
+            }
+        }
+        else
+        {
+            // Fetch all content if no WebPageId is provided
+            contents = context.Contents;
+        }
+    }
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    // ... rest of your code
+}
+
+
+@*
 @code {
     IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
     [SupplyParameterFromQuery]
@@ -70,3 +118,4 @@ else
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
+*@

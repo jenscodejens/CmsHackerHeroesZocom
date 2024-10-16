@@ -1,12 +1,20 @@
 ﻿@page "/webpages"
 @attribute [Authorize]
 
+@using CMS.Shared
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
 
 <PageTitle>Index webbsidor</PageTitle>
+
+<Breadcrumbs crumbs="@(new List<(string, string)> 
+    { 
+        ("Home", "/"), 
+        ("Websites", "/websites"),
+        ("Webpages", $"/webpages?websiteid={WebSiteId}")
+    })" />
 
 <h1>Index webbsidor</h1>
 @if (WebSiteId != null)
