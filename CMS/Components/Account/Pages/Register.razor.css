@@ -3,6 +3,10 @@
     --secondary-color: white;
 }
 
+/* Add spacing below the navbar */
+.register-page {
+    margin-top: 80px; /* Adjust this value depending on the height of your navbar */
+}
 
 .register-page .section-color {
     background-color: var(--primary-background);
@@ -52,4 +56,11 @@
     font-size: 130px;
     color: white;
   }
+
+@media (max-width: 768px) {
+    /* Adjust the margin for smaller screens if needed */
+    .register-page {
+        margin-top: 100px; /* Adjust this for mobile devices */
+    }
+}
 
