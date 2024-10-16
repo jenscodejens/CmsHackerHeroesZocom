@@ -7,97 +7,223 @@
 <PageTitle>Home</PageTitle>
 
 <AuthorizeView>
-  <NotAuthorized>
-    
-    <div class="grid-container">
-      <div class="box1">
+<NotAuthorized>
+<!-- BACK TO TOP BUTTON  -->
+<div class="btt-button shadow-sm border border-black" id="back-to-top-btn">
+    <a class="btt-link d-flex h-100" title="Back to Top">
+        <span class="material-symbols-outlined">
+            arrow_upward
+        </span>
+    </a>	
+</div>
+<!-- /BACK TO TOP BUTTON  -->
 
-        <h1>HACKER HEROES</h1>
-        <h2>CMS</h2>
-        <img src="https://via.placeholder.com/300x300" alt="Bild i Box 1">
-      </div>
-      <div class="box2">
-        <h4>Varför välja oss?</h4>
-                <p>Det är viktigt att välja rätt CMS (Content Management System) för din verksamhet. Vi är övertygade om
-                    att vårt CMS är det bästa för dig. Vårt CMS fokuserar på användaren. Det lättförståeliga gränssnittet
-                    gör det enkelt att skapa, redigera och publicera innehåll utan att ha någon teknisk expertis. Dessutom,
-                    oavsett om du driver en liten blogg eller en stor e-handelsplats, är systemet flexibelt och kan anpassas
-                    till dina specifika behov.</p>
-
-                <p>Säkerhet är avgörande för oss. Det finns inbyggda säkerhetsfunktioner i vårt CMS som skyddar ditt innehåll och
-                    data från hot och intrång. Dessutom erbjuder vi omfattande support och kundservice. 
-                    Vårt dedikerade team är här för att hjälpa dig, oavsett vilka problem eller frågor du har.</p>
-
-                <p>
-                    En mängd olika verktyg och plattformar kan använda vårt CMS, vilket gör det enkelt att integrera med dina 
-                    befintliga system och arbetsflöden. Vårt CMS kan hantera ökad webbplatstrafik och innehåll utan att tappa prestandan.
-
-                </p>
-
-
-      </div>
-      <div class="box3">
-        <div class="box3-item">
-          <h4>
-            Enkelt att använda
-          </h4>
-        </div>
-        <div class="box3-item">
-          <h4>
-            Anpassningsbar
-          </h4>
-        </div>
-        <div class="box3-item">
-          <h4>
-            Responsiv
-          </h4>
-        </div>
-        <div class="box3-item">
-          <h4>
-            Snabb
-          </h4>
-        </div>
-        <div class="box3-item">
-          <h4>
-            Säker
-          </h4>
-        </div>
-        <div class="box3-item">
-          <h4>
-            Integrerad
-          </h4>
-        </div>
-      </div>
-
-
-      <div class="box4">
-
-        <!-- Stor H1-Titel -->
-        <h2 class="display-1">
-          Boka din Demo nu!
-        </h2>
-
-        <!-- Mellanstor bild -->
+<!--LANDING PAGE SECTION-->
+<section class="landing-page-container container-fluid" style="margin-top: -35px;" id="top-page">
+    <div class="landing-page-heading-wrapper text-center">
+        <h1 class="landing-page-heading">Hacker Heroes CMS</h1>
+                <p class="landing-page-paragraph">Skapa din bästa webbplats här!</p>
         <div class="text-center">
-          <img src="https://via.placeholder.com/300x300" alt="Demo bild" />
+            <a href="Account/Register" class="button btn-yellow uppercase" id="submitButton">
+                Registrera dig nu
+            </a>
         </div>
-
-        <!-- Grön knapp med Bootstrap -->
-        <div class="text-center mt-4">
-          <button>
-            Boka nu
-          </button>
-        </div>
-
-        <!-- Säljande text -->
-        <div class="mt-4">
-          <p>Upplev kraften i vårt CMS-verktyg genom att boka en gratis demo idag! Vårt system gör det enkelt för dig att
-            hantera innehåll på ett intuitivt och effektivt sätt, oavsett om du driver en liten blogg eller en stor
-            företagswebbplats. Få en skräddarsydd genomgång och upptäck alla funktioner som kan hjälpa dig att spara tid
-            och maximera din webbplats prestanda.</p>
-        </div>
-      </div>
     </div>
+</section>
+<!--HOW IT WORKS / ABOUT SECTION-->
+<section id="about-section-wrapper">
+    <div class=" d-flex justify-content-center">
+        <div class="about-heading-wrapper text-center mb-md-5">
+            <h2 class="uppercase primary-heading mb-0">
+                <span class="material-symbols-outlined">question_mark</span>
+                Hur fungerar det
+            </h2>
+        </div>
+    </div>
+    <!--Instructions for using the website-->
+    <div class="row mb-5 about-heading-mobile-center">
+        <div class="col-12 mb-5 col-lg-6 planning-images-container">
+            <img src="/images/landingPage.png" alt="Planning image" class="img-fluid d-none d-md-block planning-image">
+            <img src="/images/landingPage2.png" alt="Planning image2"  class="img-fluid d-none d-md-block planning-image planning-image-2">
+        </div>
+        <div class="col-12 col-lg-6 d-flex align-items-center flex-column">
+            <h3 class="about-heading">
+                    Planera det själv
+                </h3>
+            <img src="/images/landingPage2.png" alt="Planera det själv" class="img-fluid d-block my-3 d-md-none about-mobile-only-image">
+            <p class="about-paragraphs shadow-lg p-4 mb-5 rounded-lg">
+                    Välkommen till vårt innehållshanteringssystem (CMS) som hjälper dig att enkelt skapa och hantera din webbplats.<br />
+                    Systemet är användarvänligt och kräver ingen avancerad teknisk kunskap.Du kan skapa menyer, redigera sidor och följa besöksstatistik direkt via adminpanelen.<br />
+                    Dessutom erbjuder vi en responsiv design som fungerar lika bra på mobil som på dator.<br />
+                        &rarr;&nbsp;Skapa ett admin-konto: Börja med att registrera dig och logga in som admin. Detta ger dig full tillgång till att skapa och hantera ditt innehåll.<br />
+                        &rarr;&nbsp;Skapa och redigera menyer: Använd adminpanelen för att bygga menyer. Här kan du enkelt lägga till och radera menyalternativ för att anpassa din webbplats.<br />
+                        &rarr;&nbsp;Lägg till innehåll: Skapa sidor genom att lägga till rubriker, text, bilder och länkar. Du kan även formatera text och lägga till innehåll på olika delar av sidan, som i huvudområdet, vänsterkolumnen eller footern.
+            </p>
+        </div>
+    </div>
+</section>
+<section class="mb-4" id="aboutUs">
+    <div class="row mb-md-5 about-heading-mobile-center">
+        <div class="row mt-2 mt-md-5 pt-4" >
+            <div class=class="col-12 col-lg-6 d-flex align-items-center flex-column">
+                <h3 class="about-heading"></h3>
+            </div>
+        </div>
+        <div class="col-12 col-lg-6 d-flex align-items-center flex-column">
+            <img src="/images/landingPage2.png" alt="About us image" class="img-fluid d-block my-3 d-md-none about-mobile-only-image">
+                <h3 class="about-heading">
+                    Om oss
+                </h3>
+            <p class="about-paragraphs shadow-lg p-4 mb-5 rounded-lg text-center">
+                    Vi är ett passionerat team av mjukvaruutvecklare som strävar efter att förenkla webbpublicering och innehållshantering för företag och individer.<br />
+                        Med vår expertis och innovativa lösningar skapar vi verktyg som gör det möjligt för alla att hantera sin online-närvaro effektivt och enkelt.<br />
+                        Vi tror på kraften av teknik för att förenkla vardagen och ge våra användare friheten att fokusera på det som verkligen betyder något.<br />
+                        Vårt mål är att leverera en plattform som kombinerar funktionalitet och användarvänlighet. 
+                        Vi lägger stor vikt vid kundnöjdhet och arbetar ständigt med att förbättra våra tjänster. 
+                        Genom att lyssna på våra användare och förstå deras behov, kan vi fortsätta att utveckla
+                        vår produkt och erbjuda skräddarsydda lösningar för att stödja deras framgång.<br />
+            </p>
+        </div>
+        <div class="col-12 mb-md-5 col-lg-6 planning-images-container">
+            <img src="/images/landingPage.png" alt="About us image" class="img-fluid d-none d-md-block about-image">
+            <img src="/images/landingPage2.png" alt="About us image" class="img-fluid d-none d-md-block about-image about-image2">
+        </div>
+    </div>
+</section>
+<!-- PAYMENT -->
+<section class="mb-4" id="payment">
+    <div class="row text-center mt-4 px-lg-5">
+        <div class="row mt-2 mt-md-5 pt-4" >
+            <div class="col-12 text-center mb-3">
+                <h3 class="uppercase">Prismodell</h3>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3 shadow p-3 rounded">
+            <div class="card card-benefit mx-2">
+                <div class="card-body">
+                    <h5 class="uppercase">Grattis</h5>
+                    <i class="fas fa-hiking icon-about"></i>
+                    <p class="benefit-paragraph">
+                        Skapa och hantera din webbplats helt gratis med vårt användarvänliga CMS <br/> – inga dolda avgifter!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3 shadow p-3 rounded">
+            <div class="card  card-benefit mx-2">
+                <div class="card-body">
+                    <h5 class="uppercase">Personal 39SEK</h5>
+                    <i class="fas fa-bed icon-about"></i>
+                    <p class="benefit-paragraph">
+                        Få personlig support och skräddarsydda lösningar för att optimera din webbplats med vårt CMS<br />
+                        – alltid här för att hjälpa dig!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3 shadow p-3 rounded">
+            <div class="card card-benefit mx-2">
+                <div class="card-body">
+                    <h5 class="uppercase">Premium 91SEK</h5>
+                    <i class="fas fa-user-check icon-about"></i>
+                    <p class="benefit-paragraph">
+                        Uppgradera till vårt premium-paket för avancerade funktioner,<br />
+                        extra lagringsutrymme och prioriterad support<br />
+                        – ta din webbplats till nästa nivå!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3 shadow p-3 rounded">
+            <div class="card card-benefit mx-2">
+                <div class="card-body">
+                    <h5 class="uppercase">Business 300SEK</h5>
+                    <i class="fas fa-car icon-about"></i>
+                    <p class="benefit-paragraph">
+                        Välj vårt Business-paket för kraftfulla verktyg, obegränsat lagringsutrymme och dedikerad support<br/>
+                        – perfekt för att växa din verksamhet online!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3 shadow p-3 rounded">
+            <div class="card card-benefit mx-2">
+                <div class="card-body">
+                    <h5 class="uppercase">Commerce 540SEK</h5>
+                    <i class="fas fa-euro-sign icon-about"></i>
+                    <p class="benefit-paragraph">
+                        Maximera din försäljning med vårt Commerce-paket <br />
+                        – få tillgång till avancerade e-handelsfunktioner,<br/>
+                        säker betalningshantering och skräddarsydd support!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-4 mb-3 shadow p-3 rounded">
+            <div class="card card-benefit mx-2">
+                <div class="card-body">
+                    <h5 class="uppercase">Enterprise 25000US</h5>
+                    <i class="fas fa-hand-holding-heart icon-about"></i>
+                    <p class="benefit-paragraph">
+                        Välj vårt Enterprise-paket för omfattande anpassningsmöjligheter,<br />
+                        skalbara lösningar och personlig rådgivning <br />
+                        – perfekt för stora företag med komplexa behov!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- /PAYMENT -->
+
+<!-- CONTACT -->
+<section class="mb-4" id="contact-section">
+    <h2 class="uppercase contact-main-heading">
+        <span class="material-symbols-outlined">
+            mail
+        </span> Kontakta oss
+    </h2>
+    <div class="d-flex justify-content-center">
+        <hr class="w-25 mt-3">
+    </div>
+    <div class="d-flex justify-content-center my-4">
+        <div class="text-center">
+            <h4 class="contact-heading uppercase">
+                Har du Frågor?
+            </h4>
+            <h4 class="contact-heading uppercase"> Booka Demo? </h4>
+        </div>
+    </div>
+    <div class="form-container mx-2 mb-5">
+        <div class="mt-4 text-center" id="contact-form">
+            <h5>
+                SKICKA IN FÖRFRÅGAN SÅ ÅTERKOMMER VI TILL DIG SNART<br/>
+            </h5>
+            <form class="contactform pt-2" method="POST" action="">
+                <div class="form-group">
+                    <label for="name">NAMN:</label>
+                    <input type="text" class="form-control" id="name" name="name" required placeholder="Fill in ditt namn">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-MAIL:</label>
+                    <input type="email" class="form-control" id="email"
+                            name="emailaddress" required
+                            placeholder="Fill in ditt email">
+                </div>
+                <div class="form-group">
+                    <label for="cmsquery">DIN FÖRFRÅGAN:</label>
+                     <textarea class="form-control" id="bcmsquery" name="cmsquery" rows="5" placeholder="Ange din förfrågan" required></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="submitButton" class="btn-submit button btn-yellow">
+                        Skicka
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- /CONTACT -->
   </NotAuthorized>
 </AuthorizeView>
 
