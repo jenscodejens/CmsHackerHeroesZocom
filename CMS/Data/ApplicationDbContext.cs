@@ -19,6 +19,7 @@ namespace CMS.Data
         public DbSet<WebSiteVisit> WebSiteVisits { get; set; }
         public DbSet<Template> Templates { get; set; }  // Map to the Templates table
 
+        public DbSet<Profile> profiles {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +55,18 @@ namespace CMS.Data
                  .WithMany()  // No reverse navigation
                  .HasForeignKey(c => c.TemplateId);
             });
+
+            modelBuilder.Entity<Profile>( p => 
+                {
+                    p.ToTable("Profiles");
+                    p.HasKey(p => p.id);
+                    p.HasOne(c=> c.User)
+                    .WithOne(u => u.Profile)
+                    .HasForeignKey<Profile>(c => c.UserId);
+                }
+            );
         }
+    
+         
     }
 }
