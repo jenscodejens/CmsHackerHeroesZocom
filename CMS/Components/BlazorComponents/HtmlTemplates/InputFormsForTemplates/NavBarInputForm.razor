@@ -61,7 +61,7 @@
                             </a> *@
                             <div class="input-group">
                                 <input type="text" @bind="inputValue" placeholder="Menys namn" />
-                                    <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="AddMenuName" aria-label="Spara namn" title="Spara namn">
+                                    <a class="btn overlay-btn-cancle" @onclick="AddMenuName" aria-label="Spara namn" title="Spara namn">
                                     <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -107,12 +107,12 @@
                             }
                         </select>
                         <div class="nav-edit-button-container">
-                        <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="AddItem" aria-label="Ändra" title="Ändra">
-                         <i class="fa fa-check fa-2x" aria-hidden="true"></i>
-                        </a>
-                        <a class="btn overlay-btn-cancel" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
-                            <i class="fa fa-times fa-2x" aria-hidden="true"></i>
-                        </a>
+                            <a class="btn overlay-btn-cancel" @onclick="AddItem" aria-label="Ändra" title="Ändra">
+                             <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn overlay-btn-cancel" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
+                                <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                            </a>
                         </div>
 
                        @*  <button type="button" @onclick="AddItem">Lägg till</button>
@@ -146,10 +146,10 @@
                         {
                             @* <button type="button" @onclick="Save">Spara meny</button> *@
                             <div class="nav-edit-button-container">
-                                <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;">
+                                <a class=" btn overlay-btn-cancle" @onclick="Save" aria-label="Spara" title="Spara">
                                     <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                                 </a>
-                                <a class="btn overlay-btn-accept" @onclick="NewItem" aria-label="Lägg till menyval" title="Lägg till menyval" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;">
+                                <a class="btn overlay-btn-cancle" @onclick="NewItem" aria-label="Lägg till menyval" title="Lägg till menyval">
                                     <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -157,7 +157,7 @@
                         else
                         {
                             <div class="nav-edit-button-container">
-                                <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;">
+                    <a class="btn overlay-btn-cancle" @onclick="Save" aria-label="Spara" title="Spara">
                                     <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -223,15 +223,15 @@
                         @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
                         {
                         <div class="nav-edit-button-container">
-                                <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
-                                <i class="fa fa-step-backward fa-2x" aria-hidden="true"></i>
+                            <a class="btn overlay-btn-cancle" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
+                                <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
                             </a>
 
-                                <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                            <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
                                 <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                             </a>
 
-                                <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="DeleteItem" aria-label="Ta bort" title="Ta bort">
+                            <a class="btn overlay-btn-cancle" @onclick="DeleteItem" aria-label="Ta bort" title="Ta bort">
                                 <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -243,7 +243,7 @@
                         else
                         {
                             <div class="nav-edit-button-container">>
-                                <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                                <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
                                 <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                             </a>
                             </div>
@@ -334,13 +334,13 @@
         <div class="color-picker-group">
             
             <!-- Text color picker -->
-            <label for="textColorInput" class="overlay-btn-color" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" aria-label="Textfärg" title="Textfärg">
+            <label for="textColorInput" class="overlay-btn-color" aria-label="Textfärg" title="Textfärg">
                 <i class="fa fa-font fa-1x" aria-hidden="true"></i>
             </label>
             <input type="color" id="textColorInput" @bind="TextColor" style="display:none;" />
             
             <!-- Background color picker -->
-            <label for="backgroundColorInput" class="overlay-btn-color" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;"  aria-label="Bakgrundsfärg" title="Bakgrundsfärg">
+            <label for="backgroundColorInput" class="overlay-btn-color" aria-label="Bakgrundsfärg" title="Bakgrundsfärg">
                 <i class="fa fa-paint-brush fa-1x" aria-hidden="true"></i>
             </label>
             <input type="color" id="backgroundColorInput" @bind="BackgroundColor" style="display:none;" />
@@ -405,8 +405,8 @@
     .overlay-btn-accept {
         background-color: rgba(255, 255, 255, 0.9);
         color: black;
-        border: 2px solid black;
-        border-radius: 5%; /* This makes the button round */
+        border: 4px solid black;
+        border-radius: 5px; /* This makes the button round */
         padding: 20px; /* Ensure equal padding for width and height */
         width: 40px; /* Set width to ensure a fixed size */
         height: 40px; /* Set height to ensure a fixed size */
@@ -419,7 +419,7 @@
         background-color: rgba(255, 255, 255, 0.9);
         color: black;
         border: 2px solid black;
-        border-radius: 5%; /* This makes the button round */
+        border-radius: 5px; /* This makes the button round */
         padding: 10px; /* Ensure equal padding for width and height */
         width: 30px; /* Set width to ensure a fixed size */
         height: 30px; /* Set height to ensure a fixed size */
@@ -428,18 +428,31 @@
         align-items: center; /* Center the icon vertically */
     }
 
-    .overlay-btn-cancel {
+    .overlay-btn-cancle {
         background-color: rgba(255, 255, 255, 0.9); 
         color: black;
-        border: 2px solid #000000;
-        border-radius: 10%; /* This makes the button round */
+        border: 2px solid black;
+        border-radius: 5px; /* This makes the button round */
         padding: 20px; /* Ensure equal padding for width and height */
-        width: 40px; /* Set width to ensure a fixed size */
-        height: 40px; /* Set height to ensure a fixed size */
+        width: 35px; /* Set width to ensure a fixed size */
+        height: 35px; /* Set height to ensure a fixed size */
         display: flex;
         justify-content: center; /* Center the icon horizontally */
         align-items: center; /* Center the icon vertically */
+        
     }
+
+    .btn:hover {
+        background-color: lightgray; /* Darker background on hover */
+        border: 2px solid black;
+    }
+
+        .btn:hover i {
+            color: black;
+        }
+
+    
+
 
     .input-group {
         display: flex; /* Use flexbox to align items horizontally */
@@ -475,7 +488,7 @@
 
     .nav-edit-button-container {
         position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
-        bottom: -44px; /* Position from the top of the page */
+        bottom: -43px; /* Position from the top of the page */
         left: 60px; /* Position from the left of the page */
         z-index: 1000; /* Make sure it's on top of other content */
         display: flex; /* Align the items horizontally */
