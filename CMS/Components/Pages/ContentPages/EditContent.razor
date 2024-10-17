@@ -2,11 +2,76 @@
 @namespace BlazorComponents.HtmlTemplates
 @using CMS.Data
 @using CMS.Models
+@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
 @attribute [Authorize]
+
+<Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+        //("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={Content?.WebPages?.WebSiteId ?? 0}"),
+        ("Innehåll", $"/contents?webpageid={Content?.WebPageId ?? 0}"),
+        ("Redigera innehåll", $"/content/editcontent?contentid={ContentId}")
+    })" />
+
+<h3>Redigera ett innehåll</h3>
+
+@if (Content is null)
+{
+    <p><em>Laddar...</em></p>
+}
+else
+{
+    @if (!string.IsNullOrEmpty(selectedTemplatePath))
+    {
+        <div>
+            @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(selectedInputFormPath))
+    {
+        <div>
+            @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
+    {
+    { "TemplateId", templateParameters["TemplateId"] },
+    { "WebPageId", templateParameters["WebPageId"] },
+    { "ContentId", ContentId },
+    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
+    { "SaveBtnClicked", SaveBtnClicked },
+    { "MultiPageMode", MultiPageMode }
+    })
+        </div>
+    }
+}
+@*
+@page "/content/editContent"
+@namespace BlazorComponents.HtmlTemplates
+@using CMS.Data
+@using CMS.Models
+@using CMS.Shared
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Home", "/"), 
+        ("Websites", "/websites"),
+        ("Webpages", $"/webpages?websiteid={Content.WebPages.WebSiteId}"),
+        ("Contents", $"/contents?webpageid={Content.WebPageId}"),
+        ("Edit Content", $"/content/editcontent?contentid={ContentId}")
+    })" />
+
+<h3>Redigera ett innehåll</h3>
+// ... rest of your existing code
+
 
 <h3>Redigera ett innehåll</h3>
 
@@ -39,6 +104,8 @@ else
     }
 }
 
+*@
+
 @code {
     [SupplyParameterFromQuery]
     public int ContentId { get; set; } // Fetch ContentId from the query
@@ -61,7 +128,10 @@ else
         using var dbContext = DbContextFactory.CreateDbContext();
 
         // Fetch the Content based on ContentId
-        Content ??= await dbContext.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+       // Content ??= await dbContext.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+        Content = await dbContext.Contents
+         .Include(c => c.WebPages)
+         .FirstOrDefaultAsync(m => m.ContentId == ContentId);
 
         if (Content != null)
         {

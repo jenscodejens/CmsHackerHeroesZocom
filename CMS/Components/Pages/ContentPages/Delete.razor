@@ -1,12 +1,98 @@
 ﻿@page "/content/delete"
 @attribute [Authorize]
 
+@using CMS.Shared
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+       // ("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={content?.WebPages?.WebSiteId ?? 0}"),
+        ("Innehåll", $"/contents?webpageid={content?.WebPageId ?? 0}"),
+        ("Ta bort innehåll", $"/content/delete?contentid={ContentId}")
+    })" />
+
+<h1>Radera innehåll</h1>
+
+<h3>Är du säker på att du vill radera innehållet?</h3>
+
+@if (content is null)
+{
+    <p><em>Laddar...</em></p>
+}
+else
+{
+    <div>
+        <h4>Innehåll</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">Namn</dt>
+            <dd class="col-sm-10">@content.ContentName</dd>
+            <!-- Add other properties here -->
+        </dl>
+
+        <EditForm Model="content" OnValidSubmit="DeleteContent">
+            <button type="submit" class="btn btn-danger">Radera</button>
+        </EditForm>
+    </div>
+}
+
+<div>
+    <a href="/contents">Tillbaka</a>
+</div>
+
+@code {
+    Content? content;
+
+    [SupplyParameterFromQuery]
+    public int ContentId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        content = await context.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+
+        if (content is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    public async Task DeleteContent()
+    {
+        if (content != null)
+        {
+            using var context = DbFactory.CreateDbContext();
+            context.Contents.Remove(content);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo($"/contents?webpageid={content.WebPageId}");
+        }
+    }
+}
+
+@*
+@page "/content/delete"
+@attribute [Authorize]
+@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
 <PageTitle>Radera innehåll</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Home", "/"), 
+        ("Websites", "/websites"),
+        ("Webpages", $"/webpages?websiteid={content.WebPages.WebSiteId}"),
+        ("Contents", $"/contents?webpageid={content.WebPageId}"),
+        ("Delete Content", $"/content/delete?contentid={ContentId}")
+    })" />
 
 <h1>Radera</h1>
 
@@ -36,6 +122,8 @@
             <dt class="col-sm-2">Innehållsmall</dt>
             <dd class="col-sm-10">@content.Template.TemplateType</dd>
         </dl> *@
+
+        @*
         <EditForm method="post" Model="content" OnValidSubmit="DeleteContent" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button> |
             <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a>
@@ -68,3 +156,5 @@
         NavigationManager.NavigateTo($"/contents?webpageid={content.WebPageId}");
     }
 }
+
+*@

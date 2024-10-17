@@ -1,4 +1,5 @@
 ﻿@page "/websites/create"
+@using CMS.Shared
 @attribute [Authorize]
 
 @inject IGetCurrentUserService GetCurrentUserService
@@ -6,6 +7,14 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Skapa Webbsite</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Home", "/"), 
+        ("Websites", "/websites"),
+        ("Create Website", $"/websites/create")
+    })" />
+
 
 <h1>Skapa webbsite</h1>
 <hr />

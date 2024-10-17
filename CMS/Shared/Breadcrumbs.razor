@@ -1,5 +1,33 @@
 ﻿@using Microsoft.AspNetCore.Components.Routing
 
+<div class="breadcrumb-container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            @foreach (var crumb in crumbs)
+            {
+                <li class="breadcrumb-item @(crumb == crumbs.Last() ? "active" : "")">
+                    @if (crumb != crumbs.Last())
+                    {
+                        <NavLink href="@crumb.Url">@crumb.Text</NavLink>
+                    }
+                    else
+                    {
+                        @crumb.Text
+                    }
+                </li>
+            }
+        </ol>
+    </nav>
+</div>
+@code {
+    [Parameter] public List<(string Text, string Url)> crumbs { get; set; } = new List<(string, string)>();
+}
+
+
+
+
+@*
+
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
         @foreach (var crumb in crumbs)
@@ -25,3 +53,4 @@
 @code {
     [Parameter] public List<(string Text, string Url)> crumbs { get; set; } = new List<(string, string)>();
 }
+*@
