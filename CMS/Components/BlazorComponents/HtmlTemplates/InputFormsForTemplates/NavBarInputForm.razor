@@ -53,9 +53,18 @@
                             </div>
                         <form>
 
-                            <label for="meny">Menys namn:</label>
-                            <input type="text" @bind="inputValue" placeholder="" />
-                            <button type="button" @onclick="AddMenuName">Lägg till</button>
+
+                          @*  <input type="text" @bind="inputValue" placeholder="Menys namn" />
+
+                            <a class="btn overlay-btn-accept" @onclick="AddMenuName" aria-label="Spara namn" title="Spara namn">
+                                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a> *@
+                            <div class="input-group">
+                                <input type="text" @bind="inputValue" placeholder="Menys namn" />
+                                <a class="btn overlay-btn-accept" @onclick="AddMenuName" aria-label="Spara namn" title="Spara namn">
+                                    <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                                </a>
+                            </div>
 
                         </form>
                         
@@ -134,10 +143,13 @@
                         <a class="btn overlay-btn-accept" @onclick="NewItem" aria-label="Lägg till menyval" title="Lägg till menyval">
                             <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
                         </a>
-                        <button type="button" @onclick="NewItem">Lägg till menyval</button>
+                       @*  <button type="button" @onclick="NewItem">Lägg till menyval</button> *@
                         @if (!MultiPageMode) // Show button only if not in multi-page mode
                         {
-                            <button type="button" @onclick="Save">Spara meny</button>
+                            @* <button type="button" @onclick="Save">Spara meny</button> *@
+                <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara">
+                                <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+                            </a>
                         }
                     }
                     else if ((currentStep == InputStep.Edit))
@@ -375,6 +387,23 @@
         justify-content: center; /* Center the icon horizontally */
         align-items: center; /* Center the icon vertically */
     }
+
+    .input-group {
+        display: flex; /* Use flexbox to align items horizontally */
+        align-items: center; /* Vertically align the items in the center */
+    }
+
+        .input-group input {
+            margin-right: 10px; /* Optional: Adds space between the input and the button */
+            flex-grow: 1; /* Make the input field take up remaining space */
+        }
+
+        .input-group a {
+            display: inline-flex; /* Ensure the button stays inline with other elements */
+            justify-content: center; /* Center the icon inside the button */
+            align-items: center; /* Align the icon vertically in the center */
+        }
+
 </style>
 
 
