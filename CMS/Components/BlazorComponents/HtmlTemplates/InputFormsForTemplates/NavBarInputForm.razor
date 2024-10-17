@@ -93,9 +93,9 @@
 
                         <label for="title"></label>
 
-            <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                        <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
 
-            <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
+                        <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
                 
                             <option value="">-- Välj Sida --</option>
                             @if (webpages != null)
@@ -147,7 +147,7 @@
                         @if (!MultiPageMode) // Show button only if not in multi-page mode
                         {
                             @* <button type="button" @onclick="Save">Spara meny</button> *@
-                <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara">
+                            <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara">
                                 <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                             </a>
                         }
@@ -210,19 +210,33 @@
                         </select> *@
                         @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
                         {
+                            <a class="btn overlay-btn-accept" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
+                                <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+                            </a>
+
+                            <a class="btn overlay-btn-accept" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a>
+
+                            <a class="btn overlay-btn-accept" @onclick="DeleteItem" aria-label="Ta bort" title="Ta bort">
+                                <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+                            </a>
+
+
                             <button type="button" @onclick="AbortItem">Avbryt</button>
                             <button type="button" @onclick="UpdateItem">Ändra</button>
                             <button type="button" @onclick="DeleteItem">Ta bort</button>
                         }
                         else
                         {
-                            <button type="button" @onclick="UpdateItem">Ändra</button>
+                            <a class="btn overlay-btn-accept" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a>
                         }
-
                     }
     </nav>
 
-    <a>Tryck på en titel i menyn för att editera valet.</a>
+@*     <a>Tryck på en titel i menyn för att editera valet.</a> *@
 
        @*  @{if (currentStep == InputStep.ContentNameInput)
         {
@@ -300,13 +314,24 @@
         } *@
     <div>
 
-        <div>
+
             <!--Color Controls -->
-            <label>Background Color:</label>
-            <input type="color" @bind="BackgroundColor" />
-            <br>
-            <label>Text Color:</label>
-            <input type="color" @bind="TextColor" />
+        <div class="color-picker-group">
+            
+            <!-- Text color picker -->
+            <label for="textColorInput" class="overlay-btn-color" aria-label="Textfärg" title="Textfärg">
+                <i class="fa fa-font fa-1x" aria-hidden="true"></i>
+            </label>
+            <input type="color" id="textColorInput" @bind="TextColor" style="display:none;" />
+            
+            <!-- Background color picker -->
+            <label for="backgroundColorInput" class="overlay-btn-color" aria-label="Bakgrundsfärg" title="Bakgrundsfärg">
+                <i class="fa fa-paint-brush fa-1x" aria-hidden="true"></i>
+            </label>
+            <input type="color" id="backgroundColorInput" @bind="BackgroundColor" style="display:none;" />
+
+        </div>
+
         </div>
 
         @if (infoMessage)
@@ -375,6 +400,19 @@
         align-items: center; /* Center the icon vertically */
     }
 
+    .overlay-btn-color {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: black;
+        border: 2px solid black;
+        border-radius: 5%; /* This makes the button round */
+        padding: 10px; /* Ensure equal padding for width and height */
+        width: 30px; /* Set width to ensure a fixed size */
+        height: 30px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+    }
+
     .overlay-btn-cancel {
         background-color: rgba(255, 255, 255, 0.9); 
         color: black;
@@ -404,6 +442,21 @@
             align-items: center; /* Align the icon vertically in the center */
         }
 
+    .color-picker-group {
+        display: flex; /* Use flexbox to align items horizontally */
+        align-items: center; /* Vertically center the items in the row */
+        gap: 10px; /* Optional: Adds spacing between the two inputs */
+    }
+
+    .overlay-btn-color {
+        cursor: pointer; /* Make the icon clickable */
+        display: inline-flex; /* Make sure the label and icon stay inline */
+        align-items: center; /* Vertically center the icon */
+    }
+
+        .overlay-btn-color i {
+            margin-right: 5px; /* Optional: Adds a small gap between the icon and the input */
+        }
 </style>
 
 
