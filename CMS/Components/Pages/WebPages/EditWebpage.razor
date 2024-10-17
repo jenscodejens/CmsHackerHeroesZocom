@@ -25,40 +25,40 @@
 
 
 @* Todo: Investigate the handling of the use of components, to remove excess use/"writing"" of components*@
-
+containerEditWebPagebuttons
     <p>
          <div class="containerMainButtons">
              <div class="button-container">
-        @if (PageExecution != ExecuteAction.Preview)
-        {
+                @if (PageExecution != ExecuteAction.Preview)
+                {
  
-          @*   <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
-            <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
-            <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
- *@
-            <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
-                <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
-            </a>
+                  @*   <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
+                    <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
+                    <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
+         *@
+                    <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
+                        <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
+                    </a>
 
-            <a class="btn overlay-btn-main" @onclick="()=> AddContent()" aria-label="Lägg till innehåll" title="Lägg till innehåll">
-                <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
-            </a>
+                    <a class="btn overlay-btn-main" @onclick="()=> AddContent()" aria-label="Lägg till innehåll" title="Lägg till innehåll">
+                        <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
+                    </a>
 
-            <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
-                <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
-            </a>
+                    <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
+                        <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+                    </a>
  
-        }
-        else
-        {
-            <a class="btn overlay-btn-main" @onclick="()=> ResumeEditContent()" aria-label="Fortsätt redigera" title="Fortsätt redigera">
-                <i class="fa fa-play fa-1x" aria-hidden="true"></i>
-            </a>
+                }
+                else
+                {
+                    <a class="btn overlay-btn-main" @onclick="()=> ResumeEditContent()" aria-label="Fortsätt redigera" title="Fortsätt redigera">
+                        <i class="fa fa-play fa-1x" aria-hidden="true"></i>
+                    </a>
 
-           @*  <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button> *@
+                   @*  <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button> *@
 
-        }
-        </div>
+                }
+            </div>
         </div>
     </p>
 
@@ -89,7 +89,7 @@ else
             {
                 case ExecuteAction.EditPageinformation:
                 {
-                    <div class="containerEditWebPage" style="position: relative;">
+                    <div class="containerEditWebPageContent" style="position: relative;">
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
@@ -110,7 +110,7 @@ else
                             @* Todo: ChangeEventArgs this use of templeid not good practise: *@
                             if (content.TemplateId == 9)
                             {
-                                <div class="containerEditWebPage" style="position: relative;">
+                                <div class="containerEditWebPageContent" style="position: relative;">
                                     <div class="content">
                                         <CascadingValue Value="content.ContentId">
                                             <EditContent />
@@ -123,7 +123,7 @@ else
                             }
                             else
                             {
-                            <div class="containerEditWebPage" style="position: relative;">
+                            <div class="containerEditWebPageContent" style="position: relative;">
                                 <div class="content">
                                     <ContentPreview ContentId="@content.ContentId" />
                                 </div>
@@ -147,8 +147,8 @@ else
                     }
                 case ExecuteAction.CreateContent:
                     {
-                       
-                        <div class="containerEditWebPage" style="position: relative;">
+
+                    <div class="containerEditWebPageContent" style="position: relative;">
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
@@ -164,7 +164,7 @@ else
                 }
                 case ExecuteAction.EditSelect:
                 {
-                    <div class="containerEditWebPage" style="position: relative;">
+                    <div class="containerEditWebPageContent" style="position: relative;">
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />
                         </div>
@@ -199,10 +199,10 @@ else
                         if (ContentForEditing == content.ContentId)
                         {
                             Content contentdelete = new()
-                                        {
-                                            ContentId = (int)ContentForEditing
-                                        };
-                            <div class="containerEditWebPage" style="position: relative;">
+                            {
+                                ContentId = (int)ContentForEditing
+                            };
+                        <div class="containerEditWebPageContent" style="position: relative;">
                                 <div class="content">
                                     <ContentPreview ContentId="@content.ContentId" />
                                 </div>

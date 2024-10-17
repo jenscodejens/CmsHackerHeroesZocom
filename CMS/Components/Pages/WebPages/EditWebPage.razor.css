@@ -124,8 +124,8 @@
 /* Main button container */
 .containerMainButtons {
     position: fixed; /* Fixes the container */
-    bottom: 3%; /* Always at the top of the screen */
-    left: 10%; /* Optional: Align it to the left */
+    bottom: 50%; /* Always at the top of the screen */
+    left: 5%; /* Optional: Align it to the left */
     width: auto; /* Optional: Make it full width */
     z-index: 100; /* Ensure it stays above other content */
     background-color: rgba(255, 255, 255, 1); /* Optional: adds a background */

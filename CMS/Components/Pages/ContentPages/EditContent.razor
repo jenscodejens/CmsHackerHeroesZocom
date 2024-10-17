@@ -17,7 +17,11 @@ else
     @if (!string.IsNullOrEmpty(selectedTemplatePath))
     {
         <div>
-           @*  @RenderDynamicComponent(selectedTemplatePath, templateParameters) *@
+            @* ToDo: This is a temp fix, change. *@
+            @if (selectedTemplatePath != "BlazorComponents.HtmlTemplates.TemplatesForComponents.NavBarTemplate")
+            {
+                @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+            }
         </div>
     }
 
