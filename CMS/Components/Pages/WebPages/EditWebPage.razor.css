@@ -85,7 +85,7 @@
 .overlay-editwebpageinfo {
     position: absolute; /* Position relative to the viewport (screen) */
     top: -20px; /* Adjust this value as needed for how far down you want it to appear */
-    left: 50%; /* Center it horizontally */
+    left: 50%;
     transform: translateX(-50%); /* Offset the button by half its width */
     z-index: 10;
     background-color: rgba(255, 255, 255, 1);
@@ -114,7 +114,7 @@
 .nav-edit-done-button-container {
     position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
     bottom: -35px; /* Position from the top of the page */
-    left: 85px; /* Position from the left of the page */
+    left:191px; /* Position from the left of the page */
     z-index: 1000; /* Make sure it's on top of other content */
     display: flex; /* Align the items horizontally */
     align-items: center; /* Center them vertically */

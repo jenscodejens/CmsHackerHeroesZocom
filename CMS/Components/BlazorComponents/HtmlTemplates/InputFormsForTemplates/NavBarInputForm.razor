@@ -107,7 +107,6 @@
                             }
                         </select>
                         <div class="nav-edit-button-container">
-
                         <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="AddItem" aria-label="Ändra" title="Ändra">
                          <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                         </a>
@@ -146,7 +145,7 @@
                         @if (!MultiPageMode) // Show button only if not in multi-page mode
                         {
                             @* <button type="button" @onclick="Save">Spara meny</button> *@
-                            <div class="nav-edit-done-button-container">
+                            <div class="nav-edit-button-container">
                                 <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;">
                                     <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                                 </a>
@@ -157,7 +156,7 @@
                         }
                         else
                         {
-                <div class="nav-edit-done-button-container">
+                            <div class="nav-edit-button-container">
                                 <a class="btn overlay-btn-accept" @onclick="Save" aria-label="Spara" title="Spara" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;">
                                     <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                                 </a>
@@ -223,6 +222,7 @@
                         </select> *@
                         @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
                         {
+                        <div class="nav-edit-button-container">
                                 <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
                                 <i class="fa fa-step-backward fa-2x" aria-hidden="true"></i>
                             </a>
@@ -234,7 +234,7 @@
                                 <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="DeleteItem" aria-label="Ta bort" title="Ta bort">
                                 <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
                             </a>
-
+                        </div>
 
                           @*   <button type="button" @onclick="AbortItem">Avbryt</button>
                             <button type="button" @onclick="UpdateItem">Ändra</button>
@@ -242,9 +242,11 @@
                         }
                         else
                         {
+                            <div class="nav-edit-button-container">>
                                 <a class="btn overlay-btn-accept" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
                                 <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                             </a>
+                            </div>
                         }
                     }
     </nav>
@@ -473,7 +475,7 @@
 
     .nav-edit-button-container {
         position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
-        bottom: -50px; /* Position from the top of the page */
+        bottom: -44px; /* Position from the top of the page */
         left: 60px; /* Position from the left of the page */
         z-index: 1000; /* Make sure it's on top of other content */
         display: flex; /* Align the items horizontally */
