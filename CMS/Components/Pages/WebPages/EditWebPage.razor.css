@@ -111,6 +111,16 @@
     display: block;
 }
 
+.nav-edit-done-button-container {
+    position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
+    bottom: -35px; /* Position from the top of the page */
+    left: 85px; /* Position from the left of the page */
+    z-index: 1000; /* Make sure it's on top of other content */
+    display: flex; /* Align the items horizontally */
+    align-items: center; /* Center them vertically */
+    gap: 0px; /* Add space between the items */
+}
+
 /* Main button container */
 .containerMainButtons {
     position: fixed; /* Fixes the container */

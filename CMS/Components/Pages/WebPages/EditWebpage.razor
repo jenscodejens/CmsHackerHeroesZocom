@@ -67,7 +67,7 @@
     <p>Denna webbsidan har inget innehåll.</p>
 }
 else if (!Contents.Any())
-                        {
+{
                             <div class="containerEditWebPage" style="position: relative;">
                                 <div class="content">
                                         <CascadingValue Value="WebPageId">
@@ -75,14 +75,16 @@ else if (!Contents.Any())
                                     </CascadingValue>
                                 </div>
                                 <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
-                            </div>
-                        }
+    </div>
+}
 else
 {
-    <QuickGrid Class="table" Items="Contents">
+ @*    <QuickGrid Class="table" Items="Contents.to">
 
             
-        <TemplateColumn Context="content">
+        <TemplateColumn Context="content"> *@
+    foreach (var content in Contents)
+    {
             @switch (PageExecution)
             {
                 case ExecuteAction.EditPageinformation:
@@ -95,27 +97,44 @@ else
                             <CascadingValue Value="content.WebPageId">
                                 <CMS.Components.Pages.WebPages.Edit />
                             </CascadingValue>
-                            <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Avbryt </button>
+                                <button type="button" class="btn btn-warning" @onclick="()=> EditPageinformationDone()"> Tillbaka </button>
                         </div>
-                    </div>
-                    PageExecution = ExecuteAction.Preview;
-                    break;         
-                }
+                        </div>
+                        PageExecution = ExecuteAction.Preview;
+                        break;         
+                    }
                 case ExecuteAction.EditContent:
-                {
-                    if (content.ContentId == ContentForEditing)
                     {
-                        <div class="containerEditWebPage" style="position: relative;">
-                            <div class="content">
-                                <ContentPreview ContentId="@content.ContentId" />
-                            </div>
-                            <div class="overlay-edit">
-                                <CascadingValue Value="content.ContentId">
-                                    <EditContent />
-                                </CascadingValue>
-                                <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Avbryt </button>
-                            </div>
-                        </div>
+                        if (content.ContentId == ContentForEditing)
+                        {
+                            @* Todo: ChangeEventArgs this use of templeid not good practise: *@
+                            if (content.TemplateId == 9)
+                            {
+                                <div class="containerEditWebPage" style="position: relative;">
+                                    <div class="content">
+                                        <CascadingValue Value="content.ContentId">
+                                            <EditContent />
+                                        </CascadingValue>
+                                    </div>
+                                    <div class="nav-edit-done-button-container">
+                                        <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Tillbaka </button>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                            <div class="containerEditWebPage" style="position: relative;">
+                                <div class="content">
+                                    <ContentPreview ContentId="@content.ContentId" />
+                                </div>
+                                <div class="overlay-edit">
+                                    <CascadingValue Value="content.ContentId">
+                                        <EditContent />
+                                    </CascadingValue>
+                                    <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Tillbaka </button>
+                                </div>
+                            </div>                             
+                            }
                     }
                     else
                     {
@@ -215,6 +234,5 @@ else
                     break;
                 }
             }
-        </TemplateColumn>
-    </QuickGrid>
+    }
 }
