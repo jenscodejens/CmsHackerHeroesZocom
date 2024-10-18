@@ -82,6 +82,12 @@
     padding: 10px 20px;
 }
 
+.btn-warning-edit {
+    left: 1px;
+    position: relative;
+    top: -21px;
+}
+
 .overlay-editwebpageinfo {
     position: absolute; /* Position relative to the viewport (screen) */
     top: -20px; /* Adjust this value as needed for how far down you want it to appear */
