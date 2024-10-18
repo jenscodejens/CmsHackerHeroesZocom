@@ -39,7 +39,7 @@
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
-                            <ul class="navbar-nav ms-auto">
+                            <ul class="navbar-nav">
                                 @foreach (var item in MenuItems)
                                 {
                                     <li class="nav-item">
@@ -77,35 +77,39 @@
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
-
-                            <ul class="navbar-nav ms-auto">
+                            <ul class="navbar-nav">
 
                                 @foreach (var item in MenuItems)
                                 {
+                                    
                                     <li class="nav-item">
                                         <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
                                             @item.Key
                                         </NavLink>
                                     </li>
+                                    <li class="nav-item">
+                                    @if(item.)
+                                    {
+                                    <NavLink class="nav-link">
+                                        <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                                        <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
+                
+                                            <option value="">-- Välj Sida --</option>
+                                            @if (webpages != null)
+                                            {
+                                            @foreach (var menuItem in Pages)
+                                                {
+                                                <option value="@menuItem.Value">@menuItem.Key</option>
+                                                }
+                                            }
+                                        </select>
+                                         </NavLink>
+                                         }
+                                    </li>
                                 }
                             </ul>
                         </div>
 
-                        <label for="title"></label>
-
-                        <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
-
-                        <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
-                
-                            <option value="">-- Välj Sida --</option>
-                            @if (webpages != null)
-                            {
-                            @foreach (var menuItem in Pages)
-                                {
-                                <option value="@menuItem.Value">@menuItem.Key</option>
-                                }
-                            }
-                        </select>
                         <div class="nav-edit-button-container">
                             <a class="btn overlay-btn-cancle" @onclick="AddItem" aria-label="Ändra" title="Ändra">
                              <i class="fa fa-check fa-2x" aria-hidden="true"></i>
@@ -127,8 +131,7 @@
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
-
-                            <ul class="navbar-nav ms-auto">
+                            <ul class="navbar-nav">
 
                                 @foreach (var item in MenuItems)
                                 {
@@ -172,8 +175,7 @@
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
-
-                            <ul class="navbar-nav ms-auto">
+                            <ul class="navbar-nav">
 
                                 @foreach (var item in MenuItems)
                                 {
@@ -303,7 +305,36 @@
 
 <style>
 
+    /* Make the input and dropdown smaller in height */
+    .custom-dropdown {
+        height: 30px; /* Adjust to make it smaller */
+        padding: 5px 10px; /* Adjust padding to control the size */
+        font-size: 14px; /* Reduce font size if needed */
+        margin-left: 10px; /* Space between the dropdown and navbar items */
+        border-radius: 4px; /* Optional: make the corners rounded */
+    }
 
+    /* Align the input and dropdown next to the last nav item */
+    .navbar-nav {
+        display: flex; /* Flexbox for alignment */
+        align-items: center; /* Vertically align items */
+    }
+
+        /* Ensure the last navbar item has no extra margin (if any) */
+        .navbar-nav .nav-item:last-child {
+            margin-right: 0; /* Remove any margin that might push items away */
+        }
+
+    /* Optionally: Style the input and dropdown container if needed */
+    .navbar-collapse {
+        display: flex; /* Make sure the navbar items and inputs align properly */
+        align-items: center; /* Align vertically */
+    }
+
+    /* Optional: Add some spacing around the navbar items */
+    .navbar-nav .nav-item {
+        margin-right: 15px; /* Adjust to control spacing between items */
+    }
 
     .alert {
         position: absolute; /* Or fixed, if you want it to stay fixed in place */
@@ -334,12 +365,12 @@
         }
 
     /* Custom styles for the dropdown */
-    .custom-dropdown {
-        background-color: #f0f0f0; /* Background color */
-        border: 3px solid #3498db; /* Border color */
-        padding: 8px 10px; /* Padding for dropdown */
+   /*  .custom-dropdown {
+        background-color: #f0f0f0; 
+        border: 3px solid #3498db; 
+        padding: 8px 10px;
       
-        border-radius: 5px; /* Rounded corners */
+        border-radius: 5px; 
     }
 
         .custom-dropdown option {
@@ -348,8 +379,8 @@
 
         .custom-dropdown:focus {
            
-            outline: none; /* Remove default focus outline */
-        }
+            outline: none; 
+        } */
 
     .overlay-btn-accept {
         background-color: rgba(255, 255, 255, 0.9);
