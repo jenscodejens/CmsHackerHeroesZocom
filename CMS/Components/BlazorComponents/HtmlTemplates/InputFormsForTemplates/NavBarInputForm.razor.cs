@@ -155,6 +155,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
         }
 
+
         private async Task RetrieveWebPages()
         {
             //Todo: Add alertmessage
@@ -234,9 +235,15 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             using var context = DbFactory.CreateDbContext();
             return context.Contents.Any(e => e.ContentId == contentid);
         }
+
+        private void CloseMessage()
+        {
+            AlertMessageHide();
+        }
+
         private void AddMenuName()
         {
-
+            AlertMessageHide();
             inputValueContentName = inputValue; // Input NavBar name
             inputValue = string.Empty;
             SetInparametersForMenuOptions(MenuItems.FirstOrDefault().Key, MenuItems.FirstOrDefault().Value);
@@ -245,6 +252,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private void AddItem()
         {
+            AlertMessageHide();
             if (!string.IsNullOrEmpty(templateDropdown) && !string.IsNullOrEmpty(inputValue))
             {
                 if (!MenuItems.ContainsKey(inputValue))
@@ -253,21 +261,27 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     inputValue = string.Empty;
                     currentStep = InputStep.Wait;
                 }
-                else 
+                else
                 {
-                    //Todo: Set Alertmessage: You can not use the same name for two items.
+                    AlertMessage("Titeln används redan i menyn.", InputStep.Edit);
                     currentStep = InputStep.AddItem;
                 }
+            }
+            else
+            {
+                AlertMessage("Både titel och sidlänk behövs, vill du lägga till sida senare kan du använda \"Länk saknas\".", InputStep.Edit);
             }
             
         }
         private void NewItem()
-        {          
-                currentStep = InputStep.AddItem; 
+        {
+            AlertMessageHide();
+            currentStep = InputStep.AddItem; 
         }
 
         private void Edit(string href)
         {
+            AlertMessageHide();
             if (inputValueContentName == string.Empty)
             {
                 currentStep = InputStep.ContentNameInput;
@@ -287,7 +301,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                             oldKey = item.Key;
                             templateDropdown = item.Value;
                         }
-                        infoMessage = false;
                     }
                     else
                     {
@@ -387,6 +400,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private void AbortItem()
         {
+            AlertMessageHide();
             if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
             {
                 inputValue = string.Empty;
@@ -400,12 +414,14 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private void DeleteItem()
         {
+            AlertMessageHide();
             MenuItems.Remove(oldKey);
             currentStep = InputStep.Wait;
         }
       
         private async Task Save()
         {
+            AlertMessageHide();
             await SaveToDatabase();
         }
 
@@ -414,7 +430,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         //Todo: Divide code into functions.
         private async Task SaveToDatabase()
         {
-
             if (!MenuItems.Any() || inputValueContentName == string.Empty)
             {
                 if (inputValueContentName == string.Empty)
@@ -479,11 +494,13 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 content.ContentId = ContentId.Value;
                 await ContentService.UpdateContentAsync(content);
                 saveSuccessful = true;
+                infoMessage = true;
             }
             else
             {
                 await ContentService.SaveContentAsync(content);
                 saveSuccessful = true;
+                infoMessage = true;
             }
         }
 

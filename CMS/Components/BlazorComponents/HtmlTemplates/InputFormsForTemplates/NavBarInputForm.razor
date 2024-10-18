@@ -34,14 +34,12 @@
          
                     @if (currentStep == InputStep.ContentNameInput)
                     {
-                            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
-                                    <span class="navbar-toggler-icon"></span>
-                            </button>
-                            
-                            <div class="collapse navbar-collapse" id="navbaris">
-                            
-                            <ul class="navbar-nav mr-auto">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
 
+                        <div class="collapse navbar-collapse" id="navbaris">
+                            <ul class="navbar-nav ms-auto">
                                 @foreach (var item in MenuItems)
                                 {
                                     <li class="nav-item">
@@ -51,7 +49,8 @@
                                     </li>
                                 }
                             </ul>
-                            </div>
+                        </div>
+
                         <form>
 
 
@@ -73,13 +72,13 @@
                     }
                     else if ((currentStep == InputStep.AddItem))
                     {
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
 
-                            <ul class="navbar-nav mr-auto">
+                            <ul class="navbar-nav ms-auto">
 
                                 @foreach (var item in MenuItems)
                                 {
@@ -108,10 +107,10 @@
                             }
                         </select>
                         <div class="nav-edit-button-container">
-                            <a class="btn overlay-btn-cancel" @onclick="AddItem" aria-label="Ändra" title="Ändra">
+                            <a class="btn overlay-btn-cancle" @onclick="AddItem" aria-label="Ändra" title="Ändra">
                              <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                             </a>
-                            <a class="btn overlay-btn-cancel" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
+                            <a class="btn overlay-btn-cancle" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
                                 <i class="fa fa-times fa-2x" aria-hidden="true"></i>
                             </a>
                         </div>
@@ -123,13 +122,13 @@
                     }
                     else if ((currentStep == InputStep.Wait))
                     {
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
 
-                            <ul class="navbar-nav mr-auto">
+                            <ul class="navbar-nav ms-auto">
 
                                 @foreach (var item in MenuItems)
                                 {
@@ -168,13 +167,13 @@
                     else if ((currentStep == InputStep.Edit))
                     {
 
-                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
                         <div class="collapse navbar-collapse" id="navbaris">
 
-                            <ul class="navbar-nav mr-auto">
+                            <ul class="navbar-nav ms-auto">
 
                                 @foreach (var item in MenuItems)
                                 {
@@ -252,85 +251,7 @@
                     }
     </nav>
 
-@*     <a>Tryck på en titel i menyn för att editera valet.</a> *@
-
-       @*  @{if (currentStep == InputStep.ContentNameInput)
-        {
-            <form>
-            
-                        <label for="meny">Menys namn:</label>
-                        <input type="text" @bind="inputValue" placeholder="" />
-                        <button type="button" @onclick="AddMenuName">Lägg till</button>
-           
-            </form>
-        }
-            else if ((currentStep == InputStep.AddItem))
-        {
-                    <label for="title">Menyval namn:</label>
-
-                    <input type="text" @bind="inputValue" placeholder="Menyval namn" />
-
-                        <select id="templateDropdown" @bind="templateDropdown">
-                        <option value="">-- Välj Sida --</option>
-                        @if (webpages != null)
-                        {
-                            @foreach (var item in Pages)
-                            {
-                                <option value="@item.Value">@item.Key</option>
-                            }
-                        }
-                    </select>
-                    <button type="button" @onclick="AddItem">Lägg till</button>
-                    <button type="button" @onclick="AbortItem">Avbryt</button>
-
-            
-            }
-            else if ((currentStep == InputStep.Wait))
-            {
-                    <li class="nav-item">
-                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
-                            @item.Key
-                        </NavLink>
-                    </li>
-                    <button type="button" @onclick="NewItem">Lägg till menyval</button>
-                    @if (!MultiPageMode) // Show button only if not in multi-page mode
-                    {
-                        <button type="button" @onclick="Save">Spara meny</button>
-                    }
-            }
-            else if ((currentStep == InputStep.Edit))
-            {
-                    <label for="title">Menyval nam:</label>
-
-                    <input type="text" @bind="inputValue" placeholder="inputValue" />
-
-                    <select id="templateDropdown" @bind="templateDropdown">
-                        <option value="">-- Välj Sida --</option>
-                        @if (webpages != null)
-                        {
-                            @foreach (var item in Pages)
-                            {
-                                <option value="@item.Value">@item.Key</option>
-                            }
-                        }
-                    </select>
-                    @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
-                    {
-                        <button type="button" @onclick="AbortItem">Avbryt</button>
-                        <button type="button" @onclick="UpdateItem">Ändra</button>
-                        <button type="button" @onclick="DeleteItem">Ta bort</button>
-                    }
-                    else
-                    {
-                        <button type="button" @onclick="UpdateItem">Ändra</button>
-                    }
-
-            }
-
-        } *@
     <div class="color-picker-container">
-
-
             <!--Color Controls -->
         <div class="color-picker-group">
             
@@ -351,20 +272,29 @@
         </div>
 </div>
         <div classs="alert">
-        @if (infoMessage)
-        {
-            <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-                @navBarInfoMessage           
-            </div>
-        }
 
         <!-- Success message -->
-        @if (saveSuccessful)
+        @if (saveSuccessful && infoMessage)
         {
             <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-                Content saved successfully!
-               @*  <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a> *@
+                    Content saved successfully!
+            <div class="alert-flex">
+                <a class="btn overlay-btn-cancle-message" @onclick="CloseMessage" aria-label="Stäng" title="Stäng">
+                    <i class="fa fa-times fa-1x" aria-hidden="true"></i>
+                </a>
+            </div>
 
+            </div>
+        }
+        else if (infoMessage)
+        {
+            <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+                    @navBarInfoMessage           
+                <div class="alert-flex">
+                    <a class="btn overlay-btn-cancle-message" @onclick="CloseMessage" aria-label="Stäng" title="Stäng">
+                        <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
         }
         </div>
@@ -372,6 +302,9 @@
 
 
 <style>
+
+
+
     .alert {
         position: absolute; /* Or fixed, if you want it to stay fixed in place */
         bottom: 10px; /* Adjust as needed */
@@ -380,8 +313,15 @@
         z-index: 9999; /* Ensure it appears above other elements */
     }
 
+    .alert-flex {
+        display: flex; /* Enable flexbox */
+        align-items: center; /* Center content vertically */
+        justify-content: center; /* Center content horizontally */
+        position: relative; /* Ensure the close button can be positioned inside this container */
+        width: 100%; /* Ensure it spans the full width of the alert */
+    }
+
     .custom-input {
-       
         border: 0px solid #3498db; /* Border color */
         padding: 10px; /* Padding for spacing */
         border-radius: 5px; /* Rounded corners */
@@ -449,6 +389,21 @@
         justify-content: center; /* Center the icon horizontally */
         align-items: center; /* Center the icon vertically */
         
+    }
+
+    .overlay-btn-cancle-message {
+        background-color: rgba(255, 255, 255, 0.9);
+        right: 3px;
+        top: 3px;
+        color: black;
+        border: 2px solid black;
+        border-radius: 5px; /* This makes the button round */
+        padding: 15px; /* Ensure equal padding for width and height */
+        width: 15px; /* Set width to ensure a fixed size */
+        height: 15px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
     }
 
     .btn:hover {
