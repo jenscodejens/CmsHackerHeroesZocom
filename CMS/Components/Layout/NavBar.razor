@@ -55,9 +55,9 @@
                 </NotAuthorized>
             <Authorized>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="websites">
+                        <a class="nav-link" href="websites">
                             Sparade Webbsidor
-                        </NavLink>
+                        </a>
                     </li>              
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -99,9 +99,9 @@
                 </NotAuthorized>
                 <Authorized>
                     <li class="nav-item">
-                        <NavLink class="nav-link" href="Account/Manage">
+                        <a class="nav-link" href="Account/Manage">
                             @context.User.Identity?.Name
-                        </NavLink>
+                        </a>
                     </li>
                     <li class="nav-item">
                         <form action="Account/Logout" method="post" class="form-inline" style="font-size:20px; margin-right:10px;">
