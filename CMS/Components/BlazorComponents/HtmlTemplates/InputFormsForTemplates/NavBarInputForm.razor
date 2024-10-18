@@ -349,7 +349,8 @@
         </div>
 
         </div>
-
+</div>
+        <div classs="alert">
         @if (infoMessage)
         {
             <div class="alert alert-success" role="alert" style="margin-top: 20px;">
@@ -366,12 +367,19 @@
 
             </div>
         }
-
-</div>
+        </div>
 
 
 
 <style>
+    .alert {
+        position: absolute; /* Or fixed, if you want it to stay fixed in place */
+        bottom: 10px; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%); /* Center it horizontally */
+        z-index: 9999; /* Ensure it appears above other elements */
+    }
+
     .custom-input {
        
         border: 0px solid #3498db; /* Border color */
