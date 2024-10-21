@@ -100,22 +100,32 @@ h2 {
 /*-------Back to top button----------*/
 .btt-button {
     position: fixed;
-    height: 2.6rem;
-    width: 2.6rem;
+    height: 3rem;
+    width: 3rem;
     bottom: 0.5rem;
     right: 0.5rem;
-    border-radius: .4rem;
+    border-radius: 50%;
     background-color: #fcfcfc;
     display: none;
     z-index: 999999999;
+    border: 2px solid black;
+
 }
 
 .btt-button:hover {
-    background-color: #ebebebfd;
+    background-color: #f7c00f;
 }
 
 .btt-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
     cursor: pointer;
+}
+.material-symbols-outlined {
+    font-weight: bold; /* Make the arrow icon bold */
 }
 
 /*--------LANDING PAGE IMAGE section-------------*/
