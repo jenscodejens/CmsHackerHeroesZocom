@@ -22,7 +22,7 @@ else
 {
     <!-- Header Section -->
     <header class="header-section">
-        <p>SidHuvud</p>
+        <p>Sidhuvud</p>
         <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
     </header>
 
@@ -39,19 +39,19 @@ else
     </main>
     <!-- Footer Section -->
     <footer class="footer-section">
-        <p>Sidfoten</p>
+        <p>Sidfot</p>
         <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
     </footer>
 
     <!-- Save Button -->
-    <button @onclick="SaveAllContents" class="save-button">Save All Contents</button>
+    <button @onclick="SaveAllContents" class="save-button">Spara allt innehåll</button>
 
     <!-- Success Message -->
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            All contents have been saved successfully!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view the contents</a> | <a href="/webpages/previewpage/@WebPageId" class="alert-link">Click here to preview the webpage</a>
+            Allt innehåll har sparats framgångsrikt!
+            <a href="/contents?webpageid=@WebPageId" class="alert-link">Klicka här för att se innehållet</a> | <a href="/webpages/previewpage/@WebPageId" class="alert-link">Klicka här för att förhandsgranska webbsidan</a>
         </div>
     }
 }
