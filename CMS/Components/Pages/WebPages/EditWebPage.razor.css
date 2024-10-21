@@ -72,7 +72,7 @@
 
 .overlay-edit {
     position: absolute; /* Position relative to the containerEditWebPage */
-    top: 190px;
+    top: 260px;
     left: 50%; /* Position from the left (50% of the parent container) */
     transform: translate(-50%, -50%); /* Offset the button by half its width and height */
     z-index: 10;
@@ -82,10 +82,16 @@
     padding: 10px 20px;
 }
 
+.btn-warning-edit {
+    left: 1px;
+    position: relative;
+    top: -21px;
+}
+
 .overlay-editwebpageinfo {
     position: absolute; /* Position relative to the viewport (screen) */
     top: -20px; /* Adjust this value as needed for how far down you want it to appear */
-    left: 50%; /* Center it horizontally */
+    left: 50%;
     transform: translateX(-50%); /* Offset the button by half its width */
     z-index: 10;
     background-color: rgba(255, 255, 255, 1);
@@ -111,11 +117,21 @@
     display: block;
 }
 
+.nav-edit-done-button-container {
+    position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
+    bottom: -35px; /* Position from the top of the page */
+    left: 191px; /* Position from the left of the page */
+    z-index: 1000; /* Make sure it's on top of other content */
+    display: flex; /* Align the items horizontally */
+    align-items: center; /* Center them vertically */
+    gap: 0px; /* Add space between the items */
+}
+
 /* Main button container */
 .containerMainButtons {
     position: fixed; /* Fixes the container */
-    bottom: 3%; /* Always at the top of the screen */
-    left: 10%; /* Optional: Align it to the left */
+    top: 0%; /* Always at the top of the screen */
+    left: 5%; /* Optional: Align it to the left */
     width: auto; /* Optional: Make it full width */
     z-index: 100; /* Ensure it stays above other content */
     background-color: rgba(255, 255, 255, 1); /* Optional: adds a background */
