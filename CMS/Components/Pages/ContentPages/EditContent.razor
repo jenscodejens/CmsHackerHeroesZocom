@@ -2,23 +2,11 @@
 @namespace BlazorComponents.HtmlTemplates
 @using CMS.Data
 @using CMS.Models
-@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
 @attribute [Authorize]
-
-<Breadcrumbs Crumbs="@(new List<(string, string)>
-    {
-        ("Hem", "/"),
-        //("Websites", "/websites"),
-        ("Webbsidor", $"/webpages?websiteid={Content?.WebPages?.WebSiteId ?? 0}"),
-        ("Innehåll", $"/contents?webpageid={Content?.WebPageId ?? 0}"),
-        ("Redigera innehåll", $"/content/editcontent?contentid={ContentId}")
-    })" />
-
-<h3>Redigera ett innehåll</h3>
 
 @if (Content is null)
 {
@@ -29,7 +17,7 @@ else
     @if (!string.IsNullOrEmpty(selectedTemplatePath))
     {
         <div>
-           @*  @RenderDynamicComponent(selectedTemplatePath, templateParameters) *@
+            @*  @RenderDynamicComponent(selectedTemplatePath, templateParameters) *@
         </div>
     }
 
