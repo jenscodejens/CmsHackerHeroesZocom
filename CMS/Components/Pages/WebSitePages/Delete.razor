@@ -1,4 +1,5 @@
 ﻿@page "/websites/delete"
+@using CMS.Shared
 @attribute [Authorize]
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
@@ -6,6 +7,13 @@
 
 
 <PageTitle>Radera webbsida</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+       // ("Websites", "/websites"),
+        ("Ta bort webbplats", $"/websites/delete?websiteid={WebSiteId}")
+    })" />
 
 <h1>Radera webbsida</h1>
 

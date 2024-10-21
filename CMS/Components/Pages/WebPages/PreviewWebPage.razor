@@ -1,5 +1,6 @@
 ﻿@page "/webpages/previewpage/{webPageId:int}"
 
+@using CMS.Shared
 @using CMS.Data
 @using CMS.Models
 @using CMS.Entities
@@ -11,6 +12,15 @@
 @inject VisitorCounterService VisitorCounterService
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+
+
+<Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+        //("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={WebSiteId}"),
+        ("Förhandsgranskning", $"/webpages/previewpage/{WebPageId}")
+    })" />
 
 <h3>Förhandsgranskning Webbsida</h3>
 
