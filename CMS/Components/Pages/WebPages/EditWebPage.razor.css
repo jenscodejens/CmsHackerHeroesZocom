@@ -72,7 +72,7 @@
 
 .overlay-edit {
     position: absolute; /* Position relative to the containerEditWebPage */
-    top: 190px;
+    top: 260px;
     left: 50%; /* Position from the left (50% of the parent container) */
     transform: translate(-50%, -50%); /* Offset the button by half its width and height */
     z-index: 10;
@@ -130,7 +130,7 @@
 /* Main button container */
 .containerMainButtons {
     position: fixed; /* Fixes the container */
-    bottom: 50%; /* Always at the top of the screen */
+    top: 0%; /* Always at the top of the screen */
     left: 5%; /* Optional: Align it to the left */
     width: auto; /* Optional: Make it full width */
     z-index: 100; /* Ensure it stays above other content */
