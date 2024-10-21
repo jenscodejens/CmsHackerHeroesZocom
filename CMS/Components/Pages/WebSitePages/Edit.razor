@@ -1,10 +1,18 @@
 ﻿@page "/WebSites/edit"
+@using CMS.Shared
 @attribute [Authorize]
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
 <PageTitle>Redigera webbsite</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+       // ("Websites", "/websites"),
+        ("Redigera webbplats", $"/websites/edit?websiteid={WebSiteId}")
+    })" />
 
 <h1>Redigera webbsite</h1>
 

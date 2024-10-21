@@ -1,6 +1,77 @@
 ﻿@page "/content/details"
 @attribute [Authorize]
 
+@using CMS.Shared
+@using Microsoft.EntityFrameworkCore
+@using CMS.Entities
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Detaljer</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+        ("Webbsidor", $"/webpages?websiteid={content?.WebPages?.WebSiteId ?? 0}"),
+        ("Innehåll", $"/contents?webpageid={content?.WebPageId ?? 0}"),
+        ("Detaljer", $"/content/details?contentid={ContentId}")
+    })" />
+
+<h1>Detaljer</h1>
+
+<div>
+    <h4>Innehåll</h4>
+    <hr />
+    @if (content is null)
+    {
+        <p><em>Laddar...</em></p>
+    }
+    else
+    {
+        <dl class="row">
+            <dt class="col-sm-2">WebSiteId</dt>
+            <dd class="col-sm-10">@content.ContentId</dd>
+            <dt class="col-sm-2">WebpageId</dt>
+            <dd class="col-sm-10">@content.WebPageId</dd>
+            <dt class="col-sm-2">Innehållsnamn</dt>
+            <dd class="col-sm-10">@content.ContentName</dd>
+            <dt class="col-sm-2">Skapad</dt>
+            <dd class="col-sm-10">@content.CreationDate</dd>
+            <dt class="col-sm-2">Senast uppdaterad</dt>
+            <dd class="col-sm-10">@content.LastUpdated</dd>
+        </dl>
+        <div>
+            <a href="@($"/content/edit?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a>
+        </div>
+    }
+</div>
+
+@code {
+    Content? content;
+
+    [SupplyParameterFromQuery]
+    public int ContentId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        content = await context.Contents
+            .Include(c => c.WebPages)
+            .FirstOrDefaultAsync(m => m.ContentId == ContentId);
+
+        if (content is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
+
+@*
+@page "/content/details"
+@attribute [Authorize]
+
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
@@ -31,6 +102,7 @@
             <dd class="col-sm-10">@content.ContentName</dd>
 @*             <dt class="col-sm-2">Template Id</dt>
             <dd class="col-sm-10">@content.Template.TemplateType</dd> *@
+            @*
             <dt class="col-sm-2">Skapad</dt>
             <dd class="col-sm-10">@content.CreationDate</dd>
             <dt class="col-sm-2">Senast uppdaterad</dt>
@@ -60,3 +132,5 @@
         }
     }
 }
+
+*@
