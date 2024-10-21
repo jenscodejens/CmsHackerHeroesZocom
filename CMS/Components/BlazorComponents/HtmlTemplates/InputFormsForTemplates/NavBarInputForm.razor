@@ -88,7 +88,7 @@
                                         </NavLink>
                                     </li>
                                     <li class="nav-item">
-                                    @if(item.)
+                                    @if(item.Key == MenuItems.Last().Key)
                                     {
                                     <NavLink class="nav-link">
                                         <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
