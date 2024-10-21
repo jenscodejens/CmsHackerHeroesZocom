@@ -8,9 +8,6 @@
 
 <PageTitle>Radera innehåll</PageTitle>
 
-@* <h1>Radera</h1>
-
-<h3>Är du säker på att du vill radera innehållet?</h3> *@
 <div>
     <hr />
     @if (content is null)
@@ -19,22 +16,6 @@
     }
     else
     {
-        @*  <dl class="row">
-            <dt class="col-sm-2">ContentId</dt>
-            <dd class="col-sm-10">@content.ContentId</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">WebPageId</dt>
-            <dd class="col-sm-10">@content.WebPageId</dd>
-        </dl> *@
-        @*       <dl class="row">
-            <dt class="col-sm-2">Innehåll: @content.ContentName</dt>
-            <dd class="col-sm-10">@content.ContentName</dd>
-        </dl> *@
-        @*         <dl class="row">
-            <dt class="col-sm-2">Innehållsmall</dt>
-            <dd class="col-sm-10">@content.Template.TemplateType</dd>
-        </dl> *@
         if (Success == false)
         {
             <h1>Radera</h1>
@@ -61,7 +42,6 @@
                 Innehåll raderat.
             </dl>
         }
-        @*  <a href="@($"contents?webpageid={content.WebPageId}")">Tillbaka</a> *@
     }
 </div>
 
@@ -102,7 +82,6 @@
             context.Contents.Remove(contentToDelete);
             await context.SaveChangesAsync();
             Success = true;
-            // NavigationManager.NavigateTo("/contents");
         }
     }
 
