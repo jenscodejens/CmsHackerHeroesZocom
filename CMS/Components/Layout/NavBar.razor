@@ -66,18 +66,18 @@
             </AuthorizeView>
         </ul>
 
-        <ul class="navbar-nav">
+        <ul class="navbar-nav ms-auto d-flex align-items-center">
             <AuthorizeView>
                 <NotAuthorized>
                     <li class="nav-item">
-                        <NavLink class="btn btn-outline-success my-2 my-sm-0" style="font-size:20px; margin-right:10px;" href="Account/Login">
-                            <i class="fa fa-key"></i>
+                        <NavLink class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center" style="font-size:20px; margin-right:10px;" href="Account/Login">
+                            <i class="fa fa-key me-2"></i> 
                             Logga In
                         </NavLink>
                     </li>
                     <li class="nav-item">
-                        <NavLink class="btn btn-outline-success my-2 my-sm-0" style="font-size:20px; margin-right:10px;" href="Account/Register">
-                            <i class="fa fa-sign-out"></i>
+                        <NavLink class="btn btn-outline-success my-2 my-sm-0 d-flex align-items-center" style="font-size:20px; margin-right:10px;" href="Account/Register">
+                            <i class="fa fa-pencil me-2"></i>
                             Registrera dig nu
                         </NavLink>
                     </li>
@@ -89,10 +89,10 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <form action="Account/Logout" method="post" class="form-inline" style="font-size:20px; margin-right:10px;">
+                        <form action="Account/Logout" method="post" class="form-inline d-flex align-items-center" style="font-size:20px; margin-right:10px;">
                             <AntiforgeryToken />
                             <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                            <button type="submit" class="btn btn-outline-danger my-2 my-sm-0" style="font-size:20px; margin-right:10px; margin-left:10px;">
+                            <button type="submit" class="btn btn-outline-danger my-2 my-sm-0 d-flex align-items-center" style="font-size:20px; margin-right:10px; margin-left:10px;">
                                 Logga ut
                             </button>
                         </form>

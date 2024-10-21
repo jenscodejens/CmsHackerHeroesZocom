@@ -130,7 +130,7 @@
 /* Main button container */
 .containerMainButtons {
     position: fixed; /* Fixes the container */
-    top: 0%; /* Always at the top of the screen */
+    top: 50px; /* Always at the top of the screen */
     left: 5%; /* Optional: Align it to the left */
     width: auto; /* Optional: Make it full width */
     z-index: 100; /* Ensure it stays above other content */
