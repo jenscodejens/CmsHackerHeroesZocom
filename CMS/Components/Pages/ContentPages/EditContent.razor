@@ -48,63 +48,7 @@ else
         </div>
     }
 }
-@*
-@page "/content/editContent"
-@namespace BlazorComponents.HtmlTemplates
-@using CMS.Data
-@using CMS.Models
-@using CMS.Shared
-@using Microsoft.EntityFrameworkCore
-@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
-@rendermode InteractiveServer
 
-@attribute [Authorize]
-
-<Breadcrumbs Crumbs="@(new List<(string, string)> 
-    { 
-        ("Home", "/"), 
-        ("Websites", "/websites"),
-        ("Webpages", $"/webpages?websiteid={Content.WebPages.WebSiteId}"),
-        ("Contents", $"/contents?webpageid={Content.WebPageId}"),
-        ("Edit Content", $"/content/editcontent?contentid={ContentId}")
-    })" />
-
-<h3>Redigera ett innehåll</h3>
-// ... rest of your existing code
-
-
-<h3>Redigera ett innehåll</h3>
-
-@if (Content is null)
-{
-    <p><em>Laddar...</em></p>
-}
-else
-{
-    @if (!string.IsNullOrEmpty(selectedTemplatePath))
-    {
-        <div>
-            @RenderDynamicComponent(selectedTemplatePath, templateParameters)
-        </div>
-    }
-
-    @if (!string.IsNullOrEmpty(selectedInputFormPath))
-    {
-        <div>
-            @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
-    {
-    { "TemplateId", templateParameters["TemplateId"] },
-    { "WebPageId", templateParameters["WebPageId"] },
-    { "ContentId", ContentId }, // Pass the ContentId to the input form
-    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
-    { "SaveBtnClicked", SaveBtnClicked },
-    { "MultiPageMode", MultiPageMode }
-    })
-        </div>
-    }
-}
-
-*@
 
 @code {
     [SupplyParameterFromQuery]
