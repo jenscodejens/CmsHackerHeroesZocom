@@ -171,10 +171,13 @@
         {
             @* ToDo: this is a quickfix: correct. *@
             if (forceUpdate)
-            { 
-                UpdateItem();
+            {
+
+                    UpdateItem();
+              
+                currentStep = InputStep.Wait;
                 forceUpdate = false;
-                AbortItem();
+               
             }
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>

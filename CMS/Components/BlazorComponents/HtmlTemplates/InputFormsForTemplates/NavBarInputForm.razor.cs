@@ -360,12 +360,20 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         }
 
         private void UpdateItem()
-        {
+        {   
             AlertMessageHide();
             //ToDo: Check, not 2 keys with the same values?
             // Check if the new key already exists
             if ((MenuItems.ContainsKey(inputValue) && oldKey != inputValue) || inputValue == String.Empty)
             {
+                //ToDo: temp fix: should be resolved diffrently.
+                BaseNavBarTemplate initializedNavBar = new();
+                if (initializedNavBar.MenuItems.FirstOrDefault().Key == oldKey)
+                {
+                    currentStep = InputStep.Wait;
+                    return; 
+                }
+                //EndToDo: temp fix: should be resolved diffrently.
                 AlertMessage("Menyvalet kan inte lämnas utan titel eller ha samman namn som tidigare.");
                 currentStep = InputStep.Edit;
                 return; // Exit the method to prevent adding the same key   
