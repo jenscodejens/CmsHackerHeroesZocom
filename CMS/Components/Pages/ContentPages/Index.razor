@@ -1,6 +1,105 @@
 ﻿@page "/contents"
 @attribute [Authorize]
 
+@using CMS.Shared
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using CMS.Entities
+@using CMS.Data
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject IGetCurrentUserService GetCurrentUserService
+
+<PageTitle>Index innehåll</PageTitle>
+
+<Breadcrumbs crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+       // ("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={WebSiteId}"),
+        ("Innehåll", $"/contents?webpageid={WebPageId}")
+    })" />
+
+<h1>Index Innehåll</h1>
+
+<p>
+    <a href="@($"/webpages/createmulti?webpageid={WebPageId}")">Skapa flera innehåll</a> |
+    <a href="@($"/content/createcontent?webpageid={WebPageId}")">Skapa en innehåll</a>
+</p>
+
+@if (contents == null)
+{
+    <p>Laddar...</p>
+}
+else if (!contents.Any())
+{
+    <p>Denna webbsidan har inget innehåll.</p>
+}
+else
+{
+    <QuickGrid Class="table" Items="@contents.AsQueryable()">
+        <PropertyColumn Property="content => content.ContentId" />
+        <PropertyColumn Property="content => content.WebPageId" />
+        <PropertyColumn Property="content => content.ContentName" />
+        <PropertyColumn Property="content => content.CreationDate" />
+        <PropertyColumn Property="content => content.LastUpdated" />
+        <PropertyColumn Property="content => content.ContentJson" />
+        <PropertyColumn Property="content => content.TemplateId" />
+
+        <TemplateColumn Context="content">
+            <a href="@($"/preview/{content.ContentId}")">Förhandsgranska</a> |
+            <a href="@($"/content/editcontent?contentid={content.ContentId}")">Redigera</a> |
+            <a href="@($"content/details?contentid={content.ContentId}")">Detaljer</a> |
+            <a href="@($"content/delete?contentid={content.ContentId}")">Radera</a>
+        </TemplateColumn>
+    </QuickGrid>
+
+}
+
+@code {
+    private List<Content> contents;
+
+
+    [SupplyParameterFromQuery]
+    public int? WebPageId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public int? WebSiteId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadContents();
+    }
+
+    private async Task LoadContents()
+    {
+        using var context = await DbFactory.CreateDbContextAsync();
+
+        if (WebPageId.HasValue)
+        {
+            contents = await context.Contents
+                .Where(c => c.WebPageId == WebPageId.Value)
+                .ToListAsync();
+
+            if (!WebSiteId.HasValue)
+            {
+                var webPage = await context.WebPages
+                    .FirstOrDefaultAsync(wp => wp.WebPageId == WebPageId.Value);
+                WebSiteId = webPage?.WebSiteId;
+            }
+        }
+        else
+        {
+            contents = await context.Contents.ToListAsync();
+        }
+    }
+}
+
+
+@*
+@page "/contents"
+@attribute [Authorize]
+
+@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using CMS.Entities
@@ -12,6 +111,14 @@
 @attribute [Authorize]
 
 <PageTitle>Index innehåll</PageTitle>
+
+<Breadcrumbs crumbs="@(new List<(string, string)> 
+    { 
+        ("Home", "/"), 
+        ("Websites", "/websites"),
+        ("Webpages", $"/webpages?websiteid={WebSiteId}"),
+        ("Contents", $"/contents?webpageid={WebPageId}")
+    })" />
 
 <h1>Index Innehåll</h1>
 
@@ -44,7 +151,45 @@ else
     </QuickGrid>
 }
 
+@code {
+    IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
 
+    [SupplyParameterFromQuery]
+    public int? WebPageId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public int? WebSiteId { get; set; }
+
+    ApplicationDbContext context = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        context = DbFactory.CreateDbContext();
+
+        if (WebPageId.HasValue)
+        {
+            // Fetch content filtered by WebPageId
+            contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
+
+            // If WebSiteId is not provided, try to get it from the WebPage
+            if (!WebSiteId.HasValue)
+            {
+                var webPage = await context.WebPages.FirstOrDefaultAsync(wp => wp.WebPageId == WebPageId.Value);
+                WebSiteId = webPage?.WebSiteId;
+            }
+        }
+        else
+        {
+            // Fetch all content if no WebPageId is provided
+            contents = context.Contents;
+        }
+    }
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    // ... rest of your code
+}
+*@
+
+@*
 @code {
     IQueryable<Content> contents = Enumerable.Empty<Content>().AsQueryable();
     [SupplyParameterFromQuery]
@@ -70,3 +215,4 @@ else
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
+*@

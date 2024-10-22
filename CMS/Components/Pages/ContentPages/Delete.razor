@@ -7,7 +7,6 @@
 @inject NavigationManager NavigationManager
 
 <PageTitle>Radera innehåll</PageTitle>
-
 <div>
     <hr />
     @if (content is null)
@@ -16,25 +15,25 @@
     }
     else
     {
+      
         if (Success == false)
         {
             <h1>Radera</h1>
 
             <h3>Är du säker på att du vill radera innehållet?</h3>
-            
-                <hr />
+
+            <hr />
             <dl class="row">
                 <div class="content">
                     <ContentPreview ContentId="@content.ContentId" />
                 </div>
             </dl>
             <dl class="row">
-                <EditForm method="post" Model="content" OnValidSubmit="()=> DeleteContent(content.ContentId)" FormName="delete"     
-            Enhance
-                 >
-                     <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button>
-                 </EditForm>
-             </dl>
+                <EditForm method="post" Model="content" OnValidSubmit="()=> DeleteContent(content.ContentId)" FormName="delete"
+                                Enhance>
+                 <button type="submit" class="btn btn-danger" disabled="@(content is null)">Radera</button>
+             </EditForm>
+         </dl>
         }
         else
         {
@@ -62,7 +61,7 @@
         }
         else
         {
-            Console.WriteLine("No value passed to Delete content for ContentId, Id is null."); 
+            Console.WriteLine("No value passed to Delete content for ContentId, Id is null.");
         }
 
         if (content == null)

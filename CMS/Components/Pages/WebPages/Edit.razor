@@ -1,12 +1,20 @@
 ﻿@page "/WebPages/edit"
 @attribute [Authorize]
-
+@using CMS.Shared
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @inject IGetCurrentUserService GetCurrentUserService
 @rendermode InteractiveServer
 
 <PageTitle>Redigera Webbsida</PageTitle>
+
+@* <Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+        //("Websites", "/websites"),
+        ("Webbsidor", WebPage != null ? $"/webpages?websiteid={WebPage.WebSiteId}" : "/webpages"),
+        ("Redigera webbsida", $"/webpages/edit?webpageid={WebPageId}")
+    })" /> *@
 
 <h1>Redigera webbsida</h1>
 
@@ -66,10 +74,6 @@ else
         </div>
     </div>
 }
-
-<div>
-    <a href="/webpages">Tillbaka</a>
-</div>
 
 @code {
     [SupplyParameterFromQuery]

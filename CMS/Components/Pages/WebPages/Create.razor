@@ -1,12 +1,20 @@
 ﻿@page "/webpages/create"
+@using CMS.Shared
 @attribute [Authorize]
-
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
 <PageTitle>Skapa webbsida</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+        //("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={WebSiteId}"),
+        ("Skapa webbsida", $"/webpages/create?websiteid={WebSiteId}")
+    })" />
 
 <h1>Skapa webbsida</h1>
 

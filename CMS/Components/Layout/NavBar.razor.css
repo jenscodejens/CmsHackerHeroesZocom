@@ -1,0 +1,107 @@
+﻿/* General styling settings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    height: 100%;
+    background-color: #fcfafa;
+    width: 100vw;
+    line-height: 1.7;
+    overflow-x: hidden;
+    font-weight: 400;
+}
+
+h2 {
+    font-size: 2.1rem;
+}
+
+li.nav-item {
+    line-height: 1.4;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+.primary-heading {
+    font-size: 1.8rem;
+}
+
+.navbar {
+    padding: .2rem 1rem;
+    transition: all 0.3s ease-in-out;
+    background-color: rgba(82, 82, 82, 0.123);
+}
+
+/*Changes navbar background color on scroll*/
+.navbar.bg-nav-colored {
+    background-color: #525252;
+    padding: .5rem 1rem;
+}
+
+.nav-link {
+    display: inline-block;
+    color: #fff !important;
+    font-size: 1.1rem;
+    font-family: 'Oxygen', sans-serif;
+    letter-spacing: 2px;
+    text-shadow: 0 1px 3px rgba(61, 60, 60, 0.795);
+    text-transform: uppercase;
+    border-bottom: 1px solid transparent;
+    transition: all 0.3s;
+    margin-right: .5rem;
+    margin-left: .5rem;
+    padding-top: .2rem;
+    padding-bottom: .2rem;
+    position: relative;
+}
+
+.nav-link,
+.nav-link:after,
+.nav-link:before {
+    transition: all .4s ease-in-out;
+}
+
+.nav-link:after,
+.nav-link:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #f7f7f7;
+    margin: auto;
+    width: 0%;
+    height: 1px;
+}
+
+.nav-link:hover:after {
+    width: 90%;
+}
+
+#logo {
+    text-transform: uppercase;
+    font-family: 'Oxygen', sans-serif;
+    letter-spacing: 3px;
+    font-size: 1rem;
+    color: #f7f7f7;
+}
+
+.navbar-toggler {
+    background-color: #f7f7f7;
+    border-radius: 50%;
+    height: 3rem;
+    width: 3rem;
+    font-size: .9rem;
+}
+
+.navbar-toggler:focus,
+.navbar-toggler:active {
+    border-color: transparent;
+    outline: none;
+}
+
