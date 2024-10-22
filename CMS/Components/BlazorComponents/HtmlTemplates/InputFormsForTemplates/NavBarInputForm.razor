@@ -165,12 +165,18 @@
                                 </a>
                             </div>
 
-                        }
-                        }
-                    else if ((currentStep == InputStep.Edit))
-                    {
-
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+            }
+        }
+        else if ((currentStep == InputStep.Edit))
+        {
+            @* ToDo: this is a quickfix: correct. *@
+            if (forceUpdate)
+            { 
+                UpdateItem();
+                forceUpdate = false;
+                AbortItem();
+            }
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
                         </button>
 
@@ -182,20 +188,20 @@
                                     <li class="nav-item">
                                         @if (item.Key == inputValue)
                                         {
+                                <NavLink class="nav-link">
+                                    <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                                    <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
 
-
-                                            <input type="text" @bind="inputValue" placeholder="inputValue" class="custom-input" style="background-color: @BackgroundColor; color: @TextColor;" />
-
-                                            <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
-                                                <option value="">-- Välj Sida --</option>
-                                                @if (webpages != null)
-                                                {
-                                                    @foreach (var menuItem in Pages)
-                                                    {
-                                                        <option value="@menuItem.Value">@menuItem.Key</option>
-                                                    }
-                                                }
-                                            </select>
+                                        <option value="">-- Välj Sida --</option>
+                                        @if (webpages != null)
+                                        {
+                                            @foreach (var menuItem in Pages)
+                                            {
+                                                <option value="@menuItem.Value">@menuItem.Key</option>
+                                            }
+                                        }
+                                    </select>
+                                </NavLink>
                                         }
                                         else
                                         {
@@ -208,20 +214,6 @@
                             </ul>
                         </div>
 
-                       @*  <label for="title">Menyval nam:</label>
-
-                        <input type="text" @bind="inputValue" placeholder="inputValue" />
-
-                        <select id="templateDropdown" @bind="templateDropdown">
-                            <option value="">-- Välj Sida --</option>
-                            @if (webpages != null)
-                            {
-                                @foreach (var menuItem in Pages)
-                                {
-                                <option value="@menuItem.Value">@menuItem.Key</option>
-                                }
-                            }
-                        </select> *@
                         @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
                         {
                         <div class="nav-edit-button-container">
@@ -237,14 +229,11 @@
                                 <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
                             </a>
                         </div>
-
-                          @*   <button type="button" @onclick="AbortItem">Avbryt</button>
-                            <button type="button" @onclick="UpdateItem">Ändra</button>
-                            <button type="button" @onclick="DeleteItem">Ta bort</button> *@
                         }
                         else
                         {
-                            <div class="nav-edit-button-container">>
+                            forceUpdate = true;
+                            <div class="nav-edit-button-container">
                                 <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
                                 <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                             </a>

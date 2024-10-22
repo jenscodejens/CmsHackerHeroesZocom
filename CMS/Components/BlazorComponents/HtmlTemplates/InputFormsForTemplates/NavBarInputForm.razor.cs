@@ -36,6 +36,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
         [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
 
+        private bool forceUpdate = false;
         private bool infoMessage = false;
         private bool saveSuccessful = false;
         private bool Update = false;
@@ -250,6 +251,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             currentStep = InputStep.Edit;  
         }
 
+
         private void AddItem()
         {
             AlertMessageHide();
@@ -263,13 +265,14 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 }
                 else
                 {
-                    AlertMessage("Titeln används redan i menyn.", InputStep.Edit);
+                    AlertMessage("Titeln används redan i menyn.");
                     currentStep = InputStep.AddItem;
                 }
             }
             else
             {
-                AlertMessage("Både titel och sidlänk behövs, vill du lägga till sida senare kan du använda \"Länk saknas\".", InputStep.Edit);
+                AlertMessage("Både titel och sidlänk behövs, vill du lägga till sida senare kan du använda \"Länk saknas\".");
+                currentStep = InputStep.Edit;
             }
             
         }
@@ -278,6 +281,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             AlertMessageHide();
             currentStep = InputStep.AddItem; 
         }
+
 
         private void Edit(string href)
         {
@@ -288,27 +292,28 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
             else 
             { 
-                foreach (var item in MenuItems)
-                {
                     //Todo: Set Alertmessage?: error is not found.
                     //var initializedValues = InitializedMenuOptionExists(item);
-                    if (!InitializedMenuOptionExists(item))
+                    bool initValueRemoved = InitializedMenuOptionExists(href);
+                    if (!initValueRemoved)
                     {
-                        //Todo: further actions needed?
-                        if (item.Key == href)
+                        foreach (var item in MenuItems)
                         {
-                            inputValue = item.Key;
-                            oldKey = item.Key;
-                            templateDropdown = item.Value;
+                            //Todo: further actions needed?
+                            if (item.Key == href)
+                            {
+                                inputValue = item.Key;
+                                oldKey = item.Key;
+                                templateDropdown = item.Value;
+                            }
                         }
                     }
                     else
                     {
-                        SetInparametersForMenuOptions(item.Key, item.Value);
-                        AlertMessage("Lägg till ett eget alternativ för menyn.", InputStep.Edit);
+                        SetInparametersForMenuOptions(MenuItems.FirstOrDefault().Key, MenuItems.FirstOrDefault().Value);
+                        AlertMessage("Lägg till ett eget alternativ för menyn.");
                         
                     }
-                }
                     currentStep = InputStep.Edit;
             }
         }
@@ -319,11 +324,10 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             navBarInfoMessage = "";
         }
 
-        private void AlertMessage(string Message, InputStep Step)
+        private void AlertMessage(string Message)
         {
             infoMessage = true;
             navBarInfoMessage = Message;
-            currentStep = Step;
         }
 
         private bool InitializedMenuOptionExists(KeyValuePair<string, string> Item)
@@ -362,7 +366,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             // Check if the new key already exists
             if ((MenuItems.ContainsKey(inputValue) && oldKey != inputValue) || inputValue == String.Empty)
             {
-                AlertMessage("Menyvalet kan inte lämnas utan titel eller ha samman namn som tidigare.", InputStep.Edit);
+                AlertMessage("Menyvalet kan inte lämnas utan titel eller ha samman namn som tidigare.");
+                currentStep = InputStep.Edit;
                 return; // Exit the method to prevent adding the same key   
             }
 
@@ -381,18 +386,11 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
+            
             if (InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
             {
-                if (InitializedMenuOptionExists(templateDropdown))
-                {
-                    MenuItems.Remove(oldKey);
-                }
-                else
-                {
-                    AlertMessage("Lägg till ett eget alternativ för menyn.", InputStep.Edit);
-                    currentStep = InputStep.Edit;
-                }
-               
+                    AlertMessage("Lägg till ett eget alternativ för menyn.");
+                    currentStep = InputStep.Edit; 
             }
 
 
