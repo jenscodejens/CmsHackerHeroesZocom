@@ -3,25 +3,12 @@
 
 @using CMS.Data
 @using CMS.Models
-@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 @rendermode InteractiveServer
 
 @namespace BlazorComponents.HtmlTemplates
-
-@if (!HideBreadcrumbs)
-{
-<Breadcrumbs Crumbs="@(new List<(string, string)>
-    {
-        ("Hem", "/"),
-       // ("Websites", "/websites"),
-        ("Webbsidor", WebSiteId.HasValue ? $"/webpages?websiteid={WebSiteId}" : "/webpages"),
-        ("Innehåll", WebPageId.HasValue ? $"/contents?webpageid={WebPageId}" : "/contents"),
-        ("Skapa innehåll", WebPageId.HasValue ? $"/content/createcontent?webpageid={WebPageId}" : "/content/createcontent")
-    })" />
-} 
 
 <h3>Skapa ett innehåll</h3>
 
@@ -61,12 +48,6 @@
 }
 
 @code {
-    [Parameter]
-    [SupplyParameterFromQuery]
-    public int? WebSiteId { get; set; }
-
-    [Parameter]
-    public bool HideBreadcrumbs { get; set; } = false;
 
     [Parameter]
     [SupplyParameterFromQuery]
@@ -142,30 +123,13 @@
         return builder => builder.AddContent(0, "No component selected.");
     }
 
-    // private async Task OnInputFormSubmit(Dictionary<string, object> formValues)
-    // {
-    //     using var dbContext = DbContextFactory.CreateDbContext();
-
-    //     var content = new Content();
-
-    //     foreach (var kvp in formValues)
-    //     {
-    //         templateParameters[kvp.Key] = kvp.Value;
-    //     }
-
-    //     var user = await GetCurrentUserService.GetCurrentUserAsync();
-    //     content.UserId = user.Id;
-
-    //     dbContext.Contents.Add(content);
-    //     await dbContext.SaveChangesAsync();
-    // }
     private void OnInputFormSubmit(Dictionary<string, object> formValues)
     {
         // Update the parameters for the selected template based on form values
         foreach (var kvp in formValues)
         {
             templateParameters[kvp.Key] = kvp.Value;
-            }
+        }
     }
 }
 

@@ -6,6 +6,7 @@
     <UserSecretsId>aspnet-CMS-d2123ea3-7f2d-45dc-8207-40cc13c433de</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Blazor.Bootstrap" Version="3.0.0" />
     <PackageReference Include="Bogus" Version="35.6.0" />
     <PackageReference Include="Markdig" Version="0.37.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid.EntityFrameworkAdapter" Version="8.0.8" />
