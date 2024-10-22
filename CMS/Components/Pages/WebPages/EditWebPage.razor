@@ -30,11 +30,6 @@
              <div class="button-container">
                 @if (PageExecution != ExecuteAction.Preview)
                 {
- 
-                  @*   <button type="button" class="btn btn-warning" @onclick="()=> PauseEditContent()"> Förhandsgranska sidan </button>
-                    <button type="button" class="btn btn-warning" @onclick="()=> AddContent()"> Lägg till innehåll </button>
-                    <button type="button" class="btn btn-success" @onclick="()=> EditPageinformation()"> Redigera sidinformation </button>
-         *@
                     <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
                         <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
                     </a>
@@ -46,16 +41,15 @@
                     <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
                         <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
                     </a>
- 
+                <a class="btn overlay-btn-main" href="@($"websites/details?websiteid={WebSiteId}")" aria-label="Tillbaka till webbsajt" title="Tillbaka till webbsajt">
+                        <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
+                    </a>
                 }
                 else
                 {
                     <a class="btn overlay-btn-main" @onclick="()=> ResumeEditContent()" aria-label="Fortsätt redigera" title="Fortsätt redigera">
                         <i class="fa fa-play fa-1x" aria-hidden="true"></i>
                     </a>
-
-                   @*  <button type="button" class="btn btn-warning" @onclick="()=> ResumeEditContent()"> Redigera innehåll </button> *@
-
                 }
             </div>
         </div>
@@ -69,19 +63,18 @@ else if (!Contents.Any())
 {
                             <div class="containerEditWebPage" style="position: relative;">
                                 <div class="content">
+                                    <div class="create-empty-webpage">
                                         <CascadingValue Value="WebPageId">
-                                        <CreateContent />
-                                    </CascadingValue>
+                                            <CreateContent />
+                                        </CascadingValue>
+                                        <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
+                                    </div>
                                 </div>
-                                <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
     </div>
 }
 else
 {
- @*    <QuickGrid Class="table" Items="Contents.to">
 
-            
-        <TemplateColumn Context="content"> *@
     foreach (var content in Contents)
     {
             @switch (PageExecution)
@@ -146,7 +139,6 @@ else
                     }
                 case ExecuteAction.CreateContent:
                     {
-
                     <div class="containerEditWebPageContent" style="position: relative;">
                         <div class="content">
                             <ContentPreview ContentId="@content.ContentId" />

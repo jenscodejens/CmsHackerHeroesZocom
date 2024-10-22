@@ -117,10 +117,15 @@
     display: block;
 }
 
+.create-empty-webpage {
+    position: absolute;
+    top: 80px;
+}
+
 .nav-edit-done-button-container {
     position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
     bottom: -35px; /* Position from the top of the page */
-    left:191px; /* Position from the left of the page */
+    left: 191px; /* Position from the left of the page */
     z-index: 1000; /* Make sure it's on top of other content */
     display: flex; /* Align the items horizontally */
     align-items: center; /* Center them vertically */
@@ -130,7 +135,7 @@
 /* Main button container */
 .containerMainButtons {
     position: fixed; /* Fixes the container */
-    top: 0%; /* Always at the top of the screen */
+    top: 7%; /* Always at the top of the screen */
     left: 5%; /* Optional: Align it to the left */
     width: auto; /* Optional: Make it full width */
     z-index: 100; /* Ensure it stays above other content */

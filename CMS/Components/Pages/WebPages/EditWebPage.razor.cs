@@ -16,6 +16,7 @@ namespace CMS.Components.Pages.WebPages
         List<Content> Contents { get; set; } = new List<Content>();
         [SupplyParameterFromQuery]
         public int? WebPageId { get; set; }
+        private int? WebSiteId { get; set; }
         private int? ContentForEditing { get; set; } = null;
 
         public int ContentId { get; set; }
@@ -60,6 +61,8 @@ namespace CMS.Components.Pages.WebPages
                 // Fetch all content if no WebPageId is provided
                 //contents = context.Contents;
             }
+
+            WebSiteId = WebPage.WebSiteId;
           
         }
         private void EditContent(Content content)

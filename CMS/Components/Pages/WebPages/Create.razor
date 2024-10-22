@@ -108,7 +108,7 @@
 
             context.WebPages.Add(WebPage);
             await context.SaveChangesAsync();
-            NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");
+            NavigationManager.NavigateTo($"/webpages/editwebpage?webpageid={WebPage.WebPageId}");
         }
     }
 }
