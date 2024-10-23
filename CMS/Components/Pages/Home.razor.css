@@ -124,8 +124,10 @@ h2 {
     width: 100%;
     cursor: pointer;
 }
-.material-symbols-outlined {
-    font-weight: bold; /* Make the arrow icon bold */
+.bi bi-arrow-up {
+    font-weight: bold; 
+    font-size: 1.2em; 
+    text-shadow: 1px 1px 1px black; 
 }
 
 /*--------LANDING PAGE IMAGE section-------------*/
