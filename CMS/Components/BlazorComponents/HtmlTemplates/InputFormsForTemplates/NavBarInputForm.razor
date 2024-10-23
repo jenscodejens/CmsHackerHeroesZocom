@@ -90,21 +90,21 @@
                                     <li class="nav-item">
                                     @if(item.Key == MenuItems.Last().Key)
                                     {
-                                    <NavLink class="nav-link">
-                                        <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
-                                        <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
+                                        <NavLink class="nav-link">
+                                            <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                                            <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
                 
-                                            <option value="">-- Välj Sida --</option>
-                                            @if (webpages != null)
-                                            {
-                                            @foreach (var menuItem in Pages)
-                                                {
-                                                <option value="@menuItem.Value">@menuItem.Key</option>
-                                                }
-                                            }
-                                        </select>
+                                                    <option value="">-- Välj Sida --</option>
+                                                    @if (webpages != null)
+                                                    {
+                                                    @foreach (var menuItem in Pages)
+                                                        {
+                                                        <option value="@menuItem.Value">@menuItem.Key</option>
+                                                        }
+                                                    }
+                                            </select>
                                          </NavLink>
-                                         }
+                                    }
                                     </li>
                                 }
                             </ul>
@@ -160,7 +160,7 @@
                         else
                         {
                             <div class="nav-edit-button-container">
-                    <a class="btn overlay-btn-cancle" @onclick="Save" aria-label="Spara" title="Spara">
+                                    <a class="btn overlay-btn-cancle" @onclick="Save" aria-label="Spara" title="Spara">
                                     <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
                                 </a>
                             </div>
@@ -172,12 +172,14 @@
             @* ToDo: this is a quickfix: correct. *@
             if (forceUpdate)
             {
-
+                if (oldKey != inputValue)
+                {
                     UpdateItem();
-              
-                currentStep = InputStep.Wait;
-                forceUpdate = false;
-               
+
+                    currentStep = InputStep.Wait;
+                    forceUpdate = false;
+                }
+
             }
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -189,22 +191,22 @@
                                 @foreach (var item in MenuItems)
                                 {
                                     <li class="nav-item">
-                                        @if (item.Key == inputValue)
+                                        @if (item.Key == inputValue || isEditing == true)
                                         {
-                                <NavLink class="nav-link">
-                                    <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
-                                    <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
+                                            <NavLink class="nav-link">
+                                                <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                                                <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
 
-                                        <option value="">-- Välj Sida --</option>
-                                        @if (webpages != null)
-                                        {
-                                            @foreach (var menuItem in Pages)
-                                            {
-                                                <option value="@menuItem.Value">@menuItem.Key</option>
-                                            }
-                                        }
-                                    </select>
-                                </NavLink>
+                                                    <option value="">-- Välj Sida --</option>
+                                                    @if (webpages != null)
+                                                    {
+                                                        @foreach (var menuItem in Pages)
+                                                        {
+                                                            <option value="@menuItem.Value">@menuItem.Key</option>
+                                                        }
+                                                    }
+                                                </select>
+                                            </NavLink>
                                         }
                                         else
                                         {
@@ -221,10 +223,10 @@
                         {
                         <div class="nav-edit-button-container">
                             <a class="btn overlay-btn-cancle" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
-                                <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
+                                <i class="fa fa-rotate-left fa-2x" aria-hidden="true"></i>
                             </a>
 
-                            <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                    <a class="btn overlay-btn-cancle" @onclick="() => EditContentInputCompleted(inputValue)" aria-label="Ändra" title="Ändra">
                                 <i class="fa fa-check fa-2x" aria-hidden="true"></i>
                             </a>
 
@@ -238,11 +240,11 @@
                             forceUpdate = true;
                             <div class="nav-edit-button-container">
                                 <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
-                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
-                            </a>
+                                    <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                                </a>
                             </div>
                         }
-                    }
+        }
     </nav>
 
     <div class="color-picker-container">
@@ -263,7 +265,7 @@
 
         </div>
 
-        </div>
+    </div>
 </div>
         <div classs="alert">
 
@@ -271,7 +273,7 @@
         @if (saveSuccessful && infoMessage)
         {
             <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-                    Content saved successfully!
+                    Menyn är sparad.
             <div class="alert-flex">
                 <a class="btn overlay-btn-cancle-message" @onclick="CloseMessage" aria-label="Stäng" title="Stäng">
                     <i class="fa fa-times fa-1x" aria-hidden="true"></i>
