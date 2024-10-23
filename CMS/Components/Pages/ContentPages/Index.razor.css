@@ -1,0 +1,64 @@
+﻿<style >
+@media (max-width: 768px) {
+    .btn-group
+
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-group .btn {
+    margin-bottom: 0.25rem;
+    width: 100%;
+}
+
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+    .table th, .table td {
+        padding: 12px;
+        vertical-align: middle;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn-sm {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+
+</style >
