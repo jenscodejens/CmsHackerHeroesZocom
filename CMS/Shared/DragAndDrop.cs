@@ -15,7 +15,7 @@ namespace CMS.Shared
 
 
         <SortableList TItem = "ContentRenderingOrder"
-                      Data= "contentRenderingOrders"
+                      Data= "Layout"
                       Context= "item"
                       OnUpdate= "@OnContentListUpdate" >
             < ItemTemplate >
@@ -24,7 +24,7 @@ namespace CMS.Shared
         </ SortableList >
 
         public WebPage? WebPage { get; set; }
-        public List<ContentRenderingOrder> contentRenderingOrders = new();
+        public List<int?> Layout = new();
 
         public DragAndDrop(WebPage webPage, string ErrorMessage)
         {
@@ -43,25 +43,35 @@ namespace CMS.Shared
             else
             {
                 // Initial list for OnInitializedAsync
-                contentRenderingOrders = webPage.Contents
-                    .OrderBy(cnt => cnt.ContentId)
+                var Layoutorder = webPage.Layout
+                    .OrderBy(layout => layout.Value)
                     .ToList();
+                
+
+                foreach (var layout in Layoutorder) 
+                {
+                    if (layout.Key != null)
+                    {
+                     Layout.Add(layout.Key);
+
+                    }
+                }
             }
         }
 
         private async Task OnContentListUpdate(SortableListEventArgs args)
         {
             // Get the item to be moved
-            var itemToMove = contentRenderingOrders[args.OldIndex];
+            var itemToMove = Layout[args.OldIndex];
 
             // Remove the item from the old position
-            contentRenderingOrders.RemoveAt(args.OldIndex);
+            Layout.RemoveAt(args.OldIndex);
 
             // Insert the item at the new position
-            if (args.NewIndex < contentRenderingOrders.Count)
-                contentRenderingOrders.Insert(args.NewIndex, itemToMove);
+            if (args.NewIndex < Layout.Count)
+                Layout.Insert(args.NewIndex, itemToMove);
             else
-                contentRenderingOrders.Add(itemToMove);
+                Layout.Add(itemToMove);
 
             await UpdateContentIdsBasedOnNewOrder();
         }
@@ -71,14 +81,14 @@ namespace CMS.Shared
             using var context = DbFactory.CreateDbContext();
 
             // Rearrange the list, Order is fixed but ContentId's are not
-            var orderedContentIds = contentRenderingOrders
+            var orderedContentIds = Layout
                 .OrderBy(cro => cro.Order)
                 .Select(cro => cro.ContentId)
                 .ToList();
 
-            for (int i = 0; i < contentRenderingOrders.Count; i++)
+            for (int i = 0; i < Layout.Count; i++)
             {
-                var cro = contentRenderingOrders[i];
+                var cro = Layout[i];
                 var dbEntry = await context.ContentRenderingOrders.FindAsync(cro.ContentOrderId);
 
                 if (dbEntry != null)

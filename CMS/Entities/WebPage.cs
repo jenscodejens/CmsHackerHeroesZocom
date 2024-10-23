@@ -13,6 +13,9 @@ namespace CMS.Entities
         public DateOnly? LastUpdated { get; set; }
         public string VisitorUrl { get; set; } = string.Empty;
         public WebSite WebSite { get; set; }
+
+        public Dictionary<int? ,int? > Layout { get; set; } = new Dictionary<int ,int?>();
+
         public ICollection<Content> Contents { get; set; }
      
     }
