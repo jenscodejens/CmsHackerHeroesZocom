@@ -102,10 +102,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     {
                         GetNavBarParameters(content, jsonContent, objectName);
                     }
-                    else
-                    {
-                        
-                    }
                 }
             }
         }
