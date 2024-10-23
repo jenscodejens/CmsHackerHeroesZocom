@@ -4,8 +4,6 @@
 @inject IGetCurrentUserService GetCurrentUserService
 @inherits BaseTemplateComponent //gets the base parameters we have in every template/inputform
 
-<h3>Input Form</h3>
-
 <div>
     <form @onsubmit="HandleSubmit">
         <div>
@@ -24,7 +22,7 @@
 
 @code {
 
-    [Parameter] public string LabelText1 { get; set; } = "Enter First Text:";
+    [Parameter] public string LabelText1 { get; set; } = "Första texten:";
     [Parameter] public string Backgroundcolor { get; set; } = "grey";
     [Parameter] public string Textcolor { get; set; } = "black"; // Add TextColor parameter
 
