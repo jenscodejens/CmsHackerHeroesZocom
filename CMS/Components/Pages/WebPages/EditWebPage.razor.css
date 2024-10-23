@@ -85,12 +85,13 @@
 .btn-warning-edit {
     left: 1px;
     position: relative;
-    top: -21px;
+    top: 5px;
+    padding: 7px 8px !important;
 }
 
 .overlay-editwebpageinfo {
     position: absolute; /* Position relative to the viewport (screen) */
-    top: -20px; /* Adjust this value as needed for how far down you want it to appear */
+    top: 60px; /* Adjust this value as needed for how far down you want it to appear */
     left: 50%;
     transform: translateX(-50%); /* Offset the button by half its width */
     z-index: 10;
