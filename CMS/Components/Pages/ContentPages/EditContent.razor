@@ -17,7 +17,11 @@ else
     @if (!string.IsNullOrEmpty(selectedTemplatePath))
     {
         <div>
-            @*  @RenderDynamicComponent(selectedTemplatePath, templateParameters) *@
+            @* ToDo: This is a temp fix for not display double navbar when edit, change other inputforms to render content in forms. *@
+            @if (selectedTemplatePath != "BlazorComponents.HtmlTemplates.TemplatesForComponents.NavBarTemplate")
+            {
+                @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+            }
         </div>
     }
 

@@ -13,9 +13,10 @@ namespace CMS.Components.Pages.WebPages
     {
         [Inject] private NavigationManager NavigationManager { get; set; } = default!;
 
-        IQueryable<Content> Contents { get; set; } = Enumerable.Empty<Content>().AsQueryable();
+        List<Content> Contents { get; set; } = new List<Content>();
         [SupplyParameterFromQuery]
         public int? WebPageId { get; set; }
+        private int? WebSiteId { get; set; }
         private int? ContentForEditing { get; set; } = null;
 
         public int ContentId { get; set; }
@@ -52,13 +53,17 @@ namespace CMS.Components.Pages.WebPages
             if (WebPageId.HasValue)
             {
                 // Fetch content filtered by WebPageId
-                Contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value);
+                Contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value).ToList();
             }
             else
             {
+                NavigationManager.NavigateTo("/error");
                 // Fetch all content if no WebPageId is provided
                 //contents = context.Contents;
             }
+
+            WebSiteId = WebPage.WebSiteId;
+          
         }
         private void EditContent(Content content)
         {
@@ -94,14 +99,14 @@ namespace CMS.Components.Pages.WebPages
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            Contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            Contents = context.Contents.Where(c => c.WebPageId == WebPageId).ToList();
             StateHasChanged();
         }
         private void CreateDone()
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            Contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            Contents = context.Contents.Where(c => c.WebPageId == WebPageId).ToList();
             StateHasChanged();
         }
 
@@ -109,7 +114,7 @@ namespace CMS.Components.Pages.WebPages
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
-            Contents = context.Contents.Where(c => c.WebPageId == WebPageId);
+            Contents = context.Contents.Where(c => c.WebPageId == WebPageId).ToList();
             StateHasChanged();
         }
 

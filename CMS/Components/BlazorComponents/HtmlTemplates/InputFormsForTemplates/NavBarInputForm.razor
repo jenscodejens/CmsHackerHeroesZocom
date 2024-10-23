@@ -4,7 +4,6 @@
 @using Microsoft.AspNetCore.Components;
 @using Microsoft.EntityFrameworkCore;
 @using System.Threading.Tasks;
-@using CMS.Components.BlazorComponents.HtmlTemplates
 @inherits BaseNavBarTemplate
 @inject IContentService ContentService
 @inject IWebPageService WebPageService
@@ -13,12 +12,14 @@
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
 <div>
-    <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {TextColor}; font-size: 20px;")">
+     <nav class="navbar navbar-expand-lg navbar-light" style="@($"background-color: {BackgroundColor}; color: {TextColor}; font-size: 20px;")">
+@*   
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-        </button>
+        </button>  *@
 
-        <div class="collapse navbar-collapse" id="navbaris">
+ @*        <div class="collapse navbar-collapse" id="navbaris">
+           
             <ul class="navbar-nav mr-auto">
 
                 @foreach (var item in MenuItems)
@@ -29,99 +30,468 @@
                         </NavLink>
                     </li>
                 }
-              
-            </ul>
-        </div>
-    </nav>
-    <a>Tryck på en titel i menyn för att editera valet.</a>
-
-    <div>
-        @{if (currentStep == InputStep.ContentNameInput)
-        {
-            <form>
-            
-                        <label for="meny">Menys namn:</label>
-                        <input type="text" @bind="inputValue" placeholder="" />
-                        <button type="button" @onclick="AddMenuName">Lägg till</button>
-           
-            </form>
-        }
-            else if ((currentStep == InputStep.AddItem))
-        {
-            
-
-        
-                    <label for="title">Menyval namn:</label>
-
-                    <input type="text" @bind="inputValue" placeholder="Menyval namn" />
-
-                        <select id="templateDropdown" @bind="templateDropdown">
-                        <option value="">-- Välj Sida --</option>
-                        @if (webpages != null)
-                        {
-                            @foreach (var item in Pages)
-                            {
-                                <option value="@item.Value">@item.Key</option>
-                            }
-                        }
-                    </select>
-                    <button type="button" @onclick="AddItem">Lägg till</button>
-                    <button type="button" @onclick="AbortItem">Avbryt</button>
-
-            
-            }
-            else if ((currentStep == InputStep.Wait))
-            {
-                    <button type="button" @onclick="NewItem">Lägg till menyval</button>
-                    @if (!MultiPageMode) // Show button only if not in multi-page mode
+                </ul> *@
+         
+                    @if (currentStep == InputStep.ContentNameInput)
                     {
-                        <button type="button" @onclick="Save">Spara meny</button>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbaris">
+                            <ul class="navbar-nav">
+                                @foreach (var item in MenuItems)
+                                {
+                                    <li class="nav-item">
+                                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
+                                            @item.Key
+                                        </NavLink>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <form>
+
+
+                          @*  <input type="text" @bind="inputValue" placeholder="Menys namn" />
+
+                            <a class="btn overlay-btn-accept" @onclick="AddMenuName" aria-label="Spara namn" title="Spara namn">
+                                        <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a> *@
+                            <div class="input-group">
+                                <input type="text" @bind="inputValue" placeholder="Menys namn" />
+                                    <a class="btn overlay-btn-cancle" @onclick="AddMenuName" aria-label="Spara namn" title="Spara namn">
+                                    <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                                </a>
+                            </div>
+
+                        </form>
+                        
+                           
                     }
-            }
-            else if ((currentStep == InputStep.Edit))
-            {
-                    <label for="title">Menyval nam:</label>
+                    else if ((currentStep == InputStep.AddItem))
+                    {
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
 
-                    <input type="text" @bind="inputValue" placeholder="inputValue" />
+                        <div class="collapse navbar-collapse" id="navbaris">
+                            <ul class="navbar-nav">
 
-                    <select id="templateDropdown" @bind="templateDropdown">
-                        <option value="">-- Välj Sida --</option>
-                        @if (webpages != null)
+                                @foreach (var item in MenuItems)
+                                {
+                                    
+                                    <li class="nav-item">
+                                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
+                                            @item.Key
+                                        </NavLink>
+                                    </li>
+                                    <li class="nav-item">
+                                    @if(item.Key == MenuItems.Last().Key)
+                                    {
+                                    <NavLink class="nav-link">
+                                        <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                                        <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
+                
+                                            <option value="">-- Välj Sida --</option>
+                                            @if (webpages != null)
+                                            {
+                                            @foreach (var menuItem in Pages)
+                                                {
+                                                <option value="@menuItem.Value">@menuItem.Key</option>
+                                                }
+                                            }
+                                        </select>
+                                         </NavLink>
+                                         }
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="nav-edit-button-container">
+                            <a class="btn overlay-btn-cancle" @onclick="AddItem" aria-label="Ändra" title="Ändra">
+                             <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a>
+                            <a class="btn overlay-btn-cancle" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
+                                <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                            </a>
+                        </div>
+
+                       @*  <button type="button" @onclick="AddItem">Lägg till</button>
+                        <button type="button" @onclick="AbortItem">Avbryt</button> *@
+
+
+                    }
+                    else if ((currentStep == InputStep.Wait))
+                    {
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbaris">
+                            <ul class="navbar-nav">
+
+                                @foreach (var item in MenuItems)
+                                {
+                                    <li class="nav-item">
+                                        <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
+                                            @item.Key
+                                        </NavLink>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                        
+                       @*  <button type="button" @onclick="NewItem">Lägg till menyval</button> *@
+                        @if (!MultiPageMode) // Show button only if not in multi-page mode
                         {
-                            @foreach (var item in Pages)
-                            {
-                                <option value="@item.Value">@item.Key</option>
-                            }
+                            @* <button type="button" @onclick="Save">Spara meny</button> *@
+                            <div class="nav-edit-button-container">
+                                <a class=" btn overlay-btn-cancle" @onclick="Save" aria-label="Spara" title="Spara">
+                                    <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+                                </a>
+                                <a class="btn overlay-btn-cancle" @onclick="NewItem" aria-label="Lägg till menyval" title="Lägg till menyval">
+                                    <i class="fa fa-plus fa-2x" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         }
-                    </select>
-                    <button type="button" @onclick="AbortItem">Avbryt</button>
-                    <button type="button" @onclick="UpdateItem">Ändra</button>
-                    <button type="button" @onclick="DeleteItem">Ta bort</button>
+                        else
+                        {
+                            <div class="nav-edit-button-container">
+                    <a class="btn overlay-btn-cancle" @onclick="Save" aria-label="Spara" title="Spara">
+                                    <i class="fa fa-floppy-o fa-2x" aria-hidden="true"></i>
+                                </a>
+                            </div>
+
             }
-
         }
+        else if ((currentStep == InputStep.Edit))
+        {
+            @* ToDo: this is a quickfix: correct. *@
+            if (forceUpdate)
+            {
 
-        <div>
+                    UpdateItem();
+              
+                currentStep = InputStep.Wait;
+                forceUpdate = false;
+               
+            }
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbaris" aria-controls="navbaris" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+
+                        <div class="collapse navbar-collapse" id="navbaris">
+                            <ul class="navbar-nav">
+
+                                @foreach (var item in MenuItems)
+                                {
+                                    <li class="nav-item">
+                                        @if (item.Key == inputValue)
+                                        {
+                                <NavLink class="nav-link">
+                                    <input type="text" @bind="inputValue" placeholder="Menyval namn" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color:@TextColor;" />
+                                    <select id="templateDropdown" @bind="templateDropdown" class="custom-dropdown" style="background-color: @BackgroundColor; color: @TextColor; border-color: @TextColor;">
+
+                                        <option value="">-- Välj Sida --</option>
+                                        @if (webpages != null)
+                                        {
+                                            @foreach (var menuItem in Pages)
+                                            {
+                                                <option value="@menuItem.Value">@menuItem.Key</option>
+                                            }
+                                        }
+                                    </select>
+                                </NavLink>
+                                        }
+                                        else
+                                        {
+                                            <NavLink class="nav-link" @onclick="() => Edit(item.Key)" style="@($"color: {TextColor};")">
+                                                    @item.Key
+                                            </NavLink>
+                                        }
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+
+                        @if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+                        {
+                        <div class="nav-edit-button-container">
+                            <a class="btn overlay-btn-cancle" @onclick="AbortItem" aria-label="Avbryt" title="Avbryt">
+                                <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
+                            </a>
+
+                            <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a>
+
+                            <a class="btn overlay-btn-cancle" @onclick="DeleteItem" aria-label="Ta bort" title="Ta bort">
+                                <i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                        }
+                        else
+                        {
+                            forceUpdate = true;
+                            <div class="nav-edit-button-container">
+                                <a class="btn overlay-btn-cancle" @onclick="UpdateItem" aria-label="Ändra" title="Ändra">
+                                <i class="fa fa-check fa-2x" aria-hidden="true"></i>
+                            </a>
+                            </div>
+                        }
+                    }
+    </nav>
+
+    <div class="color-picker-container">
             <!--Color Controls -->
-            <label>Background Color:</label>
-            <input type="color" @bind="BackgroundColor" />
-            <br>
-            <label>Text Color:</label>
-            <input type="color" @bind="TextColor" />
+        <div class="color-picker-group">
+            
+            <!-- Text color picker -->
+            <label for="textColorInput" class="overlay-btn-color" aria-label="Textfärg" title="Textfärg">
+                <i class="fa fa-font fa-1x" aria-hidden="true"></i>
+            </label>
+            <input type="color" id="textColorInput" @bind="TextColor" style="display:none;" />
+            
+            <!-- Background color picker -->
+            <label for="backgroundColorInput" class="overlay-btn-color" aria-label="Bakgrundsfärg" title="Bakgrundsfärg">
+                <i class="fa fa-paint-brush fa-1x" aria-hidden="true"></i>
+            </label>
+            <input type="color" id="backgroundColorInput" @bind="BackgroundColor" style="display:none;" />
+
         </div>
+
+        </div>
+</div>
+        <div classs="alert">
 
         <!-- Success message -->
-        @if (saveSuccessful)
+        @if (saveSuccessful && infoMessage)
         {
             <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-                Content saved successfully!
-                <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+                    Content saved successfully!
+            <div class="alert-flex">
+                <a class="btn overlay-btn-cancle-message" @onclick="CloseMessage" aria-label="Stäng" title="Stäng">
+                    <i class="fa fa-times fa-1x" aria-hidden="true"></i>
+                </a>
+            </div>
 
             </div>
         }
+        else if (infoMessage)
+        {
+            <div class="alert alert-success" role="alert" style="margin-top: 20px;">
+                    @navBarInfoMessage           
+                <div class="alert-flex">
+                    <a class="btn overlay-btn-cancle-message" @onclick="CloseMessage" aria-label="Stäng" title="Stäng">
+                        <i class="fa fa-times fa-2x" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        }
+        </div>
 
-    </div>
 
-</div>
+
+<style>
+
+    /* Make the input and dropdown smaller in height */
+    .custom-dropdown {
+        height: 30px; /* Adjust to make it smaller */
+        padding: 5px 10px; /* Adjust padding to control the size */
+        font-size: 14px; /* Reduce font size if needed */
+        margin-left: 10px; /* Space between the dropdown and navbar items */
+        border-radius: 4px; /* Optional: make the corners rounded */
+    }
+
+    /* Align the input and dropdown next to the last nav item */
+    .navbar-nav {
+        display: flex; /* Flexbox for alignment */
+        align-items: center; /* Vertically align items */
+    }
+
+        /* Ensure the last navbar item has no extra margin (if any) */
+        .navbar-nav .nav-item:last-child {
+            margin-right: 0; /* Remove any margin that might push items away */
+        }
+
+    /* Optionally: Style the input and dropdown container if needed */
+    .navbar-collapse {
+        display: flex; /* Make sure the navbar items and inputs align properly */
+        align-items: center; /* Align vertically */
+    }
+
+    /* Optional: Add some spacing around the navbar items */
+    .navbar-nav .nav-item {
+        margin-right: 15px; /* Adjust to control spacing between items */
+    }
+
+    .alert {
+        position: absolute; /* Or fixed, if you want it to stay fixed in place */
+        bottom: 10px; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%); /* Center it horizontally */
+        z-index: 9999; /* Ensure it appears above other elements */
+    }
+
+    .alert-flex {
+        display: flex; /* Enable flexbox */
+        align-items: center; /* Center content vertically */
+        justify-content: center; /* Center content horizontally */
+        position: relative; /* Ensure the close button can be positioned inside this container */
+        width: 100%; /* Ensure it spans the full width of the alert */
+    }
+
+    .custom-input {
+        border: 0px solid #3498db; /* Border color */
+        padding: 10px; /* Padding for spacing */
+        border-radius: 5px; /* Rounded corners */
+        outline: none; /* Remove default focus outline */
+    }
+
+        .custom-input:focus {
+         
+            outline: none; /* Remove default focus outline */
+        }
+
+    /* Custom styles for the dropdown */
+   /*  .custom-dropdown {
+        background-color: #f0f0f0; 
+        border: 3px solid #3498db; 
+        padding: 8px 10px;
+      
+        border-radius: 5px; 
+    }
+
+        .custom-dropdown option {
+           
+        }
+
+        .custom-dropdown:focus {
+           
+            outline: none; 
+        } */
+
+    .overlay-btn-accept {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: black;
+        border: 4px solid black;
+        border-radius: 5px; /* This makes the button round */
+        padding: 20px; /* Ensure equal padding for width and height */
+        width: 40px; /* Set width to ensure a fixed size */
+        height: 40px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+    }
+
+    .overlay-btn-color {
+        background-color: rgba(255, 255, 255, 0.9);
+        color: black;
+        border: 2px solid black;
+        border-radius: 5px; /* This makes the button round */
+        padding: 10px; /* Ensure equal padding for width and height */
+        width: 30px; /* Set width to ensure a fixed size */
+        height: 30px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+    }
+
+    .overlay-btn-cancle {
+        background-color: rgba(255, 255, 255, 0.9); 
+        color: black;
+        border: 2px solid black;
+        border-radius: 5px; /* This makes the button round */
+        padding: 20px; /* Ensure equal padding for width and height */
+        width: 35px; /* Set width to ensure a fixed size */
+        height: 35px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+        
+    }
+
+    .overlay-btn-cancle-message {
+        background-color: rgba(255, 255, 255, 0.9);
+        right: 3px;
+        top: 3px;
+        color: black;
+        border: 2px solid black;
+        border-radius: 5px; /* This makes the button round */
+        padding: 15px; /* Ensure equal padding for width and height */
+        width: 15px; /* Set width to ensure a fixed size */
+        height: 15px; /* Set height to ensure a fixed size */
+        display: flex;
+        justify-content: center; /* Center the icon horizontally */
+        align-items: center; /* Center the icon vertically */
+    }
+
+    .btn:hover {
+        background-color: lightgray; /* Darker background on hover */
+        border: 2px solid black;
+    }
+
+        .btn:hover i {
+            color: black;
+        }
+
+    
+
+
+    .input-group {
+        display: flex; /* Use flexbox to align items horizontally */
+        align-items: center; /* Vertically align the items in the center */
+    }
+
+        .input-group input {
+            margin-right: 10px; /* Optional: Adds space between the input and the button */
+            flex-grow: 1; /* Make the input field take up remaining space */
+        }
+
+        .input-group a {
+            display: inline-flex; /* Ensure the button stays inline with other elements */
+            justify-content: center; /* Center the icon inside the button */
+            align-items: center; /* Align the icon vertically in the center */
+        }
+
+    .color-picker-group {
+        display: flex; /* Use flexbox to align items horizontally */
+        align-items: center; /* Vertically center the items in the row */
+        gap: 0px; /* Optional: Adds spacing between the two inputs */
+    }
+
+    .color-picker-container {
+        position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
+        bottom: -30px; /* Position from the top of the page */
+        left: 0px; /* Position from the left of the page */
+        z-index: 1000; /* Make sure it's on top of other content */
+        display: flex; /* Align the items horizontally */
+        align-items: center; /* Center them vertically */
+        gap: 10px; /* Add space between the items */
+    }
+
+    .nav-edit-button-container {
+        position: absolute; /* Position relative to nearest positioned ancestor (typically body or parent div) */
+        bottom: -43px; /* Position from the top of the page */
+        left: 60px; /* Position from the left of the page */
+        z-index: 1000; /* Make sure it's on top of other content */
+        display: flex; /* Align the items horizontally */
+        align-items: center; /* Center them vertically */
+        gap: 0px; /* Add space between the items */
+    }
+
+    .overlay-btn-color {
+        cursor: pointer; /* Make the icon clickable */
+        display: inline-flex; /* Make sure the label and icon stay inline */
+        align-items: center; /* Vertically center the icon */
+    }
+
+        .overlay-btn-color i {
+            margin-right: 5px; /* Optional: Adds a small gap between the icon and the input */
+        }
+</style>
 
 

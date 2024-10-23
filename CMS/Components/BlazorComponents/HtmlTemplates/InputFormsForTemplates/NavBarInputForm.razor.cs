@@ -9,6 +9,9 @@ using System.Net.NetworkInformation;
 using CMS.Shared;
 using System.Text.Json;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Identity;
+using CMS.Components.BlazorComponents.HtmlTemplates;
+using System.Runtime.ExceptionServices;
 
 
 namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
@@ -33,22 +36,24 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
         [Parameter] public bool MultiPageMode { get; set; } // Receive MultiPageMode parameter
 
+        private bool forceUpdate = false;
+        private bool infoMessage = false;
         private bool saveSuccessful = false;
         private bool Update = false;
         private bool hasSaved = false; // Flag to track if save has been executed
+        private string navBarInfoMessage = string.Empty;
         private string inputValue = string.Empty;
         private string inputKey = string.Empty;
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
         private string oldKey = string.Empty;
-        //private string inputItemValue = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
         public Dictionary<string, string> Pages = new Dictionary<string, string>() { { "Länk saknas","Titel saknas"  } };
         private IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
 
-        public string UserId { get; set; }
+        public string? UserId { get; set; } = null;
 
         protected override async Task OnInitializedAsync()
         {
@@ -73,21 +78,19 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private async Task LoadNavBarContent()
         {
-            if (ContentExists((int)ContentId))
+            if (ContentExists((int)ContentId!))
             {
                 var content = await ContentService.GetContentAsync((int)ContentId);
                 if (content != null)
                 {
                     GetNavbarContent(content);
                 }
-
-
             }
         }
 
         private void GetNavbarContent(Content? content)
         {
-            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content.ContentJson);
+            var textInputs = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(content!.ContentJson);
             if (textInputs != null)
             {
                 foreach (var jsonContent in textInputs)
@@ -99,7 +102,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     }
                     else
                     {
-                        Console.WriteLine($"Data for contents name is invalid.");
+                        
                     }
                 }
             }
@@ -128,7 +131,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             {
                 MenuItems = menuItemsWrapper.ToDictionary();
                 currentStep = InputStep.Wait;
-                TemplateId = content.TemplateId;
+                TemplateId = content!.TemplateId;
                 inputValueContentName = content.ContentName;
                 ContentId = content.ContentId;
                 WebPageId = content.WebPageId;
@@ -140,18 +143,19 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         {
             if (objectName.ToString() == "Backgroundcolor")
             {
-                BackgroundColor = ConvertJsonElement(jsonContent.Value).ToString();
+                BackgroundColor = ConvertJsonElement(jsonContent.Value)!.ToString()!;
             }
             else if (objectName.ToString() == "Textcolor")
             {
-                TextColor = ConvertJsonElement(jsonContent.Value).ToString();
+                TextColor = ConvertJsonElement(jsonContent.Value)!.ToString()!;
             }
             else
             {
-                var error = ConvertJsonElement(jsonContent.Value).ToString();
-                Console.WriteLine($"NavbarInputForm can not match value : {error}.");
+                var error = ConvertJsonElement(jsonContent.Value)!.ToString();
+                NavigationManager.NavigateTo($"/Error");
             }
         }
+
 
         private async Task RetrieveWebPages()
         {
@@ -186,17 +190,21 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private async Task GetUserID()
         {
             var user = await GetCurrentUserService.GetCurrentUserAsync();
-            UserId = user.Id;
+            if (user == null)
+            {
+                NavigationManager.NavigateTo($"/Error");
+            }
+                UserId = user!.Id;
         }
 
 
 
         //ToDo: Handle async method.
-        protected override void OnParametersSet()
+        protected override async Task OnParametersSetAsync()
         {
             if (SaveBtnClicked && !hasSaved) // Check if SaveBtnClicked and save hasn't been executed yet
             {
-                Save(); // Call the save method
+                await Save(); // Call the save method
                 hasSaved = true; // Set the flag to prevent further saves
             }
         }
@@ -228,16 +236,25 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             using var context = DbFactory.CreateDbContext();
             return context.Contents.Any(e => e.ContentId == contentid);
         }
+
+        private void CloseMessage()
+        {
+            AlertMessageHide();
+        }
+
         private void AddMenuName()
         {
-
+            AlertMessageHide();
             inputValueContentName = inputValue; // Input NavBar name
             inputValue = string.Empty;
-            currentStep = InputStep.AddItem;  
+            SetInparametersForMenuOptions(MenuItems.FirstOrDefault().Key, MenuItems.FirstOrDefault().Value);
+            currentStep = InputStep.Edit;  
         }
+
 
         private void AddItem()
         {
+            AlertMessageHide();
             if (!string.IsNullOrEmpty(templateDropdown) && !string.IsNullOrEmpty(inputValue))
             {
                 if (!MenuItems.ContainsKey(inputValue))
@@ -246,77 +263,171 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     inputValue = string.Empty;
                     currentStep = InputStep.Wait;
                 }
-                else 
+                else
                 {
-                    //Todo: Set Alertmessage: You can not use the same name for two items.
+                    AlertMessage("Titeln används redan i menyn.");
                     currentStep = InputStep.AddItem;
                 }
+            }
+            else
+            {
+                AlertMessage("Både titel och sidlänk behövs, vill du lägga till sida senare kan du använda \"Länk saknas\".");
+                currentStep = InputStep.Edit;
             }
             
         }
         private void NewItem()
-        {          
-                currentStep = InputStep.AddItem; 
+        {
+            AlertMessageHide();
+            currentStep = InputStep.AddItem; 
         }
+
 
         private void Edit(string href)
         {
-            foreach (var item in MenuItems)
+            AlertMessageHide();
+            if (inputValueContentName == string.Empty)
             {
-                //Todo: Set Alertmessage?: error is not found.
-                if (item.Key == href)
-                {
-                    inputValue = item.Key;
-                    oldKey = item.Key;
-                    templateDropdown = item.Value;
-                }
-
-
+                currentStep = InputStep.ContentNameInput;
             }
-            currentStep = InputStep.Edit;
+            else 
+            { 
+                    //Todo: Set Alertmessage?: error is not found.
+                    //var initializedValues = InitializedMenuOptionExists(item);
+                    bool initValueRemoved = InitializedMenuOptionExists(href);
+                    if (!initValueRemoved)
+                    {
+                        foreach (var item in MenuItems)
+                        {
+                            //Todo: further actions needed?
+                            if (item.Key == href)
+                            {
+                                inputValue = item.Key;
+                                oldKey = item.Key;
+                                templateDropdown = item.Value;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        SetInparametersForMenuOptions(MenuItems.FirstOrDefault().Key, MenuItems.FirstOrDefault().Value);
+                        AlertMessage("Lägg till ett eget alternativ för menyn.");
+                        
+                    }
+                    currentStep = InputStep.Edit;
+            }
+        }
+
+        private void AlertMessageHide()
+        {
+            infoMessage = false;
+            navBarInfoMessage = "";
+        }
+
+        private void AlertMessage(string Message)
+        {
+            infoMessage = true;
+            navBarInfoMessage = Message;
+        }
+
+        private bool InitializedMenuOptionExists(KeyValuePair<string, string> Item)
+        {
+            BaseNavBarTemplate initializedNavBar = new();
+            var initializedElement = initializedNavBar.MenuItems.FirstOrDefault();
+            if (Item.Key == initializedElement.Key)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool InitializedMenuOptionExists(string Key)
+        {
+            BaseNavBarTemplate initializedNavBar = new();
+            var initializedElement = initializedNavBar.MenuItems.FirstOrDefault();
+            if (Key == initializedElement.Key)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private void SetInparametersForMenuOptions(string Key, string Value)
+        {
+            inputValue = Key;
+            oldKey = Key;
+            templateDropdown = Value;
         }
 
         private void UpdateItem()
-        {
-            //ToDo: Check, not 2 keys with the same values.
+        {   
+            AlertMessageHide();
+            //ToDo: Check, not 2 keys with the same values?
             // Check if the new key already exists
-            if (MenuItems.ContainsKey(inputValue) && oldKey != inputValue)
+            if ((MenuItems.ContainsKey(inputValue) && oldKey != inputValue) || inputValue == String.Empty)
             {
-                    //ToDo: Alert message: You cannot use the same name for two items.
-                   return; // Exit the method to prevent adding the same key   
+                //ToDo: temp fix: should be resolved diffrently.
+                BaseNavBarTemplate initializedNavBar = new();
+                if (initializedNavBar.MenuItems.FirstOrDefault().Key == oldKey)
+                {
+                    currentStep = InputStep.Wait;
+                    return; 
+                }
+                //EndToDo: temp fix: should be resolved diffrently.
+                AlertMessage("Menyvalet kan inte lämnas utan titel eller ha samman namn som tidigare.");
+                currentStep = InputStep.Edit;
+                return; // Exit the method to prevent adding the same key   
             }
 
             if (MenuItems.ContainsKey(oldKey))
-            {             
-                string value = MenuItems[oldKey];              
-                MenuItems.Remove(oldKey);              
+            {
+                //Todo: Fix; Should not enter here if same data is stored.
+                string value = MenuItems[oldKey];
+                MenuItems.Remove(oldKey);
                 MenuItems[inputValue] = templateDropdown; // Maintain the same value while keeping insertion order              
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
             else
-            { 
+            {
                 MenuItems.Add(inputValue, templateDropdown); // Add new key-value
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
-           
+            
+            if (InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+            {
+                    AlertMessage("Lägg till ett eget alternativ för menyn.");
+                    currentStep = InputStep.Edit; 
+            }
+
+
         }
 
         private void AbortItem()
         {
-            inputValue = string.Empty;
-            currentStep = InputStep.Wait;
+            AlertMessageHide();
+            if (!InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
+            {
+                inputValue = string.Empty;
+                currentStep = InputStep.Wait;
+            }
+            else 
+            {
+                currentStep = InputStep.Edit;
+            }
         }
 
         private void DeleteItem()
         {
+            AlertMessageHide();
             MenuItems.Remove(oldKey);
             currentStep = InputStep.Wait;
         }
       
         private async Task Save()
         {
+            AlertMessageHide();
             await SaveToDatabase();
         }
 
@@ -325,7 +436,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         //Todo: Divide code into functions.
         private async Task SaveToDatabase()
         {
-
             if (!MenuItems.Any() || inputValueContentName == string.Empty)
             {
                 if (inputValueContentName == string.Empty)
@@ -348,7 +458,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
             if (!webPageExists)
             {
-                throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
+                NavigationManager.NavigateTo($"/Error");
             }
 
             NavBarTextInputJson textInputJson = ConvertMenuItemsToJson();
@@ -364,8 +474,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     WebPageId = WebPageId,
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
-                    ContentId = (int)ContentId,
-                    UserId = UserId,
+                    ContentId = (int)ContentId!,
+                    UserId = UserId!,
                     LastUpdated = updatetime
                 };
                 //context.Contents.Update(content);
@@ -378,7 +488,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     WebPageId = WebPageId,
                     ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(textInputJson), // Serialize the wrapper
                     TemplateId = TemplateId,
-                    UserId = UserId,
+                    UserId = UserId!,
                     CreationDate = DateOnly.FromDateTime(DateTime.Now)
                 };
                 // context.Contents.Add(content);
@@ -390,11 +500,13 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 content.ContentId = ContentId.Value;
                 await ContentService.UpdateContentAsync(content);
                 saveSuccessful = true;
+                infoMessage = true;
             }
             else
             {
                 await ContentService.SaveContentAsync(content);
                 saveSuccessful = true;
+                infoMessage = true;
             }
         }
 
