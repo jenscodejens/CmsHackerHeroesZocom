@@ -457,6 +457,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         //Todo: Divide code into functions.
         private async Task SaveToDatabase()
         {
+            //ToDo: Check if menu is really changed before Update!
             if (!MenuItems.Any() || inputValueContentName == string.Empty)
             {
                 if (inputValueContentName == string.Empty)
@@ -500,7 +501,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     UserId = UserId!,
                     LastUpdated = updatetime
                 };
-                //context.Contents.Update(content);
             }
             else
             {
@@ -513,7 +513,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     UserId = UserId!,
                     CreationDate = DateOnly.FromDateTime(DateTime.Now)
                 };
-                // context.Contents.Add(content);
             }
 
             if (ContentId.HasValue)
@@ -523,12 +522,20 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 await ContentService.UpdateContentAsync(content);
                 saveSuccessful = true;
                 infoMessage = true;
+                AlertMessage("Uppdaterad menyn sparad.");
             }
             else
             {
                 await ContentService.SaveContentAsync(content);
                 saveSuccessful = true;
+                ContentId = content.ContentId;
+                saveSuccessful = true;
                 infoMessage = true;
+                AlertMessage("Menyn sparades.");
+                if (ContentId != null)
+                {
+                    await LoadNavBarContent();
+                }
             }
         }
 
