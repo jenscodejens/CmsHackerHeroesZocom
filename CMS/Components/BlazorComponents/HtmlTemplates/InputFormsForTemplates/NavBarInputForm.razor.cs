@@ -48,6 +48,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
         private string oldKey = string.Empty;
+        private string updateKey = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
@@ -285,12 +286,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         
 
-        private void EditContentInputCompleted(string key)
-        {
-            inputValue = key; // Set the inputValue to the selected item
-            isEditing = true;  // Activate edit mode
-            UpdateItem();
-        }
         private void Edit(string href)
         {
             AlertMessageHide();
@@ -313,6 +308,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                                 inputValue = item.Key;
                                 oldKey = item.Key;
                                 templateDropdown = item.Value;
+                                updateKey = item.Key;   
                             }
                         }
                     }
@@ -329,6 +325,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private void AlertMessageHide()
         {
             infoMessage = false;
+            saveSuccessful = false;
             navBarInfoMessage = "";
         }
 
@@ -409,9 +406,15 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
-            
 
+            isEditing = false;
 
+        }
+        private void EditContentInputCompleted(string key)
+        {
+            inputValue = key; // Set the inputValue to the selected item
+            isEditing = true;  // Activate edit mode
+            UpdateItem();
         }
 
         private void AbortItem()
@@ -438,7 +441,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
             else
             {
-                AlertMessage("Minst ett alternativ för menyn krävs.");
+                AlertMessage("Minst ett alternativ för menyn krävs. Ändra menyvalet eller ta bort menyn från huvudsidan.");
                 currentStep = InputStep.Edit;
             }
         }
