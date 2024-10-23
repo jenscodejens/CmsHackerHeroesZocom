@@ -58,6 +58,12 @@
             <a href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")" title="Lägg till webbsida" class="me-2">
                 <i class="material-icons icon-green">note_add</i>
             </a>
+            <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" title="Redigera" class="me-2">
+                <i class="material-icons icon-orange">edit_document</i>
+            </a>
+            <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" title="Ta bort" class="me-2">
+                <i class="material-icons icon-red" style="font-size: 32px;">delete_forever</i>
+            </a>
         </div>
     </div>
 </div>
