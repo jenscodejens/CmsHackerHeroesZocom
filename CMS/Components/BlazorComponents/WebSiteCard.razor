@@ -1,5 +1,49 @@
 @attribute [Authorize]
 
+<div class="card">
+    <div class="card-image">
+        @if (WebSite.ImageUrl != null)
+        {
+            <img src="@WebSite.ImageUrl" alt="@WebSite.Title" class="card-img">
+        }
+        @if (VisitCount >= 1)
+        {
+            <div class="badge-overlay">
+                <Badge Color="BadgeColor.Primary" IndicatorType="BadgeIndicatorType.RoundedPill">
+                    @VisitCount
+                </Badge>
+            </div>
+        }
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">@WebSite.Title</h5>
+        <p class="card-text">@WebSite.Description</p>
+        <div class="creation-info">
+            Skapad: @WebSite.CreationDate<br>
+            @if (WebSite.LastUpdated.HasValue)
+            {
+                <span>Uppdaterad: @WebSite.LastUpdated</span>
+            }
+        </div>
+        <div class="btn-group">
+            <a href="@($"webpages?websiteid={WebSite.WebSiteId}")" class="btn btn-outline-primary btn-sm">Webbsidor</a>
+            <a href="@($"websites/details?websiteid={WebSite.WebSiteId}")" class="btn btn-outline-info btn-sm">Detaljer</a>
+            <a href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" class="btn btn-outline-warning btn-sm">Redigera</a>
+            <a href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" class="btn btn-outline-danger btn-sm">Radera</a>
+        </div>
+
+
+    </div>
+</div>
+
+
+@code {
+    [Parameter] public WebSite WebSite { get; set; }
+    [Parameter] public int VisitCount { get; set; }
+}
+@*
+@attribute [Authorize]
+
 <div class="card" style="width: 16rem;">
     <div class="card-image">
         @if (WebSite.ImageUrl != null)
@@ -68,7 +112,10 @@
     </div>
 </div>
 
+*@
+@*
 @code {
     [Parameter] public WebSite WebSite { get; set; }
     [Parameter] public int VisitCount { get; set; }
 }
+*@

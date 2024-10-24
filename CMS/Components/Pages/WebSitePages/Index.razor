@@ -8,30 +8,32 @@
 
 <PageTitle>Mina webbsites</PageTitle>
 
-    @* ny font test *@
-<div class="website-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; padding: 15px; background-color: bisque; border-radius: 8px; box-shadow: 10px 10px 5px #dbdbd6; width: fit-content; margin-bottom: 50px; font-family: 'Trebuchet MS', sans-serif;">
-    <h3 style="margin: 0; ">Mina webbsites</h3>
-    <p style="margin: 0;">
-        <a href="websites/create">Skapa ny webbsite</a>
-    </p>
-</div>
-
-@if (UserId != null && WebSitesWithVisits != null)
-{
-    <div class="flex-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
-        @foreach (var website in WebSitesWithVisits)
-        {
-            <div style="margin: 10px;">
-                <WebSiteCard WebSite="@website.WebSite" VisitCount="@website.VisitCount" />
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="text-center">Mina webbsites</h1>
+            <div class="text-center">
+                <a href="websites/create" class="btn btn-primary">Skapa ny webbsite</a>
             </div>
-        }
+        </div>
     </div>
-}
-else
-{
-    <p>Loading...</p>
-}
 
+    @if (UserId != null && WebSitesWithVisits != null)
+    {
+        <div class="row">
+            @foreach (var website in WebSitesWithVisits)
+            {
+                <div class="col-md-4 mb-4">
+                    <WebSiteCard WebSite="@website.WebSite" VisitCount="@website.VisitCount" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-center">Loading...</p>
+    }
+</div>
 
 @code {
     public string UserId { get; set; }

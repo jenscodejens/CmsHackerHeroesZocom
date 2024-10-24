@@ -1,25 +1,19 @@
-/*.flex-container {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
-    width: auto;
-    margin: auto;*/ /* Center the container if it has a width */
-/*}*/
-
 .card {
-    display: flex;
-    flex-direction: column;
-    margin-right: 30px;
-    margin-bottom: 5px;
     width: 18rem;
-    /*    box-shadow: 10px 10px 5px lightblue;*/
-    box-shadow: 10px 10px 5px #dbdbd6;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
 .card-image {
-    height: 200px; /* Set a fixed height for the image container */
+    height: 200px;
     position: relative;
-    overflow: hidden; /* Prevents overflow of the image */
+    overflow: hidden;
 }
 
 .card-img {
@@ -28,57 +22,85 @@
     object-fit: cover;
 }
 
+.badge-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
 .card-body {
     padding: 15px;
-    text-align: center;
-    background-color: bisque;
-    /*    font-family: 'Trebuchet MS', sans-serif;*/
+    background-color: #f8f9fa;
 }
 
-.card-icons {
-    display: flex;
-    justify-content: space-around;
-    border: 2px solid black;
-    border-radius: 5px;
-    padding: 3px;
-    background-color: white;
+.card-title {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
 }
 
-.icon-blue {
-    color: blue;
-    font-size: 32px;
-}
-
-.icon-black {
-    color: black;
-    font-size: 24px;
-}
-
-.icon-orange {
-    color: orange;
-    font-size: 32px;
-}
-
-.icon-green {
-    color: green;
-    font-size: 32px;
-}
-
-.icon-red {
-    color: red;
-    font-size: 25px;
+.card-text {
+    font-size: 0.9rem;
+    color: #6c757d;
 }
 
 .creation-info {
-    font-size: 12px;
-    text-align: center;
-    padding-bottom: 1px;
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin-bottom: 1rem;
 }
 
-.badge-overlay {
-    position: absolute;
-    font-size: 28px;
-    top: 10px;
-    right: 15px;
-    /*z-index: 5;*/ /*Ensure it appears above the image*/
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 10px;
 }
+
+    .btn-group .btn {
+        flex: 1 1 calc(50% - 5px);
+        padding: 0.375rem 0.5rem;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        background-color: transparent;
+    }
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-info {
+    color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-outline-warning {
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .btn-outline-primary:hover,
+    .btn-outline-info:hover,
+    .btn-outline-warning:hover,
+    .btn-outline-danger:hover {
+        color: #fff;
+    }
+
+@media (max-width: 576px) {
+    .btn-group {
+        flex-direction: column;
+    }
+
+        .btn-group .btn {
+            flex: 1 1 auto;
+            margin-bottom: 5px;
+        }
+}
+
+
