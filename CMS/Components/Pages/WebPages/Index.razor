@@ -7,6 +7,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
+@rendermode InteractiveServer
 @* 
 <div class="container-fluid">
     <div class="row">
@@ -109,7 +110,7 @@ else
 }
 
 @code {
-    IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
+    List<WebPage> webpages = new();
 
     [SupplyParameterFromQuery]
 
@@ -131,9 +132,9 @@ else
 
         {
 
-            webpages = context.WebPages.Include(w => w.WebSite)
+            webpages = context.WebPages.Include(w => w.WebSite).Include(w=>w.Contents)
 
-                .Where(wp => wp.WebSiteId == WebSiteId);
+                .Where(wp => wp.WebSiteId == WebSiteId).ToList();
 
         }
 
@@ -147,9 +148,9 @@ else
 
             {
 
-                webpages = context.WebPages.Include(w => w.WebSite)
+                webpages = context.WebPages.Include(w => w.WebSite).Include(w => w.Contents)
 
-                    .Where(wp => wp.WebSite.UserId == user.Id);
+                    .Where(wp => wp.WebSite.UserId == user.Id).ToList();
 
             }
 
