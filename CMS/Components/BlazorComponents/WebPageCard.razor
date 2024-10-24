@@ -18,10 +18,11 @@
                     if (content.TemplateId == 1 || content.TemplateId == 2)
                     {
                         found = true;
-                        <div class ="card-img">
-                        <ContentPreview ContentId = "@content.ContentId" />
+                        <div class="card">
+                            <div class="card-content">
+                                <ContentPreview ContentId="@content.ContentId" />
+                            </div>
                         </div>
-
                     }
                 }
                 if (!found)
