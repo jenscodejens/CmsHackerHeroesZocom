@@ -28,29 +28,65 @@
     <p>
          <div class="containerMainButtons">
              <div class="button-container">
-                @if (PageExecution != ExecuteAction.Preview)
+            @if (PageExecution != ExecuteAction.Preview)
+            {
+                if (HideToolbar)
                 {
-                    <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
-                        <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
-                    </a>
-
-                    <a class="btn overlay-btn-main" @onclick="()=> AddContent()" aria-label="Lägg till innehåll" title="Lägg till innehåll">
-                        <i class="fa fa-plus-square-o fa-2x" aria-hidden="true"></i>
-                    </a>
-
-                    <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
-                        <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
-                    </a>
-                <a class="btn overlay-btn-main" href="@($"websites/details?websiteid={WebSiteId}")" aria-label="Tillbaka till webbsajt" title="Tillbaka till webbsajt">
-                        <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
-                    </a>
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" @onclick="()=> HideTools()" aria-label="Förhandgranska" title="Förhandgranska">
+                            <i class="fa fa-wrench fa-1x" aria-hidden="true"></i>
+                        </a>
+                        <span class="icon-text">Verktyg</span>
+                    </div>
                 }
                 else
                 {
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" @onclick="()=> PauseEditContent()" aria-label="Förhandgranska" title="Förhandgranska">
+                            <i class="fa fa-pause fa-1x" aria-hidden="true"></i>
+                        </a>
+                        <span class="icon-text">Granska</span>
+                    </div>
+
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" @onclick="()=> AddContent()" aria-label="Lägg till innehåll" title="Lägg till innehåll">
+                            <i class="fa fa-plus-square-o fa-2x" style="margin-top:2px;"aria-hidden="true"></i>
+                        </a>
+                        <span class="icon-text">Lägg till</span>
+                    </div>
+
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
+                            <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
+                        </a>
+                        <span class="icon-text">Redigera</span>
+                    </div>
+
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" href="@($"websites/details?websiteid={WebSiteId}")" aria-label="Tillbaka till webbsajt" title="Tillbaka till webbsajt">
+                            <i class="fa fa-mail-reply fa-2x" aria-hidden="true"></i>
+                    </a>
+                        <span class="icon-text">Tillbaka</span>
+                </div>
+
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" @onclick="()=> HideTools()" aria-label="Förhandgranska" title="Förhandgranska">
+                            <i class="fa fa-snapchat-ghost fa-2x" aria-hidden="true"></i>
+                        </a>
+                        <span class="icon-text">Göm</span>
+                    </div>
+
+                }
+            }
+            else
+            {
+                <div class="icon-container">
                     <a class="btn overlay-btn-main" @onclick="()=> ResumeEditContent()" aria-label="Fortsätt redigera" title="Fortsätt redigera">
                         <i class="fa fa-play fa-1x" aria-hidden="true"></i>
                     </a>
-                }
+                        <span class="icon-text">Redigera</span>
+                </div>
+            }
             </div>
         </div>
     </p>
