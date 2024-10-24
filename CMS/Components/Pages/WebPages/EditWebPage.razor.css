@@ -95,7 +95,9 @@
 }
 
 .btn-create {
- top : 4px;
+    margin-top: 2px!important;
+    padding-left: 6px!important;
+    padding-right: 6px!important;
 }
 
 .icon-container {
