@@ -17,13 +17,17 @@
                 {
                     if (content.TemplateId == 1 || content.TemplateId == 2)
                     {
+                        found = true;
+                        <div class ="card-img">
                         <ContentPreview ContentId = "@content.ContentId" />
+                        </div>
+
                     }
                 }
                 if (!found)
                 {
-@*                     var content = WebPage.Contents.FirstOrDefault();
-                    <ContentPreview ContentId = "@content.ContentId" /> *@
+                    <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
+                         class="card-img" />
                 }
             }
         </div>
