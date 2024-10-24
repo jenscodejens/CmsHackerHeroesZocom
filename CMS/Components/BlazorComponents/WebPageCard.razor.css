@@ -3,17 +3,17 @@
     flex-wrap: nowrap;
     justify-content: center;
     width: auto;
-    margin: auto;*/ /* Center the container if it has a width */
-/*}*/
+    margin: auto; 
+}*/
 
 .card {
     display: flex;
     flex-direction: column;
     margin-right: 30px;
     margin-bottom: 5px;
-    width: 18rem;
+    width: auto;
     /*    box-shadow: 10px 10px 5px lightblue;*/
-    box-shadow: 10px 10px 5px #dbdbd6;
+    /*box-shadow: 10px 10px 5px #dbdbd6;*/
 }
 
 .card-image {
@@ -31,7 +31,7 @@
 .card-body {
     padding: 15px;
     text-align: center;
-    background-color: bisque;
+    background-color: #f8f9fa;
     /*    font-family: 'Trebuchet MS', sans-serif;*/
 }
 
@@ -42,6 +42,11 @@
     border-radius: 5px;
     padding: 3px;
     background-color: white;
+}
+
+.icon-black {
+    color: black;
+    font-size: 32px;
 }
 
 .icon-blue {
@@ -81,4 +86,49 @@
     top: 10px;
     right: 15px;
     /*z-index: 5;*/ /*Ensure it appears above the image*/
+}
+
+/*eddies ikon css*/
+
+.icon-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    margin: 2px; 
+}
+
+.icon-text {
+    font-size: 0.6em; 
+    text-align: center; 
+    margin-top: 0px; 
+    /*background-color: white;*/
+    border-color: black;
+    border-width: 1px !important;
+    /*border: solid;*/
+    border-radius: 10%;
+    padding: 1px;
+}
+
+.overlay-btn-main {
+    background-color: rgba(255, 255, 255, 0.9); 
+    color: black;
+    border: 2px solid #000000;
+    border-radius: 50%; 
+    padding: 20px; 
+    width: 40px; 
+    height: 40px; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+    /* Optional: Hover effect for buttons */
+    .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover 
+    {
+        background-color: lightgray;
+    }
+
+.btn {
+    font-size: 14px; /* Smaller font /
+    padding: 5px 1px; / Smaller padding */
 }
