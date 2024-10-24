@@ -54,6 +54,18 @@
     align-items: center; /* Center the icon vertically */
 }
 
+.overlay-btn-main-ghost {
+    background-color: rgba(200, 200, 200, 0.9); /* Red background */
+    color: white;
+    border: 0px solid black;
+    border-radius: 50%; /* This makes the button round */
+    padding: 20px; /* Ensure equal padding for width and height */
+    width: 40px; /* Set width to ensure a fixed size */
+    height: 40px; /* Set height to ensure a fixed size */
+    display: flex;
+    justify-content: center; /* Center the icon horizontally */
+    align-items: center; /* Center the icon vertically */
+}
     /* Optional: Hover effect for buttons */
     .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover {
         background-color: lightgray;
