@@ -61,7 +61,7 @@
     </div>
 </div> *@
 
-<PageTitle>Mina websidor</PageTitle>
+<PageTitle>Mina webbsidor</PageTitle>
 
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
@@ -70,12 +70,23 @@
     </ol>
 </nav>
 
-<div class="website-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; padding: 15px; background-color: bisque; border-radius: 8px; box-shadow: 10px 10px 5px #dbdbd6; width: fit-content; margin-bottom: 50px; font-family: 'Trebuchet MS', sans-serif;">
+<h1>Mina webbsidor</h1>
+
+@* <div class="website-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; padding: 15px; background-color: bisque; border-radius: 8px; box-shadow: 10px 10px 5px #dbdbd6; width: fit-content; margin-bottom: 50px; font-family: 'Trebuchet MS', sans-serif;">
     <h3 style="margin: 0; ">Mina websidor</h3>
     <p style="margin: 0;">
         <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa ny webbsida</a>
     </p>
+</div> *@
+
+<div class="icon-container row justify-content-center">
+    <a class="btn overlay-btn-main" href="@($"webpages/create?WebSiteId={WebSiteId}")" aria-label="Skapa Ny webbsida" title="Skapa Ny webbsida">
+        <i class="material-icons icon-black">note_add</i>
+    </a>
+    <span class="icon-text">Skapa Ny webbsida</span>
 </div>
+
+<hr />
 
  @if (webpages == null)
 {
