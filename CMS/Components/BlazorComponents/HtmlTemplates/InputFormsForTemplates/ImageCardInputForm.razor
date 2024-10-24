@@ -17,24 +17,24 @@
     <form>
         <div>
             <label style="margin-right: 55px;">Namn</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" />
+            <input type="text" @bind="ContentName" placeholder="Innehålls namn" />
             <br>
-            <label style="margin-right: 28px;">Bilds URL</label>
+            <label style="margin-right: 26px;">Bilds URL</label>
             <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
             <br>
             <label style="margin-right: 30px;">Korts titel</label>
-            <input type="text" @bind="CardTitle" placeholder="Enter Card Title" />
+            <input type="text" @bind="CardTitle" placeholder="Kort Titel" />
             <br>
              <label>Underrubrik 1</label>
-            <input type="text" @bind="CardText1" placeholder="Enter Card Text 1" />
+            <input type="text" @bind="CardText1" placeholder="Underrubrik 1" />
             <br>
             <label>Underrubrik 2</label>
-            <input type="text" @bind="CardText2" placeholder="Enter Card Text 2" />
+            <input type="text" @bind="CardText2" placeholder="Unterrubrik 2" />
         </div>
 
         <div>
             <!--Color Controls -->
-            <label>Bakgrundfärg:</label>
+            <label>Bakgrundsfärg:</label>
             <br>
             <input type="color" @bind="BackgroundColor" />
             <br>
@@ -44,7 +44,7 @@
         </div>
 
         <div style="margin-top: 10px;">
-            <button class="btn btn-outline-info" style=" margin-right= " type="button" @onclick="PreviewImage">PreviewImage</button>
+            <button class="btn btn-outline-info" style=" margin-right:5px; "type="button" @onclick="PreviewImage">PreviewImage</button>
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
                 <button class="btn btn-outline-primary" type="button" @onclick="SaveToDatabase">Save To Database</button>

@@ -11,56 +11,59 @@
 @inject IContentService ContentService 
 @inherits BaseImageTemplate //gets the base parameters we have in every template/inputform
 
-<h3>Single Image Input Form</h3>
+<h4>Bild</h4>
 
 <div>
     <form>
         <div>
-            <label>Content Name</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" />
-
-            <label>Image URL</label>
-            <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
-
+            <label style="margin-right:120px;">Namn</label>
+            <input type="text" @bind="ContentName" placeholder="Namn" />
+            <br>
+            <label style="margin-right:100px;">Bild URL</label>
+            <input type="text" @bind="ImageInput" style="margin-right: 55px;" placeholder="Bild URL" />
+            <br>
             <!-- Image Size Controls -->
-            <label>Image Width (px or %):</label>
-            <input type="text" @bind="ImageWidth" placeholder="e.g., 100% or 500px" />
-
-            <label>Image Height (px or %):</label>
-            <input type="text" @bind="ImageHeight" placeholder="e.g., auto or 300px" />
-
+            <label style ="margin-right:0px;">Bild-bredd (px eller %):</label>
+            <input type="text" @bind="ImageWidth" placeholder="ex., 100% or 500px" />
+            <br>
+            <label style="margin-right:12px;">Bild höjd (px eller %):</label>
+            <input type="text" @bind="ImageHeight" placeholder="ex., auto eller 300px" />
+            <br>
             <!-- Image Border Controls -->
-            <label>Border Width (px):</label>
-            <input type="number" @bind="BorderWidth" placeholder="Enter border width" />
-
-            <label>Border Color:</label>
+            <label style="margin-right:47px;" >Ram-bredd (px):</label>
+            <input type="number" @bind="BorderWidth" placeholder="Ramlinje bred" />
+            <br>
+            <label>Ram Färg:</label>
+            <br>
             <input type="color" @bind="BorderColor" />
-
-            <label>Border Radius (px):</label>
-            <input type="number" @bind="BorderRadius" placeholder="Enter border radius" />
-
+            <br>
+            <label style="margin-right:43px;">Runda hörn (px):</label>
+            <input type="number" @bind="BorderRadius" placeholder="Runda hörn" />
+            <br>
             <!-- Image Shadow Controls -->
-            <label>Box Shadow (CSS format):</label>
-            <input type="text" @bind="BoxShadow" placeholder="e.g., 0 4px 8px rgba(0, 0, 0, 0.2)" />
-
+            <label style="margin-right:7px;">Skugga (CSS format):</label>
+            <input type="text" @bind="BoxShadow" placeholder="ex., 0 4px 8px rgba(0, 0, 0, 0.2)" />
+            <br>
             <!-- Background Color Controls -->
-            <label>Background Color:</label>
+            <label>Bakgrundsfärg:</label>
+            <br>
             <input type="color" @bind="BackgroundColor" />
-
+            <br>
             <!-- Image Alignment Controls -->
-            <label>Image Alignment:</label>
+            <label>Justering av position:</label>
+            <br>
             <select @bind="ImageAlignment">
-                <option value="left">Left</option>
-                <option value="center">Center</option>
-                <option value="right">Right</option>
+                <option value="left">Vänster</option>
+                <option value="center">Centrera</option>
+                <option value="right">Höger</option>
             </select>
         </div>
 
         <div style="margin-top: 10px;">
-            <button type="button" @onclick="PreviewImage">PreviewImage</button>
+            <button type="button" class="btn btn-outline-info" style="margin-right: 5px" @onclick="PreviewImage">Förhandsgranska</button>
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="button" class="btn btn-outline-primary"  @onclick="SaveToDatabase">Spara</button>
             }
         </div>
     </form>
