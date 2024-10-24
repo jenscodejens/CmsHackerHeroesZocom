@@ -1,0 +1,41 @@
+﻿@attribute [Authorize]
+
+<div class="card" style="width: 16rem;">
+    <div class="card-body">
+        <h5 class="card-title">@WebPage.Title</h5>
+        <p class="card-text">@WebPage.Description</p>
+
+        <div class="creation-info">
+            Skapad: @WebPage.CreationDate<br />
+        </div>
+        @if (WebPage.LastUpdated.HasValue)
+        {
+            <div class="creation-info">Uppdaterad: @WebPage.LastUpdated</div>
+        }
+        else
+        {
+            <div class="creation-info">&nbsp;</div>
+        }
+        <hr />
+
+        <div class="card-icons">
+            <a href="@($"/webpages/previewpage/{WebPage.WebPageId}")" title="Förhandgranska" class="me-2">
+                <i class="material-icons icon-orange">remove_red_eye</i>
+            </a>
+            <a href="@($"/contents?webpageid={WebPage.WebPageId}")" title="InnehållsLista" class="me-2">
+                <i class="material-icons icon-green">note_add</i>
+            </a>
+            <a href="@($"webpages/editwebpage?webpageid={WebPage.WebPageId}")" title="Redigera" class="me-2">
+                <i class="material-icons icon-orange">edit_document</i>
+            </a>
+            <a href="@($"webpages/delete?webpageid={WebPage.WebPageId}")" title="Ta bort" class="me-2">
+                <i class="material-icons icon-red" style="font-size: 32px;">delete_forever</i>
+            </a>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public WebPage WebPage { get; set; }
+    [Parameter] public int VisitCount { get; set; }
+}

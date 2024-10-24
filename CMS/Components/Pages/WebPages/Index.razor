@@ -7,7 +7,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
-
+@* 
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -59,7 +59,43 @@
             }
         </div>
     </div>
+</div> *@
+
+<PageTitle>Mina websidor</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Hem</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Webbsidor</li>
+    </ol>
+</nav>
+
+<div class="website-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; padding: 15px; background-color: bisque; border-radius: 8px; box-shadow: 10px 10px 5px #dbdbd6; width: fit-content; margin-bottom: 50px; font-family: 'Trebuchet MS', sans-serif;">
+    <h3 style="margin: 0; ">Mina websidor</h3>
+    <p style="margin: 0;">
+        <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa ny webbsida</a>
+    </p>
 </div>
+
+ @if (webpages == null)
+{
+    <p>Laddar...</p>
+}
+else if (!webpages.Any())
+{
+    <p>Inga webbsidor tillgängliga.</p>
+}
+else
+{
+    <div class="flex-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        @foreach (var webpage in webpages)
+        {
+            <div style="margin: 10px;">
+                <WebPageCard WebPage="@webpage" />
+            </div>
+        }
+    </div>
+}
 
 @code {
     IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
@@ -71,8 +107,6 @@
 
 
     ApplicationDbContext context = default!;
-
-
 
     protected override async Task OnInitializedAsync()
 
