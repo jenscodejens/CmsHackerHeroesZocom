@@ -27,13 +27,28 @@
             <div style="display:flex; flex-direction: column;">
                 <div>
                     <p>
-                        <b>E-post:</b>: @Profile.Email
+                        <b>Role:</b>
+                        <AuthorizeView Roles="User">
+                            <Authorized>
+                                User
+                            </Authorized>
+                        </AuthorizeView>
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                Admin
+                            </Authorized>
+                        </AuthorizeView>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <b>E-post:</b> @Profile.Email
                     </p>
                 </div>
                 <div>
                     <p>
                         
-                        <b>Användarnamn:</b>: @($"{Profile.FirstName} {Profile.LastName}")
+                        <b>Användarnamn:</b> @($"{Profile.FirstName} {Profile.LastName}")
                     </p>
                 </div>
                 <div>
