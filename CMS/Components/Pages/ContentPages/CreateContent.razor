@@ -56,6 +56,7 @@
     [Parameter]
     [SupplyParameterFromQuery]
     public int? WebPageId { get; set; }
+    [Parameter] public bool HideBreadcrumbs { get; set; }
 
     [Parameter]
     public bool SaveBtnClicked { get; set; } // New parameter to handle save button click
