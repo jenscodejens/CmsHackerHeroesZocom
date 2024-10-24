@@ -1,7 +1,6 @@
-﻿<style >
+﻿
 @media (max-width: 768px) {
-    .btn-group
-
+.btn-group
 {
     display: flex;
     flex-direction: column;
@@ -60,5 +59,46 @@
     }
 }
 
+/*eddies ikon css*/
 
-</style >
+.icon-container {
+   /* display: flex;
+    flex-direction: column;*/
+    align-items: center;
+    margin: 2px;
+}
+
+.icon-text {
+    font-size: 1em;
+    text-align: center;
+    margin-top: 0px;
+    /*background-color: white;*/
+    border-color: black;
+    border-width: 1px !important;
+    /*border: solid;*/
+    border-radius: 10%;
+    padding: 1px;
+}
+
+.overlay-btn-main {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border: 2px solid #000000;
+    border-radius: 0%;
+    padding: 20px;
+    width: 200px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    /* Optional: Hover effect for buttons */
+    .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover {
+        background-color: lightgray;
+    }
+
+.btn {
+    font-size: 14px; /* Smaller font /
+    padding: 5px 1px; / Smaller padding */
+}
