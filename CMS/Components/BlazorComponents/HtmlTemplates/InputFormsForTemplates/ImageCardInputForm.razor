@@ -44,10 +44,10 @@
         </div>
 
         <div style="margin-top: 10px;">
-            <button class="btn btn-outline-info" style=" margin-right:5px; "type="button" @onclick="PreviewImage">PreviewImage</button>
+            <button class="btn btn-outline-info" style=" margin-right:5px; "type="button" @onclick="PreviewImage">Förhandsgranska</button>
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
-                <button class="btn btn-outline-primary" type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button class="btn btn-outline-primary" type="button" @onclick="SaveToDatabase">Spara</button>
             }
         </div>
     </form>
@@ -56,9 +56,7 @@
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            Content saved successfully!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
+            Bild sparad.
         </div>
     }
 </div>
