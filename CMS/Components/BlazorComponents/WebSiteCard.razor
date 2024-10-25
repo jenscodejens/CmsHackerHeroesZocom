@@ -39,15 +39,6 @@
         }
         <hr />
 
-        @if (WebSite.WebPages.Count > 0)
-        {
-            <div class="icon-container justify-content-center">
-                <a class="btn overlay-btn-main" href="@($"visit?websiteid={WebSite.WebSiteId}")" )" aria-label="Besök webbsida" title="Besök webbsidaa">
-                    <i class="material-icons icon-black">language</i>
-                </a>
-                <span class="icon-text">Besök webbsida</span>
-            </div>
-        }
 @*         <div class="row justify-content-evenly">
             <div class="icon-container col-3">
                 <a class="btn overlay-btn-main" href="@($"websites/details?websiteid={WebSite.WebSiteId}")" aria-label="Detaljer" title="Detaljer">
@@ -56,30 +47,39 @@
                 <span class="icon-text">Detaljer</span>
             </div>
         </div> *@
-        <div class="row justify-content-evenly">
-            <div class="icon-container col-2 ">
-                <a class="btn overlay-btn-main" href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")" aria-label="Webbsidor" title="Webbsidor">
+            @* <div class="icon-container col-2 ">
+                <a class="btn overlay-btn-main" href="@($"/webpages/create?websiteid={WebSite.WebSiteId}")" aria-label="Ny webbsida" title="Ny webbsida">
                     <i class="material-icons icon-black">note_add</i>
                 </a>
-                <span class="icon-text">Skapa webbsida</span>
-            </div>
+                <span class="icon-text">Ny webbsida</span>
+            </div> *@
+        <div class="row justify-content-evenly">
+            @if (WebSite.WebPages.Count > 0)
+            {
+                <div class="icon-container col-2">
+                    <a class="btn overlay-btn-main" href="@($"visit?websiteid={WebSite.WebSiteId}")" )" aria-label="Besök webbsida" title="Besök webbsidaa">
+                        <i class="material-icons icon-black">language</i>
+                    </a>
+                    <span class="icon-text">Besök webbsida</span>
+                </div>
+            }
             <div class="icon-container col-2">
-                <a class="btn overlay-btn-main" href="@($"webpages?websiteid={WebSite.WebSiteId}")" aria-label="Webpages" title="Visa Webpages">
-                    <i class="material-icons icon-black">remove_red_eye</i>
+                <a class="btn overlay-btn-main" href="@($"webpages?websiteid={WebSite.WebSiteId}")" aria-label="Webbsidor" title="Webbsidor">
+                    <i class="material-icons icon-black">auto_stories</i>
                 </a>
-                <span class="icon-text">Webpages</span>
+                <span class="icon-text">Webbsidor</span>
             </div>
             <div class="icon-container col-2">
-                <a class="btn overlay-btn-main" href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" aria-label="Redigera Website" title="Redigera Website">
-                    <i class="material-icons icon-black">edit_document</i>
+                <a class="btn overlay-btn-main" href="@($"websites/edit?websiteid={WebSite.WebSiteId}")" aria-label="Redigera" title="Redigera">
+                    <i class="material-icons icon-black">edit_square</i>
                 </a>
                 <span class="icon-text">Redigera</span>
             </div>
             <div class="icon-container col-2">
-                <a class="btn overlay-btn-main" href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" aria-label="Ta bort" title="Ta bort">
+                <a class="btn overlay-btn-main" href="@($"websites/delete?websiteid={WebSite.WebSiteId}")" aria-label="Radera" title="Radera">
                     <i class="material-icons icon-black" style="font-size: 32px;">delete_forever</i>
                 </a>
-                <span class="icon-text">Ta bort</span>
+                <span class="icon-text">Radera</span>
             </div>
         </div>
 
