@@ -54,6 +54,18 @@
     align-items: center; /* Center the icon vertically */
 }
 
+.overlay-btn-main-ghost {
+    background-color: rgba(200, 200, 200, 0.9); /* Red background */
+    color: white;
+    border: 0px solid black;
+    border-radius: 50%; /* This makes the button round */
+    padding: 20px; /* Ensure equal padding for width and height */
+    width: 40px; /* Set width to ensure a fixed size */
+    height: 40px; /* Set height to ensure a fixed size */
+    display: flex;
+    justify-content: center; /* Center the icon horizontally */
+    align-items: center; /* Center the icon vertically */
+}
     /* Optional: Hover effect for buttons */
     .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover {
         background-color: lightgray;
@@ -63,7 +75,7 @@
     display: flex;
     justify-content: flex-start; /* Align the buttons to the left */
     flex-wrap: nowrap; /* Prevent buttons from wrapping */
-    gap: 10px; /* Space between buttons */
+    gap: 4px; /* Space between buttons */
 }
 
     .button-container button {
@@ -80,6 +92,31 @@
     color: black;
     border: 2px solid black; /* Blue border */
     padding: 10px 20px;
+}
+
+.btn-create {
+    margin-top: 2px!important;
+    padding-left: 6px!important;
+    padding-right: 6px!important;
+}
+
+.icon-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center the icon and text */
+    margin: 2px; /* Add space between icons */
+}
+
+.icon-text {
+    font-size: 0.6em; /* Adjust text size */
+    text-align: center; /* Center the text */
+    margin-top: 0px; /* Space between icon and text */
+    background-color: white;
+/*    border-color: black;
+    border-width: 1px !important;
+    border: solid;
+    border-radius: 10%;*/
+    padding: 1px;
 }
 
 .btn-warning-edit {
@@ -141,7 +178,7 @@
     width: auto; /* Optional: Make it full width */
     z-index: 100; /* Ensure it stays above other content */
     background-color: rgba(255, 255, 255, 1); /* Optional: adds a background */
-    padding: 10px; /* Padding for the container */
+    padding: 0px; /* Padding for the container */
     border: 2px solid black;
     border-radius: 10px;
 }

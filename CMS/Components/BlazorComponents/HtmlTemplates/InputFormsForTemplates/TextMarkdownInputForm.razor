@@ -13,16 +13,16 @@
 @inject IContentService ContentService
 @inherits BaseTextTemplateMarkdown //gets the base parameters we have in every template/inputform
 
-<h3>Markdown Input Form</h3>
+<h4>Text</h4>
 
 <div>
     <form>
         <div>
-            <label>Content Name</label>
+            <label>Namn</label>
             <input type="text" @bind="ContentName" placeholder="Enter name for content" class="form-control" />
 
             <!-- Markdown Text Editor -->
-            <label>Markdown Content:</label>
+            <label>Text:</label>
             <MarkdownEditor @bind-Value="MarkdownContent" SpellChecker="false">
                 <Toolbar>
                     <MarkdownToolbarButton Action="MarkdownAction.Bold" Icon="fa fa-bold" Title="Bold" />
@@ -38,7 +38,7 @@
         <div style="margin-top: 10px;">
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="button" class="btn btn-outline-primary" @onclick="SaveToDatabase">Spara</button>
             }
         </div>
     </form>
@@ -47,9 +47,7 @@
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            Content saved successfully!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
+            Texten sparades.
         </div>
     }
 </div>
