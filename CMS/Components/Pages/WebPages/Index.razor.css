@@ -64,8 +64,9 @@
 .icon-container {
     /* display: flex;
     flex-direction: column;*/
+    background-color: #f8f9fa;
     align-items: center;
-    margin: 2px;
+    margin: 0px;
 }
 
 .icon-text {
@@ -102,3 +103,14 @@
     font-size: 14px; /* Smaller font /
     padding: 5px 1px; / Smaller padding */
 }
+
+.page-title {
+    background-color: #f8f9fa; /* Change to your desired color */
+    padding: 20px; /* Optional: Adds space around the text */
+    text-align: center; /* Optional: Center align the text */
+}
+
+    .page-title h1 {
+        color: #333; /* Change the text color if needed */
+        margin: 0; /* Remove default margin */
+    }

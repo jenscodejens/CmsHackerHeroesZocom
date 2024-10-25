@@ -19,6 +19,17 @@
     text-align: center;
 }
 
+.page-title {
+    background-color: #f8f9fa;
+    padding: 20px; /* Optional: Adds space around the text */
+    text-align: center; /* Optional: Center align the text */
+}
+
+    .page-title h1 {
+        color: #333; /* Change the text color if needed */
+        margin: 0; /* Remove default margin */
+    }
+
 .grid-item a {
     font-size: small;
     text-decoration: none;
