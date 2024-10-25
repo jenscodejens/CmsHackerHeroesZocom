@@ -62,73 +62,7 @@ else
         </div>
     }
 }
-@*
-    @page "/webpages/createmulti"
-@attribute [Authorize]
 
-@using BlazorComponents.HtmlTemplates
-@using CMS.Shared
-@using Microsoft.EntityFrameworkCore
-@using CMS.Entities
-@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
-@inject NavigationManager NavigationManager
-
-@attribute [Authorize]
-
-@rendermode InteractiveServer
-
-<Breadcrumbs Crumbs="@(new List<(string, string)>
-    {
-        ("Home", "/"),
-        ("Websites", "/websites"),
-        ("Webpages", $"/webpages?websiteid={webpage?.WebSiteId}"),
-        ("Create Multiple Contents", $"/webpages/createmulti?webpageid={WebPageId}")
-    })" />
-
-<h3>Lägg till flera innehållssidor</h3>
-
-@if (webpage is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <!-- Header Section -->
-    <header class="header-section">
-        <p>Sidhuvud</p>
-        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
-    </header>
-
-    <!-- Main Body Sections -->
-    <main class="main-body-sections">
-        @foreach (var index in contentIndexes)
-        {
-            <div class="main-body-section">
-                <p>KROPP</p>
-                <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
-            </div>
-        }
-        <button @onclick="AddNewContent" class="add-button">Lägg till nytt innehåll</button>
-    </main>
-    <!-- Footer Section -->
-    <footer class="footer-section">
-        <p>Sidfot</p>
-        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
-    </footer>
-
-    <!-- Save Button -->
-    <button @onclick="SaveAllContents" class="save-button">Spara allt innehåll</button>
-
-    <!-- Success Message -->
-    @if (saveSuccessful)
-    {
-        <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            Allt innehåll har sparats framgångsrikt!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Klicka här för att se innehållet</a> | <a href="/webpages/previewpage/@WebPageId" class="alert-link">Klicka här för att förhandsgranska webbsidan</a>
-        </div>
-    }
-}
-*@
 
 @code {
 
@@ -138,6 +72,8 @@ else
     private bool saveBtnClicked = false; // Track if save button has been clicked
     private bool multipagemode = true;
     private bool saveSuccessful = false; // New flag to show success message
+   
+
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }

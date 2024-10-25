@@ -11,41 +11,43 @@
 @inject IContentService ContentService
 @inherits BaseImageCardTemplate //gets the base parameters we have in every template/inputform
 
-<h3>Single Input Form</h3>
+<h4>Bildkort</h4>
 
 <div>
     <form>
         <div>
-            <label>Content Name</label>
-            <input type="text" @bind="ContentName" placeholder="Enter name for content" />
-
-            <label>Image URL</label>
+            <label style="margin-right: 55px;">Namn</label>
+            <input type="text" @bind="ContentName" placeholder="Innehålls namn" />
+            <br>
+            <label style="margin-right: 26px;">Bilds URL</label>
             <input type="text" @bind="ImageInput" placeholder="Enter Image URL" />
-
-            <label>Card Title</label>
-            <input type="text" @bind="CardTitle" placeholder="Enter Card Title" />
-
-            <label>Card Text 1</label>
-            <input type="text" @bind="CardText1" placeholder="Enter Card Text 1" />
-
-            <label>Card Text 2</label>
-            <input type="text" @bind="CardText2" placeholder="Enter Card Text 2" />
+            <br>
+            <label style="margin-right: 30px;">Korts titel</label>
+            <input type="text" @bind="CardTitle" placeholder="Kort Titel" />
+            <br>
+             <label>Underrubrik 1</label>
+            <input type="text" @bind="CardText1" placeholder="Underrubrik 1" />
+            <br>
+            <label>Underrubrik 2</label>
+            <input type="text" @bind="CardText2" placeholder="Unterrubrik 2" />
         </div>
 
         <div>
             <!--Color Controls -->
-            <label>Background Color:</label>
+            <label>Bakgrundsfärg:</label>
+            <br>
             <input type="color" @bind="BackgroundColor" />
             <br>
-            <label>Text Color:</label>
+            <label>Textfärg:</label>
+            <br>
             <input type="color" @bind="TextColor" />
         </div>
 
         <div style="margin-top: 10px;">
-            <button type="button" @onclick="PreviewImage">PreviewImage</button>
+            <button class="btn btn-outline-info" style=" margin-right:5px; "type="button" @onclick="PreviewImage">Förhandsgranska</button>
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button class="btn btn-outline-primary" type="button" @onclick="SaveToDatabase">Spara</button>
             }
         </div>
     </form>
@@ -54,9 +56,7 @@
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            Content saved successfully!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
-
+            Bild sparad.
         </div>
     }
 </div>

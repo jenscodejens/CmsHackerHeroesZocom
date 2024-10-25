@@ -32,12 +32,6 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary />
                 <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />
-
-                <div class="mb-3">
-                    <label for="websiteid" class="form-label">WebSiteId:</label>
-                    <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" />
-                    <ValidationMessage For="() => WebPage.WebSiteId" class="text-danger" />
-                </div>
                 <div class="mb-3">
                     <label for="title" class="form-label">Titel:</label>
                     <InputText id="title" @bind-Value="WebPage.Title" class="form-control" @onblur="CheckIfTitleExists" />

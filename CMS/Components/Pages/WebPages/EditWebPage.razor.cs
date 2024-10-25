@@ -25,6 +25,8 @@ namespace CMS.Components.Pages.WebPages
 
         ApplicationDbContext context = default!;
 
+        private bool HideToolbar = false;
+
         private ExecuteAction PageExecution { get; set; } = ExecuteAction.EditSelect;
 
         private enum ExecuteAction
@@ -116,6 +118,18 @@ namespace CMS.Components.Pages.WebPages
             PageExecution = ExecuteAction.EditSelect;
             Contents = context.Contents.Where(c => c.WebPageId == WebPageId).ToList();
             StateHasChanged();
+        }
+
+        private void HideTools()
+        {
+            if (HideToolbar)
+            {
+                HideToolbar = false;
+            }
+            else
+            { 
+                HideToolbar = true;
+            }
         }
 
         public async ValueTask DisposeAsync() => await context.DisposeAsync();

@@ -39,6 +39,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private bool forceUpdate = false;
         private bool infoMessage = false;
         private bool saveSuccessful = false;
+        private bool isEditing = false;
         private bool Update = false;
         private bool hasSaved = false; // Flag to track if save has been executed
         private string navBarInfoMessage = string.Empty;
@@ -47,6 +48,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private string inpuItemtURL = string.Empty;
         private string inputValueContentName = string.Empty;
         private string oldKey = string.Empty;
+        private string updateKey = string.Empty;
 
         private InputStep currentStep = InputStep.ContentNameInput;
         private string currentLabelText = string.Empty;
@@ -99,10 +101,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     if (objectName != null)
                     {
                         GetNavBarParameters(content, jsonContent, objectName);
-                    }
-                    else
-                    {
-                        
                     }
                 }
             }
@@ -272,7 +270,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             else
             {
                 AlertMessage("Både titel och sidlänk behövs, vill du lägga till sida senare kan du använda \"Länk saknas\".");
-                currentStep = InputStep.Edit;
+                currentStep = InputStep.AddItem;
             }
             
         }
@@ -282,6 +280,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             currentStep = InputStep.AddItem; 
         }
 
+        
 
         private void Edit(string href)
         {
@@ -305,13 +304,14 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                                 inputValue = item.Key;
                                 oldKey = item.Key;
                                 templateDropdown = item.Value;
+                                updateKey = item.Key;   
                             }
                         }
                     }
                     else
                     {
                         SetInparametersForMenuOptions(MenuItems.FirstOrDefault().Key, MenuItems.FirstOrDefault().Value);
-                        AlertMessage("Lägg till ett eget alternativ för menyn.");
+                        //AlertMessage("Lägg till ett eget alternativ för menyn.");
                         
                     }
                     currentStep = InputStep.Edit;
@@ -321,6 +321,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private void AlertMessageHide()
         {
             infoMessage = false;
+            saveSuccessful = false;
             navBarInfoMessage = "";
         }
 
@@ -362,12 +363,12 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private void UpdateItem()
         {   
             AlertMessageHide();
+                //ToDo: temp fix: should be resolved diffrently.
+                BaseNavBarTemplate initializedNavBar = new();
             //ToDo: Check, not 2 keys with the same values?
             // Check if the new key already exists
             if ((MenuItems.ContainsKey(inputValue) && oldKey != inputValue) || inputValue == String.Empty)
             {
-                //ToDo: temp fix: should be resolved diffrently.
-                BaseNavBarTemplate initializedNavBar = new();
                 if (initializedNavBar.MenuItems.FirstOrDefault().Key == oldKey)
                 {
                     currentStep = InputStep.Wait;
@@ -377,6 +378,13 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 AlertMessage("Menyvalet kan inte lämnas utan titel eller ha samman namn som tidigare.");
                 currentStep = InputStep.Edit;
                 return; // Exit the method to prevent adding the same key   
+            }
+
+            if (initializedNavBar.MenuItems.FirstOrDefault().Key == inputValue)
+            {
+                    AlertMessage("Lägg till ett eget alternativ för menyn.");
+                    currentStep = InputStep.Edit;
+                    return;
             }
 
             if (MenuItems.ContainsKey(oldKey))
@@ -394,14 +402,15 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 inputValue = string.Empty;
                 currentStep = InputStep.Wait;
             }
-            
-            if (InitializedMenuOptionExists(MenuItems.FirstOrDefault()))
-            {
-                    AlertMessage("Lägg till ett eget alternativ för menyn.");
-                    currentStep = InputStep.Edit; 
-            }
 
+            isEditing = false;
 
+        }
+        private void EditContentInputCompleted(string key)
+        {
+            inputValue = key; // Set the inputValue to the selected item
+            isEditing = true;  // Activate edit mode
+            UpdateItem();
         }
 
         private void AbortItem()
@@ -420,9 +429,17 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
         private void DeleteItem()
         {
-            AlertMessageHide();
-            MenuItems.Remove(oldKey);
-            currentStep = InputStep.Wait;
+            if (MenuItems.Count() > 1)
+            {
+                AlertMessageHide();
+                MenuItems.Remove(oldKey);
+                currentStep = InputStep.Wait;
+            }
+            else
+            {
+                AlertMessage("Minst ett alternativ för menyn krävs. Ändra menyvalet eller ta bort menyn från huvudsidan.");
+                currentStep = InputStep.Edit;
+            }
         }
       
         private async Task Save()
@@ -436,18 +453,20 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         //Todo: Divide code into functions.
         private async Task SaveToDatabase()
         {
+            //ToDo: Check if menu is really changed before Update!
             if (!MenuItems.Any() || inputValueContentName == string.Empty)
             {
                 if (inputValueContentName == string.Empty)
                 {
-                    //Todo: Add alertmessage: Menu name is mandatory.
+                    AlertMessage("Lägg till ett namn för menyn.");
                     currentStep = InputStep.ContentNameInput;
                     return;
                 }
                 else
                 {
-                    //Todo: Add alertmessage: The navbar needs at least one item.
-                    currentStep = InputStep.Wait;
+                    MenuItems = new Dictionary<string, string>() { { "Länk saknas", "Titel saknas" } };
+                    AlertMessage("Minst ett alternativ för menyn krävs.");
+                    currentStep = InputStep.Edit;
                     return;
                 }
             }
@@ -478,7 +497,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     UserId = UserId!,
                     LastUpdated = updatetime
                 };
-                //context.Contents.Update(content);
             }
             else
             {
@@ -491,7 +509,6 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                     UserId = UserId!,
                     CreationDate = DateOnly.FromDateTime(DateTime.Now)
                 };
-                // context.Contents.Add(content);
             }
 
             if (ContentId.HasValue)
@@ -501,12 +518,20 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 await ContentService.UpdateContentAsync(content);
                 saveSuccessful = true;
                 infoMessage = true;
+                AlertMessage("Uppdaterad menyn sparad.");
             }
             else
             {
                 await ContentService.SaveContentAsync(content);
                 saveSuccessful = true;
+                ContentId = content.ContentId;
+                saveSuccessful = true;
                 infoMessage = true;
+                AlertMessage("Menyn sparades.");
+                if (ContentId != null)
+                {
+                    await LoadNavBarContent();
+                }
             }
         }
 

@@ -10,41 +10,53 @@
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IContentService ContentService
 @inherits BaseHeaderTemplate //gets the base parameters we have in every template/inputform
-<h3>Input Form</h3>
+<h4></h4>
 
 <div>
     <form>
             <div>
-                <label>Content Name:</label>
-                <input type="text" @bind="ContentName" />
+                <div class="form-row">
+                    <label style="margin-right: 0px;">Innehållets namn:</label>
+                    <input type="text" @bind="ContentName" />
+                </div>
+
+                <div class="form-row">
+                    <label style="margin-right: 79px;">Text 1:</label>
+                    <input type="text" @bind="TextInput1" />
+                </div>
+
+                <div class="form-row">
+                    <label style="margin-right: 79px;">Text 2:</label>
+                    <input type="text" @bind="TextInput2" />
+                </div>
+
+                <div class="form-row">
+                    <label>Bakgrundsfärg:</label>
                 <br>
-                <label>Input Value 1:</label>
-                <input type="text" @bind="TextInput1" />
-                <br>
-                <label>Input value 2:</label>
-                <input type="text" @bind="TextInput2" />
-                <br>
-                <!--Color Controls -->
-                <label>Background Color:</label>
-                <input type="color" @bind="BackgroundColor" />
-                <br>
-                <label>Text Color:</label>
-                <input type="color" @bind="TextColor"/>
+                    <input type="color" @bind="BackgroundColor" />
+                </div>
+
+                <div class="form-row">
+                    <label>Textfärg:</label>
+                    <br>
+                    <input type="color" @bind="TextColor" />
+                </div>
             </div>
+
             <div style="margin-top: 10px;">
-                <button type="button" @onclick="PreviewImage">PreviewImage</button>
-                @if (!MultiPageMode) // Show button only if not in multi-page mode
-                {
-                    <button type="button" @onclick="SaveToDatabase">Save To Database</button>
-                }
+                <button class="btn btn-outline-info" style=" margin-right:5px; " type="button" @onclick="PreviewImage">PreviewImage</button>
+                    @if (!MultiPageMode) // Show button only if not in multi-page mode
+                    {
+                        <button type="button" class="btn btn-outline-primary" @onclick="SaveToDatabase">Spara</button>
+                    }
             </div>
     </form>
+<div/>
     <!-- Success message -->
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            Content saved successfully!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+             Innehåll sparat.
 
         </div>
     }

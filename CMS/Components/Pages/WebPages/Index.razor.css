@@ -1,0 +1,116 @@
+﻿
+@media (max-width: 768px) {
+.btn-group
+{
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-group .btn {
+    margin-bottom: 0.25rem;
+    width: 100%;
+}
+
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.table-responsive {
+    margin-top: 20px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px;
+}
+
+    .table th, .table td {
+        padding: 12px;
+        vertical-align: middle;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        font-weight: bold;
+    }
+
+.btn-group {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn-sm {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+}
+
+/*eddies ikon css*/
+
+.icon-container {
+    /* display: flex;
+    flex-direction: column;*/
+    background-color: #f8f9fa;
+    align-items: center;
+    margin: 0px;
+}
+
+.icon-text {
+    font-size: 1em;
+    text-align: center;
+    margin-top: 0px;
+    /*background-color: white;*/
+    border-color: black;
+    border-width: 1px !important;
+    /*border: solid;*/
+    border-radius: 10%;
+    padding: 1px;
+}
+
+.overlay-btn-main {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: black;
+    border: 2px solid #000000;
+    border-radius: 20%;
+    padding: 20px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+    /* Optional: Hover effect for buttons */
+    .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover {
+        background-color: lightgray;
+    }
+
+.btn {
+    font-size: 14px; /* Smaller font /
+    padding: 5px 1px; / Smaller padding */
+}
+
+.page-title {
+    background-color: #f8f9fa; /* Change to your desired color */
+    padding: 20px; /* Optional: Adds space around the text */
+    text-align: center; /* Optional: Center align the text */
+}
+
+    .page-title h1 {
+        color: #333; /* Change the text color if needed */
+        margin: 0; /* Remove default margin */
+    }

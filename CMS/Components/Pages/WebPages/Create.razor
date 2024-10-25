@@ -53,13 +53,9 @@
             </div>
 
             @* Så länge titlen inte är unik(för webbsiten) så är Skapa-knappen disabled *@
-            <button type="submit" class="btn btn-primary" disabled="@TitleExists">Skapa</button>
+            <button type="submit" class="btn btn-outline-success" disabled="@TitleExists">Skapa</button>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/webpages">Tillbaka</a>
 </div>
 
 @code {

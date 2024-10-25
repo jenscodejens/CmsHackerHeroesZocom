@@ -1,39 +1,54 @@
 ﻿@page "/websites"
 @attribute [Authorize]
 
-@using CMS.Shared
-@using Microsoft.AspNetCore.Components.QuickGrid
 @using CMS.Data
-
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
-@inject NavigationManager NavigationManager
-
-@implements IAsyncDisposable
+@inject VisitorCounterService VisitorCounterService
 
 <PageTitle>Mina webbsites</PageTitle>
 
-<h3>Mina webbsites</h3>
 
-<p>
-    <a href="websites/create">Skapa ny webbsite</a>
-</p>
-@if (UserId != null)
+@* <div class="website-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; padding: 15px; background-color: bisque; border-radius: 8px; box-shadow: 10px 10px 5px #dbdbd6; width: fit-content; margin-bottom: 50px; font-family: 'Trebuchet MS', sans-serif;">
+    <h3 style="margin: 0; ">Mina webbsites</h3>
+    <p style="margin: 0;">
+        <a href="websites/create">Skapa ny webbsite</a>
+    </p>
+</div>  *@
+<div class="page-title">
+<h1>Mina Websites</h1>
+
+<div class="icon-container row justify-content-center">
+    <a class="btn overlay-btn-main" href="@($"websites/create")" aria-label="Skapa Ny webbsite" title="Skapa Ny webbsite">
+        <i class="material-icons icon-black">note_add</i>
+    </a>
+    <span class="icon-text">Skapa ny webbsite</span>
+</div>
+</div>
+
+<hr />
+
+@if (UserId != null && WebSitesWithVisits != null)
 {
-    <div class="flex-container" style="display:flex; flex-wrap: wrap; "> 
-    @foreach (var website in context.WebSites.Include(w=> w.WebPages).Where(w => w.UserId == UserId))
-    {
-        <WebSiteCard WebSite="@website"/>
-    }
+    <div class="flex-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        @foreach (var website in WebSitesWithVisits)
+        {
+            <div style="margin: 10px;">
+                <WebSiteCard WebSite="@website.WebSite" VisitCount="@website.VisitCount" />
+            </div>
+        }
     </div>
 }
+else
+{
+    <p>Loading...</p>
+}
 
-    
+
 @code {
-
     public string UserId { get; set; }
-
     ApplicationDbContext context = default!;
+    private List<WebSiteWithVisitCount> WebSitesWithVisits = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -41,9 +56,30 @@
         if (user != null)
         {
             UserId = user.Id;
-        }
 
-        context = DbFactory.CreateDbContext();
+            context = DbFactory.CreateDbContext();
+
+            var userWebSites = await context.WebSites
+                .Include(w => w.WebPages)
+                .Where(w => w.UserId == UserId)
+                .ToListAsync();
+
+            // Loop to add the VisitCount to the WebSiteWithVisitCount object, done once for each website belonging to a specific UserId. Admin implementation has to wait
+            foreach (var website in userWebSites)
+            {
+                // Get all visits for the website
+                var visits = await VisitorCounterService.GetAllPageVisitsAsync(website.WebSiteId);
+
+                // Sum the VisitCount from the WebSiteVisit collection
+                var totalVisitCount = visits.Sum(v => v.VisitCount);
+
+                WebSitesWithVisits.Add(new WebSiteWithVisitCount
+                    {
+                        WebSite = website,
+                        VisitCount = totalVisitCount
+                    });
+            }
+        }
     }
 
     public async ValueTask DisposeAsync()
@@ -51,4 +87,9 @@
         await context.DisposeAsync();
     }
 
+    private class WebSiteWithVisitCount
+    {
+        public WebSite WebSite { get; set; }
+        public int VisitCount { get; set; }
+    }
 }
