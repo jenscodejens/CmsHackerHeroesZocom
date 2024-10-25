@@ -12,23 +12,19 @@
         <div>
             @if(WebPage.Contents != null || WebPage.Contents.Count() < 1)
             {
-                bool found = false;
-                foreach (var content in WebPage.Contents)
+                @if (WebPage.Contents != null && WebPage.Contents.Where(c => c.TemplateId == 1 || c.TemplateId == 2).Any())
                 {
-                    if (content.TemplateId == 1 || content.TemplateId == 2)
-                    {
-                        found = true;
-                        <div class="card">
-                            <div class="card-content">
-                                <ContentPreview ContentId="@content.ContentId" />
-                            </div>
+                    var content = WebPage.Contents.FirstOrDefault(C => C.TemplateId == 1 || C.TemplateId == 2);
+                    <div class="card">
+                        <div class="card-content">
+                            <ContentPreview ContentId="@content.ContentId" />
                         </div>
-                    }
+                    </div>   
                 }
-                if (!found)
+                else
                 {
                     <img src="https://t3.ftcdn.net/jpg/02/48/42/64/360_F_248426448_NVKLywWqArG2ADUxDq6QprtIzsF82dMF.webp" alt=""
-                         class="card-img" />
+                    class="card-img" />
                 }
             }
         </div>
