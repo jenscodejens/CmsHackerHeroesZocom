@@ -11,28 +11,30 @@
     flex-direction: column;
     margin-right: 30px;
     margin-bottom: 5px;
-    width: auto;
-    /*    box-shadow: 10px 10px 5px lightblue;*/
-    /*box-shadow: 10px 10px 5px #dbdbd6;*/
+    width: 200px;
 }
 
 .card-image {
     height: 200px; /* Set a fixed height for the image container */
     position: relative;
     overflow: hidden; /* Prevents overflow of the image */
-}
-
-.card-content {
-    height: 150px; /* Fixed height for the content */
-    width: 200px; /* Ensure content takes full width */
-    overflow: hidden; /* Prevents overflow of content */
-    display: flex; /* Optional: For better layout control */
-    align-items: flex-start; /* Align content to the top */
+    display: flex; /* Enable flexbox */
+    align-items: center; /* Center content vertically */
     justify-content: center; /* Center content horizontally */
 }
 
+.card-content {
+    height: 130px; /* Fixed height for the content */
+    width: 223px; /* Ensure content takes full width */
+    overflow: hidden; /* Prevents overflow of content */
+    display: flex; /* Enable flexbox for better layout control */
+    align-items: flex-start; /* Align content to the bottom */
+    justify-content: center; /* Center content horizontally */
+}
+
+
 .card-img {
-    width: 100%;
+    width: 200px;
     height: 100%;
     object-fit: cover;
 }
