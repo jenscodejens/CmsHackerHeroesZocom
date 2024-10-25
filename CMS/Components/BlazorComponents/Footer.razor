@@ -9,28 +9,38 @@
             </div>
 
             <!-- Grid column -->
-            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+            <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-1">
                 <!-- Links -->
-                <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
-                <p><i class="fas fa-home me-3"></i> New York, NY 10012, US</p>
+                <h6 class="text-uppercase fw-bold mb-4">Kontakt</h6>
                 <p>
-                    <i class="fas fa-envelope me-3"></i>
-                    info@example.com
+                   @*  <i class=" fa-home me-3"></i> *@
+                    Adress 1: Birger Jarlsgatan 58,
+                    114 29 Stockholm
                 </p>
-                <p><i class="fas fa-phone me-3"></i> + 01 234 567 88</p>
-                <p><i class="fas fa-print me-3"></i> + 01 234 567 89</p>
+                <p>
+                    @*  <i class=" fa-home me-3"></i> *@
+                    Adress 2: Vallgatan 25,
+                    411 16  Göteborg
+                </p>
+                <p>
+                    @*  <i class=" fa-home me-3"></i> *@
+                    Telefon: 08 45 631 71
+                </p>
             </div>
             <!-- Grid column -->
-
-            <div class="col-xs-6 col-md-3">
-                <h6>Snabba Länkar</h6>
-                <ul class="footer-links">
-                    <li><a href="http://yourwebsite.com/about/">Hur Fungerar det</a></li>
-                    <li><a href="http://yourwebsite.com/contact/">Om Oss</a></li>
-                    <li><a href="http://yourwebsite.com/contribute/">PrisModell</a></li>
-                    <li><a href="http://yourwebsite.com/privacy-policy/">Kontakta Oss</a></li>
-                </ul>
-            </div>
+             <AuthorizeView>
+                 <NotAuthorized>
+                        <div class="col-xs-6 col-md-3">
+                            <h6>Snabba Länkar</h6>
+                            <ul class="footer-links">
+                                <li><a href="#aboutUs">Hur Fungerar det</a></li>
+                                <li><a href="#aboutUs">Om Oss</a></li>
+                                <li><a href="#payment">PrisModell</a></li>
+                                <li><a href="#contact-section">Kontakta Oss</a></li>
+                            </ul>
+                        </div>
+                </NotAuthorized>
+             </AuthorizeView>
         </div>
         <hr>
     </div>
@@ -44,10 +54,9 @@
 
             <div class="col-md-4 col-sm-6 col-xs-12">
                 <ul class="social-icons">
-                    <li><a class="facebook" href="#"><i class="fa fa-facebook"></i></a></li>
-                    <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li>
-                    <li><a class="dribbble" href="#"><i class="fa fa-dribbble"></i></a></li>
-                    <li><a class="linkedin" href="#"><i class="fa fa-linkedin"></i></a></li>
+                    <li><a class="facebook" href="https://www.facebook.com/zocom.ab/?locale=sv_SE"><i class="fa fa-facebook"></i></a></li>
+@*                     <li><a class="twitter" href="#"><i class="fa fa-twitter"></i></a></li> *@
+                    <li><a class="linkedin" href="https://www.linkedin.com/company/zocom/posts/?feedView=all"><i class="fa fa-linkedin"></i></a></li>
                 </ul>
             </div>
         </div>
