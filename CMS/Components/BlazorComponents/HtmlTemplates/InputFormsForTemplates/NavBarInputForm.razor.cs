@@ -269,7 +269,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
             }
             else
             {
-                AlertMessage("Både titel och sidlänk behövs, vill du lägga till sida senare kan du använda \"Länk saknas\".");
+                AlertMessage("Både titel och sidlänk behövs, vill du lägga till en sida senare kan du använda \"Länk saknas\".");
                 currentStep = InputStep.AddItem;
             }
             
@@ -518,7 +518,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                 await ContentService.UpdateContentAsync(content);
                 saveSuccessful = true;
                 infoMessage = true;
-                AlertMessage("Uppdaterad menyn sparad.");
+                AlertMessage("Uppdaterad meny sparad.");
             }
             else
             {
