@@ -29,7 +29,11 @@
 @if (!string.IsNullOrEmpty(selectedTemplatePath))
 {
     <div>
-        @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+        @* ToDo: This is a temp fix for not display double navbar when edit, change other inputforms to render content in forms. *@
+        @if (selectedTemplatePath != "BlazorComponents.HtmlTemplates.TemplatesForComponents.NavBarTemplate")
+        {
+            @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+        }
     </div>
 }
 
@@ -52,6 +56,7 @@
     [Parameter]
     [SupplyParameterFromQuery]
     public int? WebPageId { get; set; }
+    [Parameter] public bool HideBreadcrumbs { get; set; }
 
     [Parameter]
     public bool SaveBtnClicked { get; set; } // New parameter to handle save button click
@@ -123,30 +128,13 @@
         return builder => builder.AddContent(0, "No component selected.");
     }
 
-    // private async Task OnInputFormSubmit(Dictionary<string, object> formValues)
-    // {
-    //     using var dbContext = DbContextFactory.CreateDbContext();
-
-    //     var content = new Content();
-
-    //     foreach (var kvp in formValues)
-    //     {
-    //         templateParameters[kvp.Key] = kvp.Value;
-    //     }
-
-    //     var user = await GetCurrentUserService.GetCurrentUserAsync();
-    //     content.UserId = user.Id;
-
-    //     dbContext.Contents.Add(content);
-    //     await dbContext.SaveChangesAsync();
-    // }
     private void OnInputFormSubmit(Dictionary<string, object> formValues)
     {
         // Update the parameters for the selected template based on form values
         foreach (var kvp in formValues)
         {
             templateParameters[kvp.Key] = kvp.Value;
-            }
+        }
     }
 }
 

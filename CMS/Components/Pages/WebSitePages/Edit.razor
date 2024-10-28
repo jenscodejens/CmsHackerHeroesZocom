@@ -1,12 +1,20 @@
 ﻿@page "/WebSites/edit"
+@using CMS.Shared
 @attribute [Authorize]
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Redigera</PageTitle>
+<PageTitle>Redigera webbsite</PageTitle>
 
-<h1>Redigera</h1>
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+       // ("Websites", "/websites"),
+        ("Redigera webbplats", $"/websites/edit?websiteid={WebSiteId}")
+    })" />
+
+<h1>Redigera webbsite</h1>
 
 <h4>Hemsida</h4>
 <hr />
@@ -61,15 +69,11 @@ else
                 <SetLandingPage WebSiteId="@WebSiteId"/>
 
                 <br />
-                <button type="submit" class="btn btn-primary">Spara</button>
+                <button type="submit" class="btn btn-outline-success" style="border: solid; border-color: black;">Spara</button>
             </EditForm>
         </div>
     </div>
 }
-
-<div>
-    <a href="/websites">Tillbaka</a>
-</div>
 
 @code {
     [SupplyParameterFromQuery]

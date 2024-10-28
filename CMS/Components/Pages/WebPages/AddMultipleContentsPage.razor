@@ -2,15 +2,21 @@
 @attribute [Authorize]
 
 @using BlazorComponents.HtmlTemplates
+@using CMS.Shared
 @using Microsoft.EntityFrameworkCore
 @using CMS.Entities
-@using CMS.Components.BlazorComponents.HtmlTemplates
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize]
-
 @rendermode InteractiveServer
+
+<Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+        //("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={webpage?.WebSiteId}"),
+        ("Skapa flera innehåll", $"/webpages/createmulti?webpageid={WebPageId}")
+    })" />
 
 <h3>Lägg till flera innehållssidor</h3>
 
@@ -23,7 +29,7 @@ else
     <!-- Header Section -->
     <header class="header-section">
         <p>SidHuvud</p>
-        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
+        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode" HideBreadcrumbs="true"></CreateContent>
     </header>
 
     <!-- Main Body Sections -->
@@ -32,15 +38,16 @@ else
         {
             <div class="main-body-section">
                 <p>KROPP</p>
-                <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
+                <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode" HideBreadcrumbs="true"></CreateContent>
             </div>
         }
         <button @onclick="AddNewContent" class="add-button">Lägg till nytt innehåll</button>
     </main>
+
     <!-- Footer Section -->
     <footer class="footer-section">
         <p>Sidfoten</p>
-        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode"></CreateContent>
+        <CreateContent WebPageId="@webpage.WebPageId" SaveBtnClicked="saveBtnClicked" MultiPageMode="multipagemode" HideBreadcrumbs="true"></CreateContent>
     </footer>
 
     <!-- Save Button -->
@@ -56,6 +63,7 @@ else
     }
 }
 
+
 @code {
 
     WebPage? webpage;
@@ -64,6 +72,8 @@ else
     private bool saveBtnClicked = false; // Track if save button has been clicked
     private bool multipagemode = true;
     private bool saveSuccessful = false; // New flag to show success message
+   
+
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }

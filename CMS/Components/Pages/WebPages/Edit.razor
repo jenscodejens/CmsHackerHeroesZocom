@@ -1,9 +1,167 @@
 ﻿@page "/WebPages/edit"
 @attribute [Authorize]
+@using CMS.Shared
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject IGetCurrentUserService GetCurrentUserService
+@rendermode InteractiveServer
+
+<PageTitle>Redigera Webbsida</PageTitle>
+
+@* <Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+        //("Websites", "/websites"),
+        ("Webbsidor", WebPage != null ? $"/webpages?websiteid={WebPage.WebSiteId}" : "/webpages"),
+        ("Redigera webbsida", $"/webpages/edit?webpageid={WebPageId}")
+    })" /> *@
+
+<h1>Redigera webbsida</h1>
+
+<h4>Webbsida</h4>
+<hr />
+@if (WebPage is null)
+{
+    <p><em>Laddar...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="WebPage" OnValidSubmit="UpdateWebPage" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />
+                <div class="mb-3">
+                    <label for="title" class="form-label">Titel:</label>
+                    <InputText id="title" @bind-Value="WebPage.Title" class="form-control" @onblur="CheckIfTitleExists" />
+                    <ValidationMessage For="() => WebPage.Title" class="text-danger" />
+                    @if (!string.IsNullOrEmpty(TitleErrorMessage))
+                    {
+                        <div class="text-danger">@TitleErrorMessage</div>
+                    }
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Beskrivning:</label>
+                    <InputText id="description" @bind-Value="WebPage.Description" class="form-control" />
+                    <ValidationMessage For="() => WebPage.Description" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="creationdate" class="form-label">Skapad:</label>
+                    <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
+                </div>
+                @if (LastUpdatedDateTime.HasValue)
+                {
+                    <div class="mb-3">
+                        <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
+                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                    </div>
+                }
+                <div class="mb-3">
+                    <label for="visitor-url" class="form-label">Besöks Url:</label>
+                    <InputText id="visitor-url" @bind-Value="WebPage.VisitorUrl" class="form-control" />
+                    <ValidationMessage For="() => WebPage.VisitorUrl" class="text-danger" />
+                </div>
+
+                <button type="submit" class="btn btn-primary" disabled="@TitleExists">Spara</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    [SupplyParameterFromQuery]
+    public int WebPageId { get; set; }
+
+    public WebPage? WebPage { get; set; }
+
+    private bool TitleExists { get; set; } = false;
+    private string TitleErrorMessage { get; set; } = string.Empty;
+
+    private DateTime? LastUpdatedDateTime { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        WebPage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
+        if (WebPage is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+        else
+        {
+            WebPage.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
+        }
+    }
+
+    private async Task CheckIfTitleExists()
+    {
+        if (WebPage != null)
+        {
+            using var context = DbFactory.CreateDbContext();
+
+            // Fixed the issue of: renaming the title to a nonvalid title -> then back to original title which was then also invalid
+            var existingWebPageTitle = await context.WebPages
+                .FirstOrDefaultAsync(t => t.Title == WebPage.Title && 
+                                     t.WebSiteId == WebPage.WebSiteId && 
+                                     t.WebPageId != WebPage.WebPageId);
+
+            TitleExists = existingWebPageTitle != null;
+
+            TitleErrorMessage = TitleExists
+                ? "Webbsiten har redan en webbsida med denna titeln."
+                : string.Empty;
+        }
+    }
+
+    public async Task UpdateWebPage()
+    {
+        await CheckIfTitleExists();
+
+        if (!TitleExists)
+        {
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
+            WebPage!.UserId = user.Id;
+
+            using var context = DbFactory.CreateDbContext();
+            context.Attach(WebPage).State = EntityState.Modified;
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!WebPageExists(WebPage.WebPageId))
+                {
+                    NavigationManager.NavigateTo("notfound");
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            // NavigationManager.NavigateTo("/webpages");
+        }
+    }
+
+    bool WebPageExists(int webpageid)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.WebPages.Any(e => e.WebPageId == webpageid);
+    }
+}
+
+
+@* @page "/WebPages/edit"
+@attribute [Authorize]
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 @inject IGetCurrentUserService GetCurrentUserService
+@rendermode InteractiveServer
 
 <PageTitle>Redigera Webbsida</PageTitle>
 
@@ -22,7 +180,8 @@ else
             <EditForm method="post" Model="WebPage" OnValidSubmit="UpdateWebPage" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary />
-                <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />    
+                <input type="hidden" name="WebPage.WebPageId" value="@WebPage.WebPageId" />
+
                 <div class="mb-3">
                     <label for="websiteid" class="form-label">WebSiteId:</label>
                     <InputNumber id="websiteid" @bind-Value="WebPage.WebSiteId" class="form-control" />
@@ -30,8 +189,12 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="title" class="form-label">Titel:</label>
-                    <InputText id="title" @bind-Value="WebPage.Title" class="form-control" />
+                    <InputText id="title" @bind-Value="WebPage.Title" class="form-control" @onblur="CheckIfTitleExists" />
                     <ValidationMessage For="() => WebPage.Title" class="text-danger" />
+                    @if (!string.IsNullOrEmpty(TitleErrorMessage))
+                    {
+                        <div class="text-danger">@TitleErrorMessage</div>
+                    }
                 </div>
                 <div class="mb-3">
                     <label for="description" class="form-label">Beskrivning:</label>
@@ -41,14 +204,12 @@ else
                 <div class="mb-3">
                     <label for="creationdate" class="form-label">Skapad:</label>
                     <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
-                    <ValidationMessage For="() => WebPage.CreationDate" class="text-danger" />
                 </div>
                 @if (LastUpdatedDateTime.HasValue)
                 {
                     <div class="mb-3">
                         <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
                         <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
-                        <ValidationMessage For="() => WebPage.LastUpdated" class="text-danger" />
                     </div>
                 }
                 <div class="mb-3">
@@ -56,12 +217,8 @@ else
                     <InputText id="visitor-url" @bind-Value="WebPage.VisitorUrl" class="form-control" />
                     <ValidationMessage For="() => WebPage.VisitorUrl" class="text-danger" />
                 </div>
-                <div class="mb-3" style="display: none;">
-                    <label for="userid" class="form-label">Användar Id:</label>
-                    <InputText id="userid" @bind-Value="WebPage.UserId" class="form-control" />
-                    <ValidationMessage For="() => WebPage.UserId" class="text-danger" />
-                </div>
-                <button type="submit" class="btn btn-primary">Spara</button>
+
+                <button type="submit" class="btn btn-primary" disabled="@TitleExists">Spara</button>
             </EditForm>
         </div>
     </div>
@@ -75,18 +232,17 @@ else
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }
 
-    [SupplyParameterFromForm]
     public WebPage? WebPage { get; set; }
 
-    public string UserId { get; set; }
-    ApplicationDbContext context = default!;
+    private bool TitleExists { get; set; } = false;
+    private string TitleErrorMessage { get; set; } = string.Empty;
 
     private DateTime? LastUpdatedDateTime { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        WebPage ??= await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+        WebPage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
 
         if (WebPage is null)
         {
@@ -94,37 +250,49 @@ else
         }
         else
         {
-            // Bindings cant work with DateOnly so converting it to DateTime then back again in UpdateWebSite() function
-            // LastUpdatedDateTime = WebPage.LastUpdated.HasValue
-            //     ? WebPage.LastUpdated.Value.ToDateTime(TimeOnly.MinValue)
-            //     : null;
             WebPage.LastUpdated = DateOnly.FromDateTime(DateTime.Now);
         }
     }
 
+    private async Task CheckIfTitleExists()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        var existingWebPageTitle = await context.WebPages.FirstOrDefaultAsync(t => t.Title == WebPage!.Title && t.WebSiteId == WebPage.WebSiteId);
+
+        TitleExists = existingWebPageTitle != null;
+
+        TitleErrorMessage = TitleExists
+            ? "Webbsiten har redan en webbsida med denna titeln."
+            : string.Empty;
+    }
+
     public async Task UpdateWebPage()
     {
-        var user = await GetCurrentUserService.GetCurrentUserAsync();
-        UserId = user.Id;
+        await CheckIfTitleExists();
 
-        using var context = DbFactory.CreateDbContext();
-        WebPage!.UserId = UserId; // Ensure UserId is set
-
-        context.Attach(WebPage).State = EntityState.Modified;
-
-        try
+        if (!TitleExists)
         {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!WebPageExists(WebPage.WebPageId))
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
+            WebPage!.UserId = user.Id;
+
+            using var context = DbFactory.CreateDbContext();
+            context.Attach(WebPage).State = EntityState.Modified;
+
+            try
             {
-                NavigationManager.NavigateTo("notfound");
+                await context.SaveChangesAsync();
             }
-            else
+            catch (DbUpdateConcurrencyException)
             {
-                throw;
+                if (!WebPageExists(WebPage.WebPageId))
+                {
+                    NavigationManager.NavigateTo("notfound");
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 
@@ -136,4 +304,4 @@ else
         using var context = DbFactory.CreateDbContext();
         return context.WebPages.Any(e => e.WebPageId == webpageid);
     }
-}
+} *@

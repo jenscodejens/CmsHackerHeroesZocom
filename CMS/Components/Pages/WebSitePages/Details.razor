@@ -2,11 +2,19 @@
 @attribute [Authorize]
 
 @using CMS.Entities
+@using CMS.Shared
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer 
+@rendermode InteractiveServer
 
 <PageTitle>Detaljer</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+        //("Websites", "/websites"),
+        ("Webbplats Detaljer", $"/websites/details?websiteid={WebSiteId}")
+    })" />
 
 <h1>Detaljer</h1>
 
@@ -15,38 +23,83 @@
     <hr />
     @if (website is null)
     {
-    <p><em>Loading...</em></p>
+        <p><em>Loading...</em></p>
     }
     else
     {
-    <dl class="row">
-        <dt class="col-sm-2">Titel</dt>
-        <dd class="col-sm-10">@website.Title</dd>
-        <dt class="col-sm-2">Beskrivning</dt>
-        <dd class="col-sm-10">@website.Description</dd>
-        <dt class="col-sm-2">Skapad</dt>
-        <dd class="col-sm-10">@website.CreationDate</dd>
-        <dt class="col-sm-2">Senast uppdaterad</dt>
-        <dd class="col-sm-10">@website.LastUpdated</dd>
-        <dt class="col-sm-2">Startsida</dt>
-        <dd class="col-sm-10">@landingPageTitle</dd>
-        <AuthorizeView Roles="Admin">
-            <dt class="col-sm-2">Användar Id</dt>
-            <dd class="col-sm-10">@website.UserId</dd>
-        </AuthorizeView>
-    </dl>
+        <dl class="row">
+            <dt class="col-sm-2">Titel</dt>
+            <dd class="col-sm-10">@website.Title</dd>
+            <dt class="col-sm-2">Beskrivning</dt>
+            <dd class="col-sm-10">@website.Description</dd>
+            <dt class="col-sm-2">Skapad</dt>
+            <dd class="col-sm-10">@website.CreationDate</dd>
+            @if (website.LastUpdated.HasValue)
+            {
+                <dt class="col-sm-2">Senast uppdaterad</dt>
+                <dd class="col-sm-10">@website.LastUpdated.Value</dd>
+            }
+
+            <AuthorizeView Roles="Admin">
+                <dt class="col-sm-2">Användar Id</dt>
+                <dd class="col-sm-10">@website.UserId</dd>
+            </AuthorizeView>
+        </dl>
         <ConnectedWebPagesInfo WebSiteId="@WebSiteId" />
-    <p>Denna sida har besökts @VisitCount gånger.</p>
-    
-    <div>
-        <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
-        <a href="@($"/webpages?websiteid={website.WebSiteId}")">Webbsidor</a> |
-        <a href="@($"/websites")">Tillbaka</a>
-    </div>
-    
+      
+
+        <div>
+            <a href="@($"/websites/edit?websiteid={website.WebSiteId}")">Redigera</a> |
+            <a href="@($"/webpages?websiteid={website.WebSiteId}")">Webbsidor</a> |
+            <a href="@($"/websites")">Tillbaka</a>
+        </div>
     }
 </div>
 
+
+@code {
+    WebSite? website;
+    private string? landingPageTitle;
+
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        website = await context.WebSites.FirstOrDefaultAsync(m => m.WebSiteId == WebSiteId);
+
+        if (website?.LandingPage != null)
+        {
+            var landingPage = await context.WebPages
+                .FirstOrDefaultAsync(wp => wp.WebPageId == website.LandingPage);
+
+            landingPageTitle = landingPage?.Title;
+        }
+        else if (website?.LandingPage is null)
+        {
+            var hasWebPages = await context.WebPages
+                 .AnyAsync(wp => wp.WebSiteId == WebSiteId);
+
+            if (hasWebPages)
+            {
+                landingPageTitle = "Webbsiten har ingen startsida vald";
+            }
+            else
+            {
+                landingPageTitle = "Webbsiten har inga webbsidor";
+            }
+        }
+
+        if (website is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
+
+
+@*
 @code {
     WebSite? website;
     private int VisitCount { get; set; }
@@ -89,5 +142,4 @@
         }
     }
 }
-
-
+*@

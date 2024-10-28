@@ -1,6 +1,6 @@
 ﻿@page "/webpages/create"
+@using CMS.Shared
 @attribute [Authorize]
-
 @inject IGetCurrentUserService GetCurrentUserService
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
@@ -8,19 +8,33 @@
 
 <PageTitle>Skapa webbsida</PageTitle>
 
-<h1>Skapa</h1>
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+        //("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={WebSiteId}"),
+        ("Skapa webbsida", $"/webpages/create?websiteid={WebSiteId}")
+    })" />
+
+<h1>Skapa webbsida</h1>
 
 <h4>Webbsida</h4>
 <hr />
-<div class="row"> 
+<div class="row">
     <div class="col-md-10">
         <EditForm method="post" Model="WebPage" OnValidSubmit="AddWebPage" FormName="create" Enhance>
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" />
+
             <div class="mb-3">
-                <label for="title" class="form-label">Titel:</label> 
-                <InputText id="title" @bind-Value="WebPage.Title" class="form-control" /> 
-                <ValidationMessage For="() => WebPage.Title" class="text-danger" /> 
+                <label for="title" class="form-label">Titel:</label>
+                @* @blur var något jag inte visste om innan https://www.w3schools.com/jsref/event_onblur.asp bör vi nog lägga in i fler checks*@
+                <InputText id="title" @bind-Value="WebPage.Title" class="form-control" @onblur="CheckIfTitleExists" />
+                <ValidationMessage For="() => WebPage.Title" class="text-danger" />
+                @if (!string.IsNullOrEmpty(TitleErrorMessage))
+                {
+                    <div class="text-danger">@TitleErrorMessage</div>
+                }
             </div>
             <div class="mb-3">
                 <label for="description" class="form-label">Beskrivning:</label>
@@ -37,13 +51,11 @@
                 <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
                 <ValidationMessage For="() => WebPage.CreationDate" class="text-danger" />
             </div>
-            <button type="submit" class="btn btn-primary">Skapa</button>
+
+            @* Så länge titlen inte är unik(för webbsiten) så är Skapa-knappen disabled *@
+            <button type="submit" class="btn btn-outline-success" disabled="@TitleExists">Skapa</button>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/webpages">Tillbaka</a>
 </div>
 
 @code {
@@ -55,26 +67,44 @@
     public int WebSiteId { get; set; }
 
     public string UserId { get; set; }
+    private bool TitleExists { get; set; } = false;
+    private string TitleErrorMessage { get; set; } = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         var user = await GetCurrentUserService.GetCurrentUserAsync();
         this.UserId = user.Id;
-    } 
+    }
 
-    // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+    private async Task CheckIfTitleExists()
+    {
+        using var context = DbFactory.CreateDbContext();
+        // Gör en lookup om websiteId redan har en webpage med inmatad titel
+        var existingWebPageTitle = await context.WebPages.FirstOrDefaultAsync(t => t.Title == WebPage.Title && t.WebSiteId == WebSiteId);
+
+        TitleExists = existingWebPageTitle != null;
+        // Om !string.IsNullOrEmpty är true så visas alltid ett errormsg, så när titeln är godkänd måste en tom sträng visas
+        TitleErrorMessage = TitleExists
+            ? "Webbsiten har redan en webbsida med denna titeln."
+            : string.Empty;
+    }
+
     public async Task AddWebPage()
     {
-        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        await CheckIfTitleExists();
 
-        WebPage.WebSiteId = WebSiteId;
-        
-        using var context = DbFactory.CreateDbContext();
-        WebPage.UserId = user.Id;
-        context.WebPages.Add(WebPage);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo($"/webpages/createmulti?webpageid={WebPage.WebPageId}");        
-        //NavigationManager.NavigateTo($"webpages/details?WebPageId={WebPage.WebPageId}");
-    }   
+        if (!TitleExists)
+        {
+            var user = await GetCurrentUserService.GetCurrentUserAsync();
 
+            WebPage.WebSiteId = WebSiteId;
+
+            using var context = DbFactory.CreateDbContext();
+            WebPage.UserId = user.Id;
+
+            context.WebPages.Add(WebPage);
+            await context.SaveChangesAsync();
+            NavigationManager.NavigateTo($"/webpages/editwebpage?webpageid={WebPage.WebPageId}");
+        }
+    }
 }

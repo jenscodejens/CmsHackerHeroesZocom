@@ -1,0 +1,99 @@
+@page "/profile/details"
+@attribute [Authorize]
+
+@inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject IGetCurrentUserService GetCurrentUserService
+@rendermode InteractiveServer
+
+<PageTitle>Profil</PageTitle>
+
+<h1>Profil</h1>
+
+<div>
+    <hr />
+    @if (Profile is null)
+    {
+        <p><em>Laddar...</em></p>
+    }
+    else
+    {
+        <div style="display:flex; flex-wrap: wrap; flex-direction:row; justify-content:left;">
+
+    <div style="max-width:100%">
+                <img src="https://st3.depositphotos.com/6672868/13701/v/450/depositphotos_137014128-stock-illustration-user-profile-icon.jpg"
+                    alt="user image" style="width:200px; margin-left: 28px; margin-right: 28px; object-fit: contain;" />
+            </div>
+            <div style="display:flex; flex-direction: column;">
+                <div>
+                    <p>
+                        <b>Role:</b>
+                        <AuthorizeView Roles="User">
+                            <Authorized>
+                                User
+                            </Authorized>
+                        </AuthorizeView>
+                        <AuthorizeView Roles="Admin">
+                            <Authorized>
+                                Admin
+                            </Authorized>
+                        </AuthorizeView>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <b>E-post:</b> @Profile.Email
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        
+                        <b>Användarnamn:</b> @($"{Profile.FirstName} {Profile.LastName}")
+                    </p>
+                </div>
+                <div>
+                    <p> <b>Medlem sedan:</b> @Profile.CreationDate </p>
+                </div>
+                <div>
+                    <p> <b> Webbplatser:</b> @ViewModel.WebsitesCount </p>
+                </div>
+                <div>
+                    <p>  <b>Webbsidor: </b>@ViewModel.WebPagesCount</p>
+                </div>
+                <div>
+                    <p> <b>Innehåll:</b> @ViewModel.ContentCount</p>
+                </div>
+            </div>
+        
+        </div>
+    }
+</div>
+
+@code {
+
+    private Profile Profile { get; set; }
+    private ProfileViewModel ViewModel = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var user = await GetCurrentUserService.GetCurrentUserAsync();
+        if (user != null)
+        {
+
+            using var context = DbFactory.CreateDbContext();
+            Profile = await context.profiles.FirstOrDefaultAsync(u => u.UserId == user.Id);
+
+            ViewModel.WebsitesCount = await context.WebSites.Where(w => w.UserId == user.Id).CountAsync();
+            ViewModel.WebPagesCount = await context.WebPages.Where(w => w.UserId == user.Id).CountAsync();
+            ViewModel.ContentCount = await context.Contents.Where(w => w.UserId == user.Id).CountAsync();
+        }
+    }
+    class ProfileViewModel
+    {
+        public int WebsitesCount { get; set; } = 0;
+        public int WebPagesCount { get; set; } = 0;
+        public int ContentCount { get; set; } = 0;
+        public int VisitorCount { get; set; } = 0;
+    }
+
+}

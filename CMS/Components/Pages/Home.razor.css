@@ -1,203 +1,432 @@
-.grid-container {
-  
-  grid-template-columns: repeat(4, 1fr) repeat(2, 1fr);
-  grid-template-rows: repeat(5, 1fr);
-  gap: 10px;
-  padding: 10px;
-  margin: -14px;
+/* General styling settings */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.box1 {
-  grid-column: 1 / 5;
-  grid-row: 1 / 3;
-  background: linear-gradient(to top right, #b703f3 0%, #ffd07a 35%, #ffc0fd 66%, #b703f3 100%);
-  padding: 3px;
-  border-radius: 12px;
-  margin-right: 10px;
+body {
+    font-family: 'Lato', sans-serif;
+    height: 100%;
+    background-color: #fcfafa;
+    width: 100vw;
+    line-height: 1.7;
+    overflow-x: hidden;
+    font-weight: 400;
 }
 
-.box1 h1{
-  text-align: center;
-  
-  font-size: 130px;
-  color: white;
-}
-.box1 h2 {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 50px;
-  color: white;
+h2 {
+    font-size: 2.1rem;
 }
 
-.box2 p {
-  font-size: 15px;
+.uppercase {
+    text-transform: uppercase;
 }
 
-.box1 img {
-  width: 100%;
-  height: 370px;
-  object-fit: cover;
-  display: block;
-  border-radius: 12px;
-  display: none;
+.primary-heading {
+    font-size: 1.8rem;
 }
 
-.box2 {
-  grid-column: 1 / 3;
-  grid-row: 3 / 6;
-  /* background-color: rgb(248, 248, 248); */
-  padding: 10px;
+/* BUTTONS */
+.button,
+.button:link,
+.button:visited {
+    font-family: 'Lato', sans-serif;
+    padding: .7rem 1.9rem;
+    display: inline-block;
+    border-radius: 10rem;
+    transition: all .2s;
+    position: relative;
+    font-size: 1.1rem;
+    text-decoration: none;
+    letter-spacing: 1px;
+    color: rgb(56, 53, 53);
 }
 
-.box2 h4 {
-  text-align: center;
-  font-size: 20px;
-  
+.button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, .2);
+    color: #212529;
 }
 
-.box2 p {
-  font-size: 18px;
+.button:active,
+.button:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .2);
+    outline: none;
 }
 
-.box3 {
-  grid-column: 3 / 5;
-  grid-row: 3 / 6;
-  background-color: rgb(248, 248, 248);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(3, 1fr);
-  gap: 10px;
-  padding: 10px;
+.btn-main {
+    background-color: #f7c00f;
+    color: #020202;
+    font-weight: 400;
+    font-size: .8rem;
 }
 
-.box3-item {
-  background-color: white;
-  padding: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.btn-main:hover,
+.btn-main:active,
+.btn-main:focus {
+    background-color: #d0a417;
+    outline: none;
+    box-shadow: none;
 }
 
-.box4 {
-  grid-column: 5 / 7;
-  grid-row: 1 / 6;
-  /* background-color: rgb(91, 29, 214); */
-  background-color: #2f285b;
-  border-radius: 12px;
-  padding: 10px;
-  margin-bottom: 10px;
+.btn-yellow {
+    color: #000;
+    background-color: #f7c00f;
+    border-color: #f7c00f;
 }
 
-/* Stil för H2-Titel */
-.box4 h2.display-1 {
-  margin-top: 30px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
+/*Submit btn*/
+.btn-submit::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 10rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all .4s;
+    background-color: #f7c00f;
 }
 
-/* Stil för bilden */
-.box4 img {
-  width: auto;
-  height: 400px;
-  display: block;
-  margin: 0 auto;
+.btn-submit:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0;
 }
 
-/* Stil för knappen */
-.box4 button {
-  font-size: 35px;
-  background: linear-gradient(to top right, #b703f3 0%, #ffd07a 35%, #ffc0fd 66%);
-  border-radius: 12px;
-  color: white;
-  border-color: #b703f3;
-  text-shadow:
-    -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
+/*-------Back to top button----------*/
+.btt-button {
+    position: fixed;
+    height: 3rem;
+    width: 3rem;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    border-radius: 50%;
+    background-color: #fcfcfc;
+    display: none;
+    z-index: 999999999;
+    border: 2px solid black;
+
 }
 
-/* Stil för säljande text */
-.box4 .mt-4 {
-  font-size: 20px;
-  color: white;
-  padding: 10px;
+.btt-button:hover {
+    background-color: #f7c00f;
 }
 
+.btt-link {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+}
+.bi bi-arrow-up {
+    font-weight: bold; 
+    font-size: 1.2em; 
+    text-shadow: 1px 1px 1px black; 
+}
 
-/* Responsiv layout vid 768px */
-@media (min-width: 1024px) {
-  
-  .box1 h1 {
-      margin-top: 5%;
+/*--------LANDING PAGE IMAGE section-------------*/
+
+.landing-page-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    background: url(/images/landingPage.png) no-repeat top center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 95vh;
+}
+
+.landing-page-heading-wrapper {
+    margin-top: 13.1rem;
+    padding: 1rem 1.5rem;
+    background-color: rgba(34, 34, 34, 0.329);
+    border-radius: .3rem;
+}
+
+.landing-page-heading {
+    font-size: 3rem;
+    letter-spacing: .2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(32, 32, 32, 0.801);
+}
+
+.landing-page-paragraph {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+}
+
+/*------------ABOUT section----------------*/
+#about-section-wrapper {
+    background-color: #f9f5f7;
+    color: #081216;
+    padding-top: 6rem;
+    text-align:center;
+}
+
+.about-paragraphs {
+    margin: 1rem 0;
+    background-color: #081216;
+    color: #fff;
+    font-size: 1.2rem;
+    line-height: 1.8;
+}
+
+.planning-images-container {
+    position: relative;
+}
+
+.planning-image {
+    width: 60%;
+    border-radius: 3px;
+    box-shadow: 0 .8rem 2rem rgba(0, 0, 0, 0.4);
+}
+
+.about-image {
+    float: right;
+    width: 50%;
+    border-radius: 3px;
+    box-shadow: 0 .8rem 2rem rgba(0, 0, 0, 0.4);
+}
+
+.about-mobile-only-image {
+    border-radius: 3px;
+    box-shadow: 0 .3rem 1rem rgba(0, 0, 0, 0.534);
+}
+
+.about-heading {
+    font-size: 1.5rem;
+    text-shadow: 0 2px 3px lightgrey;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-family: 'Oxygen', sans-serif;
+    letter-spacing: 2px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #f7c00f;
+    width: fit-content;
+}
+
+.about-heading-wrapper {
+    margin-top: -2rem;
+}
+
+/*---------------PAYMENT ---------------*/
+.icon-about {
+    color: #f7c00f;
+    font-size: 2rem;
+    margin: 1rem 0;
+    text-shadow: 0 1px 1px rgba(167, 156, 156, 0.774);
+}
+
+.payment-paragraph {
+    font-size: 1.1rem;
+}
+
+.card-payment {
+    box-shadow: 0 4px .5rem 0 rgba(0, 0, 0, 0.2), 0 6px 1.2rem 0 rgba(0, 0, 0, 0.19);
+}
+
+/*------------------CONTACT FORM SECTION--------------------------*/
+
+#contact-section {
+    padding-top: 6rem;
+    max-width: 71.25rem;
+    margin: 0 auto;
+}
+
+.contact-main-heading {
+    margin-top: -2rem;
+    font-size: 1.8rem;
+    text-align: center;
+}
+
+.form-container {
+    background-image: linear-gradient(to right, rgba(255,255,255,0.85) 0%, rgba(255,255,255,0.85) 100%), url(../images/nature-view.jpg);
+    background-size: cover;
+    border-radius: 4px;
+    box-shadow: 0 1rem 2rem rgb(0 0 0 / 30%);
+}
+
+#contact-form {
+    width: 100%;
+    padding: 2rem 1rem;
+}
+
+.contact-heading {
+    font-family: "Exo", sans-serif;
+    font-weight: 300;
+    font-size: 1.1rem;
+}
+
+.form-group {
+    text-align: left;
+}
+
+/*MEDIA QUERIES*/
+
+@media (min-width: 360px) {
+
+    .landing-page-heading-wrapper {
+        margin-top: 8rem;
     }
 
-                 .box1 h2 {
-                   font-size: 80px;
-                 }
-  
-  .grid-container {
-    display: grid;
-  }  
-    .box4 img {
-      width: auto;
-      height: auto;
-    }
-}
-@media (min-width: 1440px) {
-
-  .box1 h1 {
-      margin-top: 20px;
+    .landing-page-container {
+        height: 90vh;
     }
 
-  .box4 img {
-    width: auto;
-    height: 400px;
-  }
-}
-@media (max-width: 768px) {
+    .btn-main {
+        font-size: .9rem;
+    }
 
-  .box1 h1 {
-    margin-top: 5%;
-  }
-  .box1 h1 {
-    font-size: 83px;
-  }
-     .box1 h2 {
-       font-size: 73px;
-     }
+    .packages-heading {
+        font-size: 2rem;
+    }
+
+    .heading-card-packages {
+        font-size: 1.1rem;
+    }
 }
 
+/* for TABLET : 768px min */
+@media (min-width: 768px) {
 
-@media (max-width: 425px) {
-  .box4 img {
-    width: auto;
-    height: auto;
-  }
-  .box1 h1 {
-    font-size: 43px;
-  }
-     .box1 h2 {
-       font-size: 30px;
-     }
+    h2 {
+        font-size: 2.5rem;
+    }
+
+    .landing-page-heading {
+        font-size: 3.5rem;
+        letter-spacing: .5rem;
+    }
+
+    .landing-page-paragraph {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+
+    .landing-page-heading-wrapper {
+        padding: 2rem 3rem;
+        margin-top: 1rem;
+    }
+
+
+    .about-section-right-on-lg {
+        text-align: right;
+    }
+
+    .heading-left {
+        text-align: left;
+    }
+
+    .about-heading-wrapper {
+        background-color: #fffffb;
+        padding: 1.5rem 2.5rem;
+        border-radius: .5rem;
+        border: 1px solid #000000;
+        margin-top: -8.5rem;
+    }
+
+    .planning-image-2 {
+        position: absolute;
+        top: .8rem;
+        left: 15.5rem;
+    }
+
+    .about-image2 {
+        position: absolute;
+    }
+
+    .about-image2 {
+        top: 1rem;
+        right: 17rem;
+    }
+
+    .btn-main {
+        font-size: 1.1rem;
+    }
+
+    .contact-main-heading {
+        font-size: 2.1rem;
+    }
+
+    .place-line-paragraphs {
+        font-size: .9rem;
+        padding: .2rem;
+    }
+
+    .place-line {
+        font-size: 1rem;
+    }
+
+    #place-name {
+        font-size: 1.2rem;
+    }
+
+    #contact-form {
+        width: 65%;
+        margin: 0 auto;
+    }
 }
 
-@media (max-width: 320px) {
-  .box4 img {
-    width: 200px;
-    height: auto;
-  }
+/* for DESKTOP: 991px min*/
+@media (min-width: 991px) {
 
-  .box1 h1 {
-    font-size: 32px;
-  }
+    .planning-image-2 {
+        top: 2.5rem;
+        left: 12rem;
+    }
 
-     .box1 h2 {
-       font-size: 20px;
-     }
-  
+    .about-image2 {
+        top: 4rem;
+        right: 12rem;
+    }
+
+    .container {
+        max-width: 1140px;
+    }
+
+    .card-img:hover {
+        box-shadow: 0 .8rem 1.1rem 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .form-container {
+        background-image: linear-gradient(107deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 65%, transparent 65%), url(/images/contactImage.png);
+    }
+
+    #contact-form {
+        width: 60%;
+        padding: 4.5rem;
+        margin: 0;
+    }
+}
+
+@media (min-width: 1200px) {
+    .form-container {
+        background-image: linear-gradient(107deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.9) 50%, transparent 50%), url(/images/contactImage.png);
+    }
+
+    #contact-form {
+        width: 50%;
+        padding: 5rem;
+    }
+}
+
+/* for larger screens DESKTOP: 1800px min*/
+@media (min-width: 1800px) {
+    .container {
+        max-width: 90rem !important;
+    }
+
+    .heading-card-packages {
+        font-size: 1.2rem;
+    }
 }

@@ -1,0 +1,145 @@
+﻿/*.flex-container {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    width: auto;
+    margin: auto; 
+}*/
+
+.card {
+    display: flex;
+    flex-direction: column;
+    margin-right: 30px;
+    margin-bottom: 5px;
+    width: 200px;
+}
+
+.card-image {
+    height: 200px; /* Set a fixed height for the image container */
+    position: relative;
+    overflow: hidden; /* Prevents overflow of the image */
+    display: flex; /* Enable flexbox */
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+}
+
+.card-content {
+    height: 130px; /* Fixed height for the content */
+    width: 223px; /* Ensure content takes full width */
+    overflow: hidden; /* Prevents overflow of content */
+    display: flex; /* Enable flexbox for better layout control */
+    align-items: flex-start; /* Align content to the bottom */
+    justify-content: center; /* Center content horizontally */
+}
+
+
+.card-img {
+    width: 200px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-body {
+    padding: 15px;
+    text-align: center;
+    background-color: #f8f9fa;
+    /*    font-family: 'Trebuchet MS', sans-serif;*/
+}
+
+.card-icons {
+    display: flex;
+    justify-content: space-around;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 3px;
+    background-color: white;
+}
+
+.icon-black {
+    color: black;
+    font-size: 32px;
+}
+
+.icon-blue {
+    color: blue;
+    font-size: 32px;
+}
+
+.icon-black {
+    color: black;
+    font-size: 24px;
+}
+
+.icon-orange {
+    color: orange;
+    font-size: 32px;
+}
+
+.icon-green {
+    color: green;
+    font-size: 32px;
+}
+
+.icon-red {
+    color: red;
+    font-size: 25px;
+}
+
+.creation-info {
+    font-size: 12px;
+    text-align: center;
+    padding-bottom: 1px;
+}
+
+.badge-overlay {
+    position: absolute;
+    font-size: 28px;
+    top: 10px;
+    right: 15px;
+    /*z-index: 5;*/ /*Ensure it appears above the image*/
+}
+
+/*eddies ikon css*/
+
+.icon-container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    margin: 2px; 
+}
+
+.icon-text {
+    font-size: 0.6em; 
+    text-align: center; 
+    margin-top: 0px; 
+    /*background-color: white;*/
+    border-color: black;
+    border-width: 1px !important;
+    /*border: solid;*/
+    border-radius: 10%;
+    padding: 1px;
+}
+
+.overlay-btn-main {
+    background-color: rgba(255, 255, 255, 0.9); 
+    color: black;
+    border: 2px solid #000000;
+    border-radius: 20%; 
+    padding: 20px; 
+    width: 40px; 
+    height: 40px; 
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+}
+
+    /* Optional: Hover effect for buttons */
+    .overlay-btn-edit:hover, .overlay-btn-delete:hover, .overlay-btn-main:hover 
+    {
+        background-color: lightgray;
+    }
+
+.btn {
+    font-size: 14px; /* Smaller font /
+    padding: 5px 1px; / Smaller padding */
+}

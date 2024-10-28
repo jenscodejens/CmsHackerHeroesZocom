@@ -1,13 +1,21 @@
 ﻿@page "/websites/delete"
+@using CMS.Shared
 @attribute [Authorize]
 
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
 @inject NavigationManager NavigationManager
 
 
-<PageTitle>Radera</PageTitle>
+<PageTitle>Radera webbsida</PageTitle>
 
-<h1>Radera</h1>
+<Breadcrumbs Crumbs="@(new List<(string, string)> 
+    { 
+        ("Hem", "/"), 
+       // ("Websites", "/websites"),
+        ("Ta bort webbplats", $"/websites/delete?websiteid={WebSiteId}")
+    })" />
+
+<h1>Radera webbsida</h1>
 
 <h3>Är du säker på att du vill radera webbsiten?</h3>
 <div>
@@ -35,8 +43,10 @@
             <dd class="col-sm-10">@website.LastUpdated</dd>
         </dl>
         <EditForm method="post" Model="website" OnValidSubmit="DeleteWebSite" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(website is null)">Radera</button> |
+            <button type="submit" class="btn btn-outline-danger" disabled="@(website is null)">Radera</button>
+            <!--
             <a href="/websites">Tillbaka</a>
+            -->
         </EditForm>
     }
 </div>

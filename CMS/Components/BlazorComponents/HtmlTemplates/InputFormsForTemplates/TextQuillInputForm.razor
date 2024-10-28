@@ -4,20 +4,23 @@
 @using Microsoft.AspNetCore.Components
 @using Microsoft.EntityFrameworkCore
 @using System.Threading.Tasks
+@using Newtonsoft.Json
 
 @rendermode InteractiveServer
 
 @namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 @inject IGetCurrentUserService GetCurrentUserService
+@inject IContentService ContentService
+@inherits BaseTextTemplateQuill //gets the base parameters we have in every template/inputform
 
 @inject IJSRuntime JSRuntime
 
-<h3>Quill Input Form</h3>
+<h4>Text</h4>
 
 <div>
     <form>
         <div>
-            <label>Content Name</label>
+            <label>Namn</label>
             <input type="text" @bind="ContentName" placeholder="Enter name for content" class="form-control" />
 
             <!-- Quill editor placeholder -->
@@ -67,7 +70,7 @@
         <div style="margin-top: 10px;">
             @if (!MultiPageMode) // Show button only if not in multi-page mode
             {
-                <button type="button" @onclick="SaveToDatabase">Save To Database</button>
+                <button type="button" class="btn btn-outline-primary" @onclick="SaveToDatabase">Spara</button>
             }
         </div>
     </form>
@@ -76,23 +79,13 @@
     @if (saveSuccessful)
     {
         <div class="alert alert-success" role="alert" style="margin-top: 20px;">
-            Content saved successfully!
-            <a href="/contents?webpageid=@WebPageId" class="alert-link">Click here to view all contents.</a>
+            Text sparad.
         </div>
     }
 </div>
 
 @code {
-    [Inject] private IDbContextFactory<ApplicationDbContext> DbFactory { get; set; } = default!;
     [Inject] private NavigationManager NavigationManager { get; set; } = default!;
-
-    [Parameter] public int TemplateId { get; set; }
-    [Parameter] public int WebPageId { get; set; }
-
-    [Parameter] public string ContentName { get; set; } = string.Empty;
-    [Parameter] public string QuillContent { get; set; } = string.Empty;
-
-    [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
 
     private bool hasSaved = false; // Flag to track if save has been executed
     [Parameter] public bool SaveBtnClicked { get; set; } // New parameter to handle save button state
@@ -106,8 +99,16 @@
         {
             // Initialize Quill editor using JavaScript after the page is rendered
             await JSRuntime.InvokeVoidAsync("initializeQuillEditor");
+
+            // Set the existing content in the Quill editor if it exists (edit mode)
+            if (!string.IsNullOrEmpty(QuillContent))
+            {
+                // Use JSInterop to set the Quill content
+                await JSRuntime.InvokeVoidAsync("setQuillContent", QuillContent);
+            }
         }
     }
+
 
     protected override void OnParametersSet()
     {
@@ -118,18 +119,49 @@
         }
     }
 
+    protected override async Task OnInitializedAsync()
+    {
+        // Load content only if ContentId exists (edit mode)
+        if (ContentId.HasValue)
+        {
+            await LoadExistingContent(ContentId.Value);
+        }
+    }
+
+    // A class representing the structure of the JSON data stored in the database
+    private class ContentData
+    {
+        public string QuillContent = string.Empty;
+    }
+
+    private async Task LoadExistingContent(int contentId)
+    {
+        var existingContent = await ContentService.GetContentAsync(contentId);
+
+        if (existingContent != null)
+        {
+            // Pre-fill form fields with existing content data
+            ContentName = existingContent.ContentName;
+
+            // Deserialize the ContentJson field to extract additional form data
+            if (!string.IsNullOrEmpty(existingContent.ContentJson))
+            {
+                var contentData = JsonConvert.DeserializeObject<ContentData>(existingContent.ContentJson);
+                QuillContent = contentData.QuillContent;
+            }
+        }
+    }
+
     private async Task SaveToDatabase()
     {
         // Get Quill content via JSInterop before saving
         QuillContent = await JSRuntime.InvokeAsync<string>("getQuillContent");
 
-        await using var context = DbFactory.CreateDbContext();
-        var webPageExists = await context.WebPages.AnyAsync(wp => wp.WebPageId == WebPageId);
         var user = await GetCurrentUserService.GetCurrentUserAsync();
-        if (!webPageExists)
-        {
-            throw new InvalidOperationException($"WebPageId {WebPageId} does not exist.");
-        }
+        var contentData = new ContentData
+            {
+                QuillContent = QuillContent
+            };
 
         var content = new Content
             {
@@ -138,24 +170,46 @@
                 WebPageId = WebPageId,
                 CreationDate = DateOnly.FromDateTime(DateTime.Now),
                 LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = Newtonsoft.Json.JsonConvert.SerializeObject(new
-                {
-                    QuillContent = QuillContent
-                }),
+                ContentJson = JsonConvert.SerializeObject(contentData),
                 TemplateId = TemplateId
             };
 
-        context.Contents.Add(content);
-        try
+        // Save or update content based on ContentId presence
+        if (ContentId.HasValue)
         {
-            await context.SaveChangesAsync();
+            content.ContentId = ContentId.Value;
+            await ContentService.UpdateContentAsync(content);
         }
-        catch (DbUpdateException ex)
+        else
         {
-            Console.WriteLine($"Error: {ex.InnerException?.Message}");
-            throw;
+            await ContentService.SaveContentAsync(content);
         }
 
         saveSuccessful = true;
     }
 }
+
+<script>
+    window.initializeQuillEditor = function () {
+        var quill = new Quill('#quill-editor', {
+            modules: {
+                syntax: true,
+                toolbar: '#toolbar-container',
+            },
+            placeholder: 'Lägg till text här',
+            theme: 'snow',
+        });
+        window.quillEditor = quill;
+    };
+
+    window.getQuillContent = function () {
+        return window.quillEditor.root.innerHTML;
+    };
+
+    window.setQuillContent = function (content) {
+        // Safely set the content in the Quill editor
+        window.quillEditor.root.innerHTML = content;
+    };
+
+</script>
+

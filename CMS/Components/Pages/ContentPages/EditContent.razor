@@ -1,0 +1,123 @@
+﻿@page "/content/editContent"
+@namespace BlazorComponents.HtmlTemplates
+@using CMS.Data
+@using CMS.Models
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@rendermode InteractiveServer
+
+@attribute [Authorize]
+
+@if (Content is null)
+{
+    <p><em>Laddar...</em></p>
+}
+else
+{
+    @if (!string.IsNullOrEmpty(selectedTemplatePath))
+    {
+        <div>
+            @* ToDo: This is a temp fix for not display double navbar when edit, change other inputforms to render content in forms. *@
+            @if (selectedTemplatePath != "BlazorComponents.HtmlTemplates.TemplatesForComponents.NavBarTemplate")
+            {
+                @RenderDynamicComponent(selectedTemplatePath, templateParameters)
+            }
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(selectedInputFormPath))
+    {
+        <div>
+            @RenderDynamicComponent(selectedInputFormPath, new Dictionary<string, object>
+    {
+    { "TemplateId", templateParameters["TemplateId"] },
+    { "WebPageId", templateParameters["WebPageId"] },
+    { "ContentId", ContentId }, // Pass the ContentId to the input form
+    { "OnSubmit", EventCallback.Factory.Create<Dictionary<string, object>>(this, OnInputFormSubmit) },
+    { "SaveBtnClicked", SaveBtnClicked },
+    { "MultiPageMode", MultiPageMode }
+    })
+        </div>
+    }
+}
+
+@code {
+    [CascadingParameter]
+    public int ContentId { get; set; } // Fetch ContentId from the query
+
+    [SupplyParameterFromForm]
+    public Content? Content { get; set; }
+
+    [Parameter]
+    public bool SaveBtnClicked { get; set; }
+
+    [Parameter]
+    public bool MultiPageMode { get; set; } = false;
+
+    private string selectedTemplatePath;
+    private string selectedInputFormPath;
+    private Dictionary<string, object> templateParameters = new Dictionary<string, object>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var dbContext = DbContextFactory.CreateDbContext();
+
+        // Fetch the Content based on ContentId
+        Content ??= await dbContext.Contents.FirstOrDefaultAsync(m => m.ContentId == ContentId);
+
+        if (Content != null)
+        {
+            selectedTemplatePath = await dbContext.Templates
+                .Where(p => p.TemplateId == Content.TemplateId)
+                .Select(p => p.TemplatePath)
+                .FirstOrDefaultAsync();
+
+            selectedInputFormPath = await dbContext.Templates
+                .Where(p => p.TemplateId == Content.TemplateId)
+                .Select(p => p.InputFormPath)
+                .FirstOrDefaultAsync();
+
+            templateParameters["WebPageId"] = Content.WebPageId;
+            templateParameters["TemplateId"] = Content.TemplateId;
+            templateParameters["ContentId"] = Content.ContentId; // Pass the ContentId to the template parameters
+        }
+        else
+        {
+            Console.WriteLine("Content is null. Cannot retrieve template path.");
+        }
+    }
+
+    private RenderFragment RenderDynamicComponent(string componentPath, Dictionary<string, object> parameters)
+    {
+        if (!string.IsNullOrEmpty(componentPath))
+        {
+            var type = Type.GetType(componentPath);
+            if (type != null)
+            {
+                return builder =>
+                {
+                    builder.OpenComponent(0, type);
+                    foreach (var parameter in parameters)
+                    {
+                        builder.AddAttribute(1, parameter.Key, parameter.Value);
+                    }
+                    builder.CloseComponent();
+                };
+            }
+            else
+            {
+                return builder => builder.AddContent(0, "Component not found.");
+            }
+        }
+        return builder => builder.AddContent(0, "No component selected.");
+    }
+
+    private void OnInputFormSubmit(Dictionary<string, object> formValues)
+    {
+        // Update the parameters for the selected template based on form values
+        foreach (var kvp in formValues)
+        {
+            templateParameters[kvp.Key] = kvp.Value;
+        }
+    }
+}

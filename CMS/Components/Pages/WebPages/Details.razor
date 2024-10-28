@@ -1,5 +1,6 @@
 ﻿@page "/webpages/details"
 @attribute [Authorize]
+@using CMS.Shared
 
 @using Markdig
 @inject IDbContextFactory<CMS.Data.ApplicationDbContext> DbFactory
@@ -7,6 +8,14 @@
 @rendermode InteractiveServer
 
 <PageTitle>Detaljer</PageTitle>
+
+<Breadcrumbs Crumbs="@(new List<(string, string)>
+    {
+        ("Hem", "/"),
+       // ("Websites", "/websites"),
+        ("Webbsidor", $"/webpages?websiteid={webpage?.WebSiteId}"),
+        ("Detaljer", $"/webpages/details?webpageid={WebPageId}")
+    })" />
 
 <h1>Detaljer</h1>
 
@@ -26,7 +35,9 @@
         <div>
             <a href="@($"/webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
             <a href="@($"/contents?webpageid={webpage.WebPageId}")">Innehåll</a> | <!-- Add link to Content -->
+            <!--
             <a href="@($"/webpages")">Tillbaka</a>
+            -->
         </div>
     }
 </div>
@@ -36,6 +47,9 @@
 
     [SupplyParameterFromQuery]
     public int WebPageId { get; set; }
+
+    [SupplyParameterFromQuery]
+    public int WebSiteId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

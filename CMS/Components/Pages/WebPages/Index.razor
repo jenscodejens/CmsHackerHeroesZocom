@@ -1,78 +1,170 @@
 ﻿@page "/webpages"
 @attribute [Authorize]
 
+@using CMS.Shared
 @using Microsoft.AspNetCore.Components.QuickGrid
+@using CMS.Entities
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IGetCurrentUserService GetCurrentUserService
 @implements IAsyncDisposable
+@rendermode InteractiveServer
+@* 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="my-4">Index webbsidor</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">Hem</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Webbsidor</li>
+                </ol>
+            </nav>
+            <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                <div class="mb-2 mb-md-0">
+                    @if (WebSiteId != null)
 
-<PageTitle>Index webbsidor</PageTitle>
+                    {
+                        <a href=@($"webpages/create?WebSiteId={WebSiteId}") class="btn btn-primary">Skapa ny webbsida</a>
+                    }
+                </div>
+            </div>
 
-<h1>Index webbsidor</h1>
-@if (WebSiteId != null)
-{
-    <p>
+            @if (webpages == null)
+            {
+                <p>Laddar...</p>
+            }
+            else if (!webpages.Any())
+            {
+                <p>Inga webbsidor tillgängliga.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <QuickGrid Items="@webpages" Class="table table-striped table-hover">
+                        <PropertyColumn Property="webpage => webpage.Title" Title="Titel" />
+                        <PropertyColumn Property="webpage => webpage.Description" Title="Beskrivning" />
+                        <PropertyColumn Property="webpage => webpage.CreationDate" Title="Skapad" Format="yyyy-MM-dd" />
+                        <PropertyColumn Property="webpage => webpage.LastUpdated" Title="Uppdaterad" Format="yyyy-MM-dd" />
+
+                        <TemplateColumn Title="Åtgärder" Align="Align.Center">
+                            <div class="btn-group" role="group">
+                                <a class="btn btn-sm btn-outline-primary" href="@($"/webpages/previewpage/{context.WebPageId}")">Förhandsgranska</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="@($"/contents?webpageid={context.WebPageId}")">Innehållslista</a>
+                                <a class="btn btn-sm btn-outline-info" href="@($"webpages/editwebpage?webpageid={context.WebPageId}")">Redigera</a>
+                                <a class="btn btn-sm btn-outline-secondary" href="@($"webpages/details?webpageid={context.WebPageId}")">Detaljer</a>
+                                <a class="btn btn-sm btn-outline-danger" href="@($"webpages/delete?webpageid={context.WebPageId}")">Radera</a>
+                            </div>
+                        </TemplateColumn>
+                    </QuickGrid>
+                </div>
+            }
+        </div>
+    </div>
+</div> *@
+
+<PageTitle>Mina webbsidor</PageTitle>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Hem</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Webbsidor</li>
+    </ol>
+</nav>
+<div class="page-title">
+<h1>Mina webbsidor</h1>
+</div>
+@* <div class="website-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 15px auto; padding: 15px; background-color: bisque; border-radius: 8px; box-shadow: 10px 10px 5px #dbdbd6; width: fit-content; margin-bottom: 50px; font-family: 'Trebuchet MS', sans-serif;">
+    <h3 style="margin: 0; ">Mina websidor</h3>
+    <p style="margin: 0;">
         <a href=@($"webpages/create?WebSiteId={WebSiteId}")>Skapa ny webbsida</a>
     </p>
+</div> *@
+
+<div class="icon-container row justify-content-center">
+    <a class="btn overlay-btn-main" href="@($"webpages/create?WebSiteId={WebSiteId}")" aria-label="Skapa Ny webbsida" title="Skapa Ny webbsida">
+        <i class="material-icons icon-black">note_add</i>
+    </a>
+    <span class="icon-text">Skapa Ny webbsida</span>
+</div>
+
+<hr />
+
+ @if (webpages == null)
+{
+    <p>Laddar...</p>
 }
-@if (webpages == null || !webpages.Any())
+else if (!webpages.Any())
 {
     <p>Inga webbsidor tillgängliga.</p>
 }
 else
 {
-    <QuickGrid Class="table" Items="webpages">
-        <!-- Changed from context.WebPages to webpages -->
-        <PropertyColumn Property="webpage => webpage.WebPageId"/>
-        <PropertyColumn Property="webpage => webpage.WebSiteId"/>
-        <PropertyColumn Property="webpage => webpage.Title"/>
-        <PropertyColumn Property="webpage => webpage.Description"/>
-        <PropertyColumn Property="webpage => webpage.CreationDate"/>
-        <PropertyColumn Property="webpage => webpage.LastUpdated" />
-        <PropertyColumn Property="webpage => webpage.VisitorUrl" />
-
-        <TemplateColumn Context="webpage">
-            @* <a href="@($"/content/createcontent?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
-            <a href="@($"/webpages/previewpage/{webpage.WebPageId}")">Förhandsgranska</a> |
-            <a href="@($"/contents?webpageid={webpage.WebPageId}")">Innehållslista</a> |
-            @* <a href="@($"/webpages/createmulti?webpageid={webpage.WebPageId}")">Create New Content</a> | *@
-            <a href="@($"webpages/edit?webpageid={webpage.WebPageId}")">Redigera</a> |
-            <a href="@($"webpages/details?webpageid={webpage.WebPageId}")">Detaljer</a> |
-            <a href="@($"webpages/delete?webpageid={webpage.WebPageId}")">Radera</a>
-        </TemplateColumn>
-    </QuickGrid>
+    <div class="flex-container" style="display: flex; flex-wrap: wrap; justify-content: center;">
+        @foreach (var webpage in webpages)
+        {
+            <div style="margin: 10px;">
+                <WebPageCard WebPage="@webpage" />
+            </div>
+        }
+    </div>
 }
 
 @code {
-    IQueryable<WebPage> webpages = Enumerable.Empty<WebPage>().AsQueryable();
-    [SupplyParameterFromQuery] 
+    List<WebPage>? webpages = null;
+
+    [SupplyParameterFromQuery]
+
     public int? WebSiteId { get; set; }
+
+
 
     ApplicationDbContext context = default!;
 
     protected override async Task OnInitializedAsync()
+
     {
+
         context = DbFactory.CreateDbContext();
 
+
+
         if (WebSiteId != null)
+
         {
-            webpages = context.WebPages.Include(w => w.WebSite)
-                .Where(wp => wp.WebSiteId == WebSiteId);
+
+            webpages = context.WebPages.Include(w => w.WebSite).Include(w=>w.Contents)
+
+                .Where(wp => wp.WebSiteId == WebSiteId).ToList();
+
         }
+
         else
+
         {
+
             var user = await GetCurrentUserService.GetCurrentUserAsync();
+
             if (user != null)
+
             {
-                webpages = context.WebPages.Include(w => w.WebSite)
-                    .Where(wp => wp.WebSite.UserId == user.Id);
+
+                webpages = context.WebPages.Include(w => w.WebSite).Include(w => w.Contents)
+
+                    .Where(wp => wp.WebSite.UserId == user.Id).ToList();
+
             }
+
         }
+
     }
+
+
 
     public async ValueTask DisposeAsync()
-    {
-        await context.DisposeAsync();
-    }
 
+    {
+
+        await context.DisposeAsync();
+
+    }
 }
