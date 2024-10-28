@@ -96,17 +96,11 @@
         <p>Denna webbsidan har inget innehåll.</p>
     }
     else if (!Contents.Any())
-    {
-        <div class="containerEditWebPage" style="position: relative;">
-            <div class="content">
-                <div class="create-empty-webpage">
-                    <CascadingValue Value="WebPageId">
-                        <CreateContent />
-                    </CascadingValue>
-                    <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
-                </div>
-            </div>
-        </div>
+    { 
+        <CascadingValue Value="WebPageId">
+            <CreateContent />
+        </CascadingValue>
+        <button type="button" class="btn btn-warning" @onclick="()=> CreateDone()"> Klar </button>
     }
     else
     {
