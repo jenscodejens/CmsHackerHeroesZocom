@@ -15,7 +15,7 @@
     else
     {
     
-        <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
+      @*   <nav class="navbar navbar-expand-lg navbar-light bg-light" style="font-size:20px;">
             <a class="navbar-brand" style="font-size:24px; padding-top:10px; padding-bottom:10px;" href=@($"visit?WebSiteId={@website.WebSiteId}")>@website.Title</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -32,13 +32,13 @@
                     }
                 </ul>
             </div>
-        </nav>
+        </nav> *@
     
-        <AuthorizeView>
+       @*  <AuthorizeView>
             <Authorized>
-                <a href="websites/edit?websiteid=@WebSiteId">Redigera webbplats</a>
+                    <a href="webpages/editwebpage?websiteid=@WebPageId">Redigera webbplats</a>
             </Authorized>
-        </AuthorizeView>
+        </AuthorizeView> *@
        
       
         <VisitorWebPagePreview WebPageId="@WebPageId"/>
