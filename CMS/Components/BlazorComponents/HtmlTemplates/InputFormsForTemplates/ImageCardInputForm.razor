@@ -150,6 +150,9 @@
 
         var user = await GetCurrentUserService.GetCurrentUserAsync();
 
+        // Get the next rendering order position for the specified WebPageId
+        int nextRenderingOrderPosition = await ContentService.GetNextRenderingOrderAsync(WebPageId);
+
         var contentData = new ContentData
         {
                 ImageInput = ImageInput,
@@ -168,7 +171,8 @@
                 CreationDate = DateOnly.FromDateTime(DateTime.Now),
                 LastUpdated = DateOnly.FromDateTime(DateTime.Now),
                 ContentJson = JsonConvert.SerializeObject(contentData),
-                TemplateId = TemplateId
+                TemplateId = TemplateId,
+                RenderingOrderPosition = nextRenderingOrderPosition // Assign the next rendering order position here
         };
 
 

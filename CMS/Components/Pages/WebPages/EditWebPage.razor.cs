@@ -1,12 +1,8 @@
-
 using CMS.Data;
 using CMS.Entities;
 using Microsoft.AspNetCore.Components;
-
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using CMS.Components.BlazorComponents;
 namespace CMS.Components.Pages.WebPages
 {
     public partial class EditWebPage
@@ -34,7 +30,7 @@ namespace CMS.Components.Pages.WebPages
             Wait,
             EditSelect,
             StopEditing,
-            EditPageinformation,
+            EditPageInformation,
             CreateContent,
             Preview,
             Delete,
@@ -45,8 +41,8 @@ namespace CMS.Components.Pages.WebPages
         {
             context = DbFactory.CreateDbContext();
 
-           var  WebPage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
-           
+            var WebPage = await context.WebPages.FirstOrDefaultAsync(m => m.WebPageId == WebPageId);
+
             if (WebPage is null)
             {
                 NavigationManager.NavigateTo("/error");
@@ -55,7 +51,10 @@ namespace CMS.Components.Pages.WebPages
             if (WebPageId.HasValue)
             {
                 // Fetch content filtered by WebPageId
-                Contents = context.Contents.Where(c => c.WebPageId == WebPageId.Value).ToList();
+                Contents = await context.Contents
+                    .Where(c => c.WebPageId == WebPageId.Value)
+                    .OrderBy(c => c.RenderingOrderPosition)
+                    .ToListAsync();
             }
             else
             {
@@ -65,7 +64,7 @@ namespace CMS.Components.Pages.WebPages
             }
 
             WebSiteId = WebPage.WebSiteId;
-          
+
         }
         private void EditContent(Content content)
         {
@@ -92,12 +91,12 @@ namespace CMS.Components.Pages.WebPages
             ContentForEditing = null;
             PageExecution = ExecuteAction.Preview;
         }
-        private void EditPageinformation()
+        private void EditPageInformation()
         {
-            PageExecution = ExecuteAction.EditPageinformation;
+            PageExecution = ExecuteAction.EditPageInformation;
         }
 
-        private void EditPageinformationDone()
+        private void EditPageInformationDone()
         {
             ContentForEditing = null;
             PageExecution = ExecuteAction.EditSelect;
@@ -127,9 +126,14 @@ namespace CMS.Components.Pages.WebPages
                 HideToolbar = false;
             }
             else
-            { 
+            {
                 HideToolbar = true;
             }
+        }
+
+        private void EditContentOrder()
+        {
+            
         }
 
         public async ValueTask DisposeAsync() => await context.DisposeAsync();

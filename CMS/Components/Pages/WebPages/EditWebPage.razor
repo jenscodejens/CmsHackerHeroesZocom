@@ -1,8 +1,4 @@
-
-
 @page "/webpages/editwebpage"
-
-
 @attribute [Authorize]
 
 @using Microsoft.EntityFrameworkCore
@@ -20,8 +16,6 @@
  <style>
   
 </style>
-
-
 
 
 @* Todo: Investigate the handling of the use of components, to remove excess use/"writing" of components*@
@@ -56,10 +50,17 @@
                     </div>
 
                     <div class="icon-container">
-                        <a class="btn overlay-btn-main" @onclick="()=> EditPageinformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
+                        <a class="btn overlay-btn-main" @onclick="()=> EditPageInformation()" aria-label="Redigera sidinformation" title="Redigera sidinformation">
                             <i class="fa fa-cog fa-2x" aria-hidden="true"></i>
                         </a>
                         <span class="icon-text">Redigera</span>
+                    </div>
+
+                    <div class="icon-container">
+                        <a class="btn overlay-btn-main" @onclick="()=> EditContentOrder()" aria-label="Redigera Innehållsordning" title="Redigera Innehållsordning">
+                            <i class="fa fa-sort fa-2x" aria-hidden="true"></i>
+                        </a>
+                        <span class="icon-text">Ordning</span>
                     </div>
 
                     <div class="icon-container">
@@ -109,7 +110,7 @@
         {
                 @switch (PageExecution)
                 {
-                    case ExecuteAction.EditPageinformation:
+                    case ExecuteAction.EditPageInformation:
                     {
                         <div class="containerEditWebPageContent" style="position: relative;">
                             <div class="content">
@@ -119,7 +120,7 @@
                                     <CascadingValue Value="content.WebPageId">
                                         <CMS.Components.Pages.WebPages.Edit />
                                     </CascadingValue>
-                                        <button type="button" class="btn btn-warning btn-warning-edit" @onclick="()=> EditPageinformationDone()"> Tillbaka </button>
+                                        <button type="button" class="btn btn-warning btn-warning-edit" @onclick="()=> EditPageInformationDone()"> Tillbaka </button>
                                 </div>
                             </div>
                             PageExecution = ExecuteAction.Preview;

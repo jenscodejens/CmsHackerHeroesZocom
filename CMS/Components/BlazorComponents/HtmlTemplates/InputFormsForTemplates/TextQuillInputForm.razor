@@ -152,41 +152,95 @@
         }
     }
 
+    // private async Task SaveToDatabase()
+    // {
+    //     // Get Quill content via JSInterop before saving
+    //     QuillContent = await JSRuntime.InvokeAsync<string>("getQuillContent");
+
+    //     var user = await GetCurrentUserService.GetCurrentUserAsync();
+
+    //     var contentData = new ContentData
+    //         {
+    //             QuillContent = QuillContent
+    //         };
+
+    //     var content = new Content
+    //         {
+    //             UserId = user.Id,
+    //             ContentName = ContentName,
+    //             WebPageId = WebPageId,
+    //             CreationDate = DateOnly.FromDateTime(DateTime.Now),
+    //             LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+    //             ContentJson = JsonConvert.SerializeObject(contentData),
+    //             TemplateId = TemplateId,
+    //         };
+
+    //     // Save or update content based on ContentId presence
+    //     if (ContentId.HasValue)
+    //     {
+    //         content.ContentId = ContentId.Value;
+    //         await ContentService.UpdateContentAsync(content);
+    //     }
+    //     else
+    //     {
+    //         await ContentService.SaveContentAsync(content);
+    //     }
+
+    //     saveSuccessful = true;
+    // }
+
     private async Task SaveToDatabase()
     {
         // Get Quill content via JSInterop before saving
         QuillContent = await JSRuntime.InvokeAsync<string>("getQuillContent");
 
         var user = await GetCurrentUserService.GetCurrentUserAsync();
+
+        // Prepare the content data
         var contentData = new ContentData
-            {
-                QuillContent = QuillContent
-            };
+        {
+            QuillContent = QuillContent
+        };
 
         var content = new Content
-            {
-                UserId = user.Id,
-                ContentName = ContentName,
-                WebPageId = WebPageId,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = JsonConvert.SerializeObject(contentData),
-                TemplateId = TemplateId
-            };
+        {
+            UserId = user.Id,
+            ContentName = ContentName,
+            WebPageId = WebPageId,
+            CreationDate = DateOnly.FromDateTime(DateTime.Now),
+            LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+            ContentJson = JsonConvert.SerializeObject(contentData),
+            TemplateId = TemplateId
+        };
 
-        // Save or update content based on ContentId presence
+        // Check if we are creating new content or updating existing content
         if (ContentId.HasValue)
         {
+            // Update existing content
             content.ContentId = ContentId.Value;
+
+            // Load existing content to preserve the RenderingOrderPosition
+            var existingContent = await ContentService.GetContentAsync(ContentId.Value);
+            if (existingContent != null)
+            {
+                // Preserve the existing RenderingOrderPosition during the update
+                content.RenderingOrderPosition = existingContent.RenderingOrderPosition;
+            }
+
             await ContentService.UpdateContentAsync(content);
         }
         else
         {
+            // Creating new content: Get the next rendering order position
+            int nextRenderingOrderPosition = await ContentService.GetNextRenderingOrderAsync(WebPageId);
+            content.RenderingOrderPosition = nextRenderingOrderPosition;
+
             await ContentService.SaveContentAsync(content);
         }
 
         saveSuccessful = true;
     }
+
 }
 
 <script>

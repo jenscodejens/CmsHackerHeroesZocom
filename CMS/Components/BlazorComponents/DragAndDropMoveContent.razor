@@ -1,0 +1,62 @@
+﻿@using CMS.Shared
+@using CMS.Data
+@using CMS.Models
+@using CMS.Entities
+@using CMS.Services
+@using System.Text.Json
+@using Microsoft.EntityFrameworkCore
+@using System.Diagnostics
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@rendermode InteractiveServer
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<SortableList TItem="Content"
+              Data="contentList"
+              Context="item"
+              OnUpdate="@OnContentListUpdate">
+    <ItemTemplate>
+        @item.ContentName
+    </ItemTemplate>
+</SortableList>
+
+@code {
+    [CascadingParameter] private List<Content> contentList { get; set; }
+    [Parameter] public EventCallback OnOrderUpdated { get; set; }
+
+    private void OnContentListUpdate(SortableListEventArgs args)
+    {
+        var itemToMove = contentList[args.OldIndex];
+        contentList.RemoveAt(args.OldIndex);
+        contentList.Insert(args.NewIndex, itemToMove);
+
+        // Optionally persist the updated order
+        UpdateRenderingOrder();
+    }
+
+    private async Task UpdateRenderingOrder()
+    {
+        using var dbContext = DbContextFactory.CreateDbContext();
+
+        foreach (var (index, content) in contentList.Select((value, i) => (i, value)))
+        {
+            // Attach the entity if not tracked
+            if (dbContext.Entry(content).State == EntityState.Detached)
+            {
+                dbContext.Attach(content);
+            }
+
+            content.RenderingOrderPosition = index  +1;
+            dbContext.Contents.Update(content); // Mark as modified
+        }
+
+        try
+        {
+            await dbContext.SaveChangesAsync();
+            Debug.WriteLine("Rendering order successfully updated.");
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error saving rendering order: {ex.Message}");
+        }
+    }
+}

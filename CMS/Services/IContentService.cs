@@ -7,5 +7,6 @@ namespace CMS.Services
         Task<Content?> GetContentAsync(int contentId);
         Task SaveContentAsync(Content content);
         Task UpdateContentAsync(Content content);
+        Task<int> GetNextRenderingOrderAsync(int webPageId);
     }
 }

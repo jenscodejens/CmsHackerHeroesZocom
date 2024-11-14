@@ -112,30 +112,43 @@
         var user = await GetCurrentUserService.GetCurrentUserAsync();
 
         var contentData = new ContentData
-            {
-                MarkdownContent = MarkdownContent
-            };
+        {
+            MarkdownContent = MarkdownContent
+        };
 
         var content = new Content
-            {
-                UserId = user.Id,
-                ContentName = ContentName,
-                WebPageId = WebPageId,
-                CreationDate = DateOnly.FromDateTime(DateTime.Now),
-                LastUpdated = DateOnly.FromDateTime(DateTime.Now),
-                ContentJson = JsonConvert.SerializeObject(contentData),
-                TemplateId = TemplateId
-            };
+        {
+            UserId = user.Id,
+            ContentName = ContentName,
+            WebPageId = WebPageId,
+            CreationDate = DateOnly.FromDateTime(DateTime.Now),
+            LastUpdated = DateOnly.FromDateTime(DateTime.Now),
+            ContentJson = JsonConvert.SerializeObject(contentData),
+            TemplateId = TemplateId,
+        };
 
        
-        // Save or update content based on ContentId presence
+        // Check if we are creating new content or updating existing content
         if (ContentId.HasValue)
         {
             content.ContentId = ContentId.Value;
+
+            // Load existing content to preserve the RenderingOrderPosition
+            var existingContent = await ContentService.GetContentAsync(ContentId.Value);
+            if (existingContent != null)
+            {
+                // Preserve the existing RenderingOrderPosition during the update
+                content.RenderingOrderPosition = existingContent.RenderingOrderPosition;
+            }
+
             await ContentService.UpdateContentAsync(content);
         }
         else
         {
+            // Creating new content: Get the next rendering order position
+            int nextRenderingOrderPosition = await ContentService.GetNextRenderingOrderAsync(WebPageId);
+            content.RenderingOrderPosition = nextRenderingOrderPosition;
+
             await ContentService.SaveContentAsync(content);
         }
         saveSuccessful = true;

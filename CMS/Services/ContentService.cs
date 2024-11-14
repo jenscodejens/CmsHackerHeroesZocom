@@ -74,6 +74,24 @@ namespace CMS.Services
                 throw;
             }
         }
+
+        /// <summary>
+        /// Gets the next usable integer that can be saved to RenderingOrderPosition in the Content table in the Db
+        /// </summary>
+        /// <param name="webPageId">The unique webpage ID.</param>
+        /// <returns>The RenderingOrderPosition value to be used</returns>
+        public async Task<int> GetNextRenderingOrderAsync(int webPageId)
+        {
+            await using var dbContext = _dbContextFactory.CreateDbContext();
+
+            // Get the maximum current RenderingOrderPosition for the specific WebPageId
+            int maxOrder = await dbContext.Contents
+                .Where(c => c.WebPageId == webPageId)
+                .MaxAsync(c => (int?)c.RenderingOrderPosition) ?? 0;
+
+            // Return the next order number
+            return maxOrder + 1;
+        }
     }
 
 }

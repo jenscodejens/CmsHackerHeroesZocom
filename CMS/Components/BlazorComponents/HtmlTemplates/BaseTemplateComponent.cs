@@ -8,6 +8,7 @@ namespace CMS.Components.BlazorComponents.HtmlTemplates
         [Parameter] public int WebPageId { get; set; }
         [Parameter] public int? ContentId { get; set; }
         [Parameter] public EventCallback<Dictionary<string, object>> OnSubmit { get; set; }
+        [Parameter] public int RenderingOrderPosition { get; set; }
     }
 
     public class BaseImageCardTemplate : BaseTemplateComponent

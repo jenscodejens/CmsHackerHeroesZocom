@@ -39,7 +39,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
         private bool saveSuccessful = false;  // New flag to show the success message
         public string UserId { get; set; }
 
-        private class videoInputs
+        private class VideoInputs
         {
             public string VideoUrl { get; set; } = string.Empty;
             public string VideoWidth { get; set; } = string.Empty;
@@ -69,7 +69,7 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
                     if (!string.IsNullOrEmpty(Currentcontent.ContentJson))
                     {
-                        var contentData = JsonConvert.DeserializeObject<videoInputs>(Currentcontent.ContentJson);
+                        var contentData = JsonConvert.DeserializeObject<VideoInputs>(Currentcontent.ContentJson);
                         //Todo verfication and alertmessage if conted not loaded.
                         VideoUrl = contentData.VideoUrl;
                         VideoWidth = contentData.VideoWidth;
@@ -130,6 +130,9 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
 
             var user = await GetCurrentUserService.GetCurrentUserAsync();
 
+            // Get the next rendering order position for the specified WebPageId
+            int nextRenderingOrderPosition = await ContentService.GetNextRenderingOrderAsync(WebPageId);
+
             var content = new Content();
             if (ContentId == null)
             {
@@ -147,7 +150,8 @@ namespace BlazorComponents.HtmlTemplates.InputFormsForTemplates
                         VideoHeight = VideoHeight,
                         VideoAlignment = VideoAlignment
                     }),
-                    TemplateId = TemplateId
+                    TemplateId = TemplateId,
+                    RenderingOrderPosition = nextRenderingOrderPosition // Assign the next rendering order position here
                 };
             }
             else

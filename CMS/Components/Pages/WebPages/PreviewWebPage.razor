@@ -1,10 +1,13 @@
 ﻿@page "/webpages/previewpage/{webPageId:int}"
 
+@using CMS.Components.Pages.ContentPages
+@using CMS.Components.BlazorComponents
 @using CMS.Shared
 @using CMS.Data
 @using CMS.Models
 @using CMS.Entities
 @using CMS.Services
+@using BlazorBootstrap
 @using System.Text.Json
 @using Microsoft.EntityFrameworkCore
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
@@ -33,13 +36,28 @@ else if (contentList.Count == 0)
     <p>Inget innehåll tillgängligt för denna webbsida.</p>
 }
 else
-{
+{ 
+    <Offcanvas @ref="offcanvas"
+               title="Redigera ordning">
+        <BodyTemplate>
+            <CascadingValue Value="contentList">
+                <DragAndDropMoveContent />
+            </CascadingValue>   
+            <div class="mt-3">
+                <Button Color="ButtonColor.Success" @onclick="OnHideOffcanvasClick">Klar</Button>
+            </div>
+        </BodyTemplate>
+    </Offcanvas>
+
+    <Button Color="ButtonColor.Primary" @onclick="OnShowOffcanvasClick">Redigera ordning</Button>
+
     @foreach (var content in contentList)
     {
-        <div class="content-preview">
-            <CMS.Components.Pages.ContentPages.ContentPreview ContentId="@content.ContentId" />
+        <div class="content-preview"> 
+            <ContentPreview ContentId="@content.ContentId" />
         </div>
     }
+
 }
 
 <p>Denna sida har besökts @VisitCount gånger.</p>
@@ -56,9 +74,11 @@ else
     {
         using var dbContext = DbContextFactory.CreateDbContext();
 
+        // Load and sort content items associated with the specified WebPageId by RenderingOrderPosition
         contentList = await dbContext.Contents
-                                     .Where(c => c.WebPageId == WebPageId)
-                                     .ToListAsync();
+            .Where(c => c.WebPageId == WebPageId)
+            .OrderBy(c => c.RenderingOrderPosition) // Order by RenderingOrderPosition
+            .ToListAsync();
 
         // Get the WebSiteId associated with this WebPage
         var webPage = await dbContext.WebPages.FirstOrDefaultAsync(wp => wp.WebPageId == WebPageId);
@@ -80,6 +100,11 @@ else
             VisitCount = await VisitorCounterService.GetPageVisitCountAsync(WebSiteId, CurrentPageUrl);
         }
     }
+    private Offcanvas offcanvas = default!;
+
+    private async Task OnShowOffcanvasClick() => await offcanvas.ShowAsync();
+
+    private async Task OnHideOffcanvasClick() => await offcanvas.HideAsync();
 }
 
 

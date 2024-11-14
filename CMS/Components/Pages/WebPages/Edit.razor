@@ -48,13 +48,13 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="creationdate" class="form-label">Skapad:</label>
-                    <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" readonly />
+                    <InputDate id="creationdate" @bind-Value="WebPage.CreationDate" class="form-control" disabled />
                 </div>
                 @if (LastUpdatedDateTime.HasValue)
                 {
                     <div class="mb-3">
                         <label for="lastupdated" class="form-label">Senast uppdaterad:</label>
-                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" readonly />
+                        <InputDate id="lastupdated" @bind-Value="LastUpdatedDateTime" class="form-control" disabled />
                     </div>
                 }
                 <div class="mb-3">

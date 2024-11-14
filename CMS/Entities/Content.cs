@@ -14,5 +14,6 @@ namespace CMS.Entities
         public DateOnly? LastUpdated { get; set; }
         public WebPage WebPages { get; set; }
         public Template Template { get; set; }
+        public int RenderingOrderPosition { get; set; }
     }
 }
